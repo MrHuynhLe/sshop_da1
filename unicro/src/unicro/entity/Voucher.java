@@ -1,0 +1,123 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package unicro.entity;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+/**
+ *
+ * @author Admin
+ */
+public class Voucher {
+    private int id;
+    private String code;
+    private String discount_type;
+    private BigDecimal discount_value;
+    private LocalDateTime start_at;
+    private LocalDateTime end_at;
+    private BigDecimal max_purchase_amount;
+    private BigDecimal min_purchase_amount;
+    private LocalDateTime created_at;
+    private Boolean active;
+
+    public Voucher() {
+    }
+
+    public Voucher(int id, String code, String discount_type, BigDecimal discount_value, LocalDateTime start_at, LocalDateTime end_at, BigDecimal max_purchase_amount, BigDecimal min_purchase_amount, LocalDateTime created_at, Boolean active) {
+        this.id = id;
+        this.code = code;
+        this.discount_type = discount_type;
+        this.discount_value = discount_value;
+        this.start_at = start_at;
+        this.end_at = end_at;
+        this.max_purchase_amount = max_purchase_amount;
+        this.min_purchase_amount = min_purchase_amount;
+        this.created_at = created_at;
+        this.active = active;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getDiscount_type() {
+        return discount_type;
+    }
+
+    public void setDiscount_type(String discount_type) {
+        this.discount_type = discount_type;
+    }
+
+    public BigDecimal getDiscount_value() {
+        return discount_value;
+    }
+
+    public void setDiscount_value(BigDecimal discount_value) {
+        this.discount_value = discount_value;
+    }
+
+    public LocalDateTime getStart_at() {
+        return start_at;
+    }
+
+    public void setStart_at(LocalDateTime start_at) {
+        this.start_at = start_at;
+    }
+
+    public LocalDateTime getEnd_at() {
+        return end_at;
+    }
+
+    public void setEnd_at(LocalDateTime end_at) {
+        this.end_at = end_at;
+    }
+
+    public BigDecimal getMax_purchase_amount() {
+        return max_purchase_amount;
+    }
+
+    public void setMax_purchase_amount(BigDecimal max_purchase_amount) {
+        this.max_purchase_amount = max_purchase_amount;
+    }
+
+    public BigDecimal getMin_purchase_amount() {
+        return min_purchase_amount;
+    }
+
+    public void setMin_purchase_amount(BigDecimal min_purchase_amount) {
+        this.min_purchase_amount = min_purchase_amount;
+    }
+
+    public LocalDateTime getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(LocalDateTime created_at) {
+        this.created_at = created_at;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+    
+    
+}
