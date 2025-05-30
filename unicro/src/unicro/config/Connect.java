@@ -14,7 +14,7 @@ import java.sql.SQLException;
  */
 public class Connect {
         public static void main(String[] args) {
-        String url = "jdbc:postgresql://localhost:5432/qlbh";
+        String url = "jdbc:postgresql://localhost:5432/vn_qlbh";
         String user = "postgres";
         String password = "password";
 
@@ -23,6 +23,7 @@ public class Connect {
         } catch (SQLException e) {
             System.out.println("❌ Lỗi: " + e.getMessage());
         }
+            System.out.println("");
     }
 
 }
