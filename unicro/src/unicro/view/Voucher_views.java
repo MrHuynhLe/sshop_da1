@@ -332,7 +332,7 @@ public class Voucher_views extends javax.swing.JFrame {
             v.setStart_date(startLocalDate);
             v.setEnd_date(endLocalDate);
             v.setCreated_at(createdAt);
-            v.setActive(active);          
+            v.setActive(active);
             boolean result = service.updateVoucher(v);
             if (result) {
                 JOptionPane.showMessageDialog(this, "Cập nhật voucher thành công!");
@@ -378,7 +378,7 @@ public class Voucher_views extends javax.swing.JFrame {
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         Voucher_views.this.setVisible(false);
         BanHang banHangFrame = new BanHang();
-        banHangFrame.setVisible(true);  
+        banHangFrame.setVisible(true);
     }//GEN-LAST:event_btnBackActionPerformed
 
     /**

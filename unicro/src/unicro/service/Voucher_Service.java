@@ -27,7 +27,8 @@ public class Voucher_Service {
         List<Voucher> vouchers = new ArrayList<>();
         String sql = "SELECT * FROM vouchers";
 
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+        try (Connection conn = DriverManager.getConnection(url, username, password);
+                PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 Voucher v = new Voucher();
@@ -35,11 +36,21 @@ public class Voucher_Service {
                 v.setCode(rs.getString("code"));
                 v.setDiscount_type(rs.getString("discount_type"));
                 v.setDiscount_value(rs.getBigDecimal("discount_value"));
-                v.setStart_date(rs.getDate("start_date").toLocalDate());
-                v.setEnd_date(rs.getDate("end_date").toLocalDate());
+                  Date startDate = rs.getDate("start_date");
+            if (startDate != null) {
+                v.setStart_date(startDate.toLocalDate());
+            }
+
+            Date endDate = rs.getDate("end_date");
+            if (endDate != null) {
+                v.setEnd_date(endDate.toLocalDate());
+            }
                 v.setMax_purchase_amount(rs.getBigDecimal("max_purchase_amount"));
                 v.setMin_purchase_amount(rs.getBigDecimal("min_purchase_amount"));
-                v.setCreated_at(rs.getTimestamp("created_at").toLocalDateTime());
+                Timestamp createdAt = rs.getTimestamp("created_at");
+            if (createdAt != null) {
+                v.setCreated_at(createdAt.toLocalDateTime());
+            }
                 v.setActive(rs.getString("active").equals("1"));
 
                 vouchers.add(v);
