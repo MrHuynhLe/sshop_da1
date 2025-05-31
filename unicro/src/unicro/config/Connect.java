@@ -19,9 +19,9 @@ public class Connect {
         String password = "password";
 
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            System.out.println("✅ Kết nối thành công!");
+            System.out.println(" Kết nối thành công!");
         } catch (SQLException e) {
-            System.out.println("❌ Lỗi: " + e.getMessage());
+            System.out.println(" Lỗi: " + e.getMessage());
         }
             System.out.println("");
     }
