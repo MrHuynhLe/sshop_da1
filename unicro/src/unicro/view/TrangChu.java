@@ -29,6 +29,7 @@ public class TrangChu extends javax.swing.JFrame {
         initComponents();
        // setLayout(new BorderLayout());
        // jPanel3.setLayout(new BorderLayout());
+    
         btnBanHang.setActionCommand("Bán hàng");
         btnKhuyenMai.setActionCommand("Khuyến mãi");
         btnThongKe.setActionCommand("Thống kê");
@@ -36,11 +37,12 @@ public class TrangChu extends javax.swing.JFrame {
         btnNguoiDung.setActionCommand("Người dùng");
 
         ActionListener menuListener = new MenuButtonListener();
-        btnBanHang.addActionListener(menuListener);
+      btnBanHang.addActionListener(menuListener);
         btnKhuyenMai.addActionListener(menuListener);
         btnThongKe.addActionListener(menuListener);
         btnHoaDon.addActionListener(menuListener);
         btnNguoiDung.addActionListener(menuListener);
+       
     }
 
     private class MenuButtonListener implements ActionListener {
@@ -91,8 +93,10 @@ public class TrangChu extends javax.swing.JFrame {
         btnNguoiDung = new javax.swing.JButton();
         btnSanPham1 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
 
         jPanel1.setForeground(new java.awt.Color(204, 204, 204));
         jPanel1.setPreferredSize(new java.awt.Dimension(200, 430));
@@ -178,7 +182,7 @@ public class TrangChu extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -193,27 +197,31 @@ public class TrangChu extends javax.swing.JFrame {
 
         jPanel1.add(jPanel2);
 
-        getContentPane().add(jPanel1, java.awt.BorderLayout.LINE_START);
+        getContentPane().add(jPanel1);
+
+        jPanel6.setLayout(new java.awt.BorderLayout());
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 591, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(551, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 511, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(484, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel3, java.awt.BorderLayout.CENTER);
+        getContentPane().add(jPanel3);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnBanHangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBanHangActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnBanHangActionPerformed
 
     private void btnHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHoaDonActionPerformed
         // TODO add your handling code here:
@@ -227,6 +235,10 @@ public class TrangChu extends javax.swing.JFrame {
     private void btnSanPham1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSanPham1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnSanPham1ActionPerformed
+
+    private void btnBanHangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBanHangActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnBanHangActionPerformed
 
     /**
      * @param args the command line arguments
@@ -276,14 +288,15 @@ public class TrangChu extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JLabel tblNhanVIen;
     // End of variables declaration//GEN-END:variables
 private void setMainPanel(JPanel panel) {
-    jPanel3.removeAll(); // jPanelMain là panel trung tâm trong form
-    jPanel3.setLayout(new BorderLayout());
-    jPanel3.add(panel, BorderLayout.CENTER);
-    jPanel3.revalidate();
-    jPanel3.repaint();
+    jPanel6.removeAll(); // jPanelMain là panel trung tâm trong form
+    jPanel6.setLayout(new BorderLayout());
+    jPanel6.add(panel, BorderLayout.CENTER);
+    jPanel6.revalidate();
+    jPanel6.repaint();
 }
 
 }

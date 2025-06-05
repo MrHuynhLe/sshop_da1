@@ -14,7 +14,7 @@ import java.sql.SQLException;
  */
 public class Connect {
         public static void main(String[] args) {
-        String url = "jdbc:postgresql://localhost:5432/vn_qlbh";
+        String url = "jdbc:postgresql://localhost:5432/da_qlbh";
         String user = "postgres";
         String password = "password";
 
