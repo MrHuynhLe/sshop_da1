@@ -17,7 +17,7 @@ import java.sql.*;
  */
 public class Order_Service {
 
-    private final String url = "jdbc:postgresql://localhost:5432/vn_qlbh";
+    private final String url = "jdbc:postgresql://localhost:5432/da_qlbh";
     private final String username = "postgres";
     private final String password = "password";
 
@@ -25,7 +25,8 @@ public class Order_Service {
         List<Order> orders = new ArrayList<>();
         String sql = "SELECT * FROM orders";
 
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+        try (Connection conn = DriverManager.getConnection(url, username, password);
+                PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 Order order = new Order();

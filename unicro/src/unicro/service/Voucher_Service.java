@@ -19,7 +19,7 @@ import java.sql.*;
  */
 public class Voucher_Service {
 
-    private final String url = "jdbc:postgresql://localhost:5432/vn_qlbh";
+    private final String url = "jdbc:postgresql://localhost:5432/da_qlbh";
     private final String username = "postgres";
     private final String password = "password";
 
@@ -65,7 +65,7 @@ public class Voucher_Service {
 
     public boolean addVoucher(Voucher v) {
         String sql = "INSERT INTO vouchers (code, discount_type, discount_value, start_date, end_date, created_at, active) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?::bit)";
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, v.getCode());
@@ -84,7 +84,7 @@ public class Voucher_Service {
     }
 
     public boolean updateVoucher(Voucher v) {
-        String sql = "UPDATE vouchers SET discount_type = ?, discount_value = ?, start_date = ?, end_date = ?, created_at = ?, active = ?::bit WHERE code = ?";
+        String sql = "UPDATE vouchers SET discount_type = ?, discount_value = ?, start_date = ?, end_date = ?, created_at = ?, active = ? WHERE code = ?";
         try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, v.getDiscount_type());

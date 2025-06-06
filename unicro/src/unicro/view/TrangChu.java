@@ -6,11 +6,20 @@ package unicro.view;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 import unicro.view.KhuyenMai;
 
 /**
@@ -22,54 +31,72 @@ public class TrangChu extends javax.swing.JFrame {
     /**
      * Creates new form TrangChu
      */
-    private JPanel cardPanel;
-    private JFrame card;
+    private JPanel mainPanel;
+    private CardLayout cardLayout;
 
     public TrangChu() {
         initComponents();
-       // setLayout(new BorderLayout());
-       // jPanel3.setLayout(new BorderLayout());
-    
-        btnBanHang.setActionCommand("Bán hàng");
-        btnKhuyenMai.setActionCommand("Khuyến mãi");
-        btnThongKe.setActionCommand("Thống kê");
-        btnHoaDon.setActionCommand("Hóa đơn");
-        btnNguoiDung.setActionCommand("Người dùng");
+        setTitle("Phần mềm quản lý bán hàng");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(1000, 600);
+        setLocationRelativeTo(null);
 
-        ActionListener menuListener = new MenuButtonListener();
-      btnBanHang.addActionListener(menuListener);
-        btnKhuyenMai.addActionListener(menuListener);
-        btnThongKe.addActionListener(menuListener);
-        btnHoaDon.addActionListener(menuListener);
-        btnNguoiDung.addActionListener(menuListener);
-       
-    }
+        // ===== MENU PANEL (Top Buttons) =====
+        JPanel menuPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        menuPanel.setBackground(Color.WHITE);
+        menuPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // padding
 
-    private class MenuButtonListener implements ActionListener {
+        // Font & màu
+        Font menuFont = new Font("Segoe UI", Font.PLAIN, 14);
+        Color btnColor = new Color(52, 152, 219);
+        Color btnText = Color.WHITE;
 
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            String action = e.getActionCommand();
-            switch (action) {
-                case "Bán hàng":
-                    setMainPanel(new BanHang());
-                    break;
-                case "Khuyến mãi":
-                    setMainPanel(new KhuyenMai());
-                    break;
-                case "Thống kê":
-                    setMainPanel(new ThongKe());
-                    break;
-                case "Hóa đơn":
-                    setMainPanel(new HoaDon());
-                    break;
-                case "Người dùng":
-                    setMainPanel(new NguoiDung());
-                    break;
-                default:
-                    JOptionPane.showMessageDialog(null, "Chức năng chưa hỗ trợ!");
-            }
+        // Tạo các button menu
+        String[] menuNames = {"Bán Hàng", "Quản lý sản phẩm", "Thống kê", "Khuyến mãi", "Người dùng"};
+        JButton[] menuButtons = new JButton[menuNames.length];
+        for (int i = 0; i < menuNames.length; i++) {
+            JButton btn = new JButton(menuNames[i]);
+            btn.setFocusPainted(false);
+            btn.setFont(menuFont);
+            btn.setBackground(btnColor);
+            btn.setForeground(btnText);
+            btn.setPreferredSize(new Dimension(160, 35));
+            menuButtons[i] = btn;
+            menuPanel.add(btn);
         }
+
+        // ===== MAIN PANEL (CardLayout) =====
+        cardLayout = new CardLayout();
+        mainPanel = new JPanel(cardLayout);
+
+        // ⚠️ Đảm bảo các class sau là JPanel, không phải JFrame!
+        mainPanel.add(new BanHang(), "BanHang");
+        // mainPanel.add(new SanPhamPanel(), "QLSP"); // nhớ tạo class JPanel
+        mainPanel.add(new ThongKe(), "ThongKe");
+        mainPanel.add(new KhuyenMai(), "KhuyenMai");
+        mainPanel.add(new NguoiDung(), "NguoiDung");
+
+        // ===== GÁN SỰ KIỆN MENU =====
+        menuButtons[0].addActionListener(e -> cardLayout.show(mainPanel, "BanHang"));
+        menuButtons[1].addActionListener(e -> cardLayout.show(mainPanel, "QLSP"));
+        menuButtons[2].addActionListener(e -> cardLayout.show(mainPanel, "ThongKe"));
+        menuButtons[3].addActionListener(e -> cardLayout.show(mainPanel, "KhuyenMai"));
+        menuButtons[4].addActionListener(e -> cardLayout.show(mainPanel, "NguoiDung"));
+
+        // ===== HEADER + MENU COMBO =====
+        JLabel titleLabel = new JLabel("PHẦN MỀM QUẢN LÝ BÁN HÀNG", JLabel.CENTER);
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        titleLabel.setForeground(new Color(41, 128, 185));
+
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.add(titleLabel, BorderLayout.NORTH);
+        headerPanel.add(menuPanel, BorderLayout.SOUTH);
+        headerPanel.setBackground(Color.WHITE);
+
+        // ===== SETUP FRAME =====
+        setLayout(new BorderLayout());
+        add(headerPanel, BorderLayout.NORTH);
+        add(mainPanel, BorderLayout.CENTER);
     }
 
     /**
@@ -81,222 +108,32 @@ public class TrangChu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
-        tblNhanVIen = new javax.swing.JLabel();
-        jPanel5 = new javax.swing.JPanel();
-        btnBanHang = new javax.swing.JButton();
-        btnHoaDon = new javax.swing.JButton();
-        btnKhuyenMai = new javax.swing.JButton();
-        btnThongKe = new javax.swing.JButton();
-        btnNguoiDung = new javax.swing.JButton();
-        btnSanPham1 = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
-        jPanel6 = new javax.swing.JPanel();
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
-
-        jPanel1.setForeground(new java.awt.Color(204, 204, 204));
-        jPanel1.setPreferredSize(new java.awt.Dimension(200, 430));
-        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
-
-        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        tblNhanVIen.setText("Lê Văn Huỳnh");
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(47, 47, 47)
-                .addComponent(tblNhanVIen, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(tblNhanVIen, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(13, Short.MAX_VALUE))
-        );
-
-        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        btnBanHang.setText("Bán hàng");
-        btnBanHang.setBorder(null);
-        btnBanHang.setBorderPainted(false);
-        btnBanHang.setFocusPainted(false);
-        btnBanHang.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBanHangActionPerformed(evt);
-            }
-        });
-        jPanel5.add(btnBanHang, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 186, 47));
-
-        btnHoaDon.setText("Hoá đơn");
-        btnHoaDon.setBorder(null);
-        btnHoaDon.setBorderPainted(false);
-        btnHoaDon.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnHoaDonActionPerformed(evt);
-            }
-        });
-        jPanel5.add(btnHoaDon, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, 186, 47));
-
-        btnKhuyenMai.setText("Khuyến mãi");
-        btnKhuyenMai.setBorder(null);
-        btnKhuyenMai.setBorderPainted(false);
-        btnKhuyenMai.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnKhuyenMaiActionPerformed(evt);
-            }
-        });
-        jPanel5.add(btnKhuyenMai, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 160, 186, 49));
-
-        btnThongKe.setText("Thống kê");
-        btnThongKe.setBorder(null);
-        btnThongKe.setBorderPainted(false);
-        jPanel5.add(btnThongKe, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 210, 186, 47));
-
-        btnNguoiDung.setText("Người dùng");
-        btnNguoiDung.setBorder(null);
-        btnNguoiDung.setBorderPainted(false);
-        jPanel5.add(btnNguoiDung, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 260, 186, 44));
-
-        btnSanPham1.setText("Quàn lý sản phẩm");
-        btnSanPham1.setBorder(null);
-        btnSanPham1.setBorderPainted(false);
-        btnSanPham1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSanPham1ActionPerformed(evt);
-            }
-        });
-        jPanel5.add(btnSanPham1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 186, 47));
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(101, Short.MAX_VALUE))
-        );
-
-        jPanel1.add(jPanel2);
-
-        getContentPane().add(jPanel1);
-
-        jPanel6.setLayout(new java.awt.BorderLayout());
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(551, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(484, Short.MAX_VALUE))
-        );
-
-        getContentPane().add(jPanel3);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHoaDonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnHoaDonActionPerformed
-
-    private void btnKhuyenMaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKhuyenMaiActionPerformed
-        // TODO add your handling code here:
-
-    }//GEN-LAST:event_btnKhuyenMaiActionPerformed
-
-    private void btnSanPham1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSanPham1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnSanPham1ActionPerformed
-
-    private void btnBanHangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBanHangActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnBanHangActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+       try {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TrangChu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TrangChu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TrangChu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TrangChu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new TrangChu().setVisible(true);
-                
-            }
-        });
+        // Chạy ứng dụng
+        EventQueue.invokeLater(() -> new TrangChu().setVisible(true));
+    
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBanHang;
-    private javax.swing.JButton btnHoaDon;
-    private javax.swing.JButton btnKhuyenMai;
-    private javax.swing.JButton btnNguoiDung;
-    private javax.swing.JButton btnSanPham1;
-    private javax.swing.JButton btnThongKe;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JLabel tblNhanVIen;
     // End of variables declaration//GEN-END:variables
-private void setMainPanel(JPanel panel) {
-    jPanel6.removeAll(); // jPanelMain là panel trung tâm trong form
-    jPanel6.setLayout(new BorderLayout());
-    jPanel6.add(panel, BorderLayout.CENTER);
-    jPanel6.revalidate();
-    jPanel6.repaint();
-}
-
 }
