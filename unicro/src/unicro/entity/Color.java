@@ -9,6 +9,7 @@ package unicro.entity;
  * @author Admin
  */
 public class Color {
+
     private int id;
     private String name;
 
@@ -35,7 +36,5 @@ public class Color {
     public void setName(String name) {
         this.name = name;
     }
-    
-    
-    
+
 }

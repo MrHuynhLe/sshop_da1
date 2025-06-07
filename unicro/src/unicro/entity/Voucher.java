@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
  * @author Admin
  */
 public class Voucher {
+
     private int id;
     private String code;
     private String discount_type;
@@ -120,6 +121,4 @@ public class Voucher {
         this.active = active;
     }
 
-   
-    
 }

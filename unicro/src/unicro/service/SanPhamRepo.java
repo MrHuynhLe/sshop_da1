@@ -25,26 +25,26 @@ public class SanPhamRepo {
 
     public ArrayList<SanPham> getAll() {
         String sql = """
-          SELECT 
-                    sp.ID,
-                    sp.MA_SAN_PHAM,
-                    sp.TEN,
-                    sp.MO_TA,
-                    sp.NGAY_TAO,
-                    sp.TRANG_THAI,
-                    sp.DON_GIA,
-                    SUM(spct.SO_LUONG) AS SO_LUONG
-                FROM 
-                    SAN_PHAM sp
-                    LEFT JOIN SAN_PHAM_CHI_TIET spct ON spct.IDSP = sp.ID
-                GROUP BY 
-                    sp.ID,
-                    sp.MA_SAN_PHAM,
-                    sp.TEN,
-                    sp.MO_TA,
-                    sp.NGAY_TAO,
-                    sp.TRANG_THAI,
-                    sp.DON_GIA;
+         SELECT 
+                        sp.id,
+                        sp.ma_san_pham,
+                        sp.ten,
+                        sp.mo_ta,
+                        sp.ngay_tao,
+                        sp.trang_thai,
+                        sp.don_gia,
+                        SUM(spct.so_luong) AS so_luong
+                    FROM 
+                        san_pham sp
+                        LEFT JOIN san_pham_chi_tiet spct ON spct.idsp = sp.id
+                    GROUP BY 
+                        sp.id,
+                        sp.ma_san_pham,
+                        sp.ten,
+                        sp.mo_ta,
+                        sp.ngay_tao,
+                        sp.trang_thai,
+                        sp.don_gia;
         """;
         ArrayList<SanPham> list = new ArrayList<>();
 
@@ -75,9 +75,9 @@ public class SanPhamRepo {
     public boolean remove(Integer id) {
         int check = 0;
         String sql = """
-//                     UPDATE [dbo].[San_Pham]
-//                            SET [trangthai] = 1
-//                          WHERE ID = ?
+                  UPDATE san_pham
+                  SET trangthai = 1
+                  WHERE id = $1;
                      
                      """;
         try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -90,63 +90,12 @@ public class SanPhamRepo {
 
     }
 
-//    public ArrayList<SanPham> search(String keyword) {
-//        String sql ="""
-//                    SELECT 
-//                                      sp.[ID],
-//                                      sp.[MA_SAN_PHAM],
-//                                      sp.[TEN],
-//                                      sp.[MO_TA],
-//                                      sp.[NGAY_TAO],
-//                                      sp.[TRANG_THAI],
-//                                      sp.[DON_GIA],
-//                                      SUM(spct.SO_LUONG) AS SO_LUONG
-//                                  FROM 
-//                                      [dbo].[SAN_PHAM] sp
-//                                     LEFT JOIN dbo.SAN_PHAM_CHI_TIET spct ON spct.IDSP = sp.ID
-//                    WHERE TEN LIKE ?
-//                                  GROUP BY 
-//                                      sp.[ID],
-//                                      sp.[MA_SAN_PHAM],
-//                                      sp.[TEN],
-//                                      sp.[MO_TA],
-//                                      sp.[NGAY_TAO],
-//                                      sp.[TRANG_THAI],
-//                                      sp.[DON_GIA]
-//                      
-//                    """;
-//         
-//        ArrayList<SanPham> list = new ArrayList<>();
-//        try (Connection con = DBconnextSQL.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
-//            ps.setString(1, "%" + keyword + "%");
-//            ResultSet rs = ps.executeQuery();
-//            while (rs.next()) {
-//                SanPham sp = SanPham.builder()
-//                        .id(rs.getInt("ID"))    
-//                        .tenSP(rs.getString("TEN"))
-//                        .maSP(rs.getString("MA_SAN_PHAM"))
-//                        .soLuong(rs.getInt("SO_LUONG"))
-//                        .trangThai(rs.getBoolean("TRANG_THAI"))
-//                        .build();
-//                list.add(sp);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            JOptionPane.showMessageDialog(null, "Có lỗi xảy ra khi tìm kiếm sản phẩm", "Lỗi", JOptionPane.ERROR_MESSAGE);
-//            return null; // Trả về null nếu có lỗi
-//        }
-//        return list;
-//    }
     public boolean update(SanPham newSanPham) {
         int check = 0;
         String sql = """
-      UPDATE [dbo].[SAN_PHAM]
-      SET 
-        [TEN] = ?,
-        [MO_TA] = ?,
-        [TRANG_THAI] = ?,
-        [DON_GIA] = ?
-      WHERE ID = ? 
+         UPDATE san_pham
+            SET ten = ?, mo_ta = ?, trang_thai = ?, don_gia = ?
+            WHERE id = ?
       """;
 
         try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -166,22 +115,21 @@ public class SanPhamRepo {
     public boolean add(SanPham sanPham) {
         int check = 0;
         String sql = """
-                INSERT INTO [dbo].[SAN_PHAM]
-                    ([MA_SAN_PHAM]
-                    ,[TEN]
-                    ,[MO_TA]
-                    ,[NGAY_TAO]
-                    ,[TRANG_THAI]
-                    ,[DON_GIA]
-                    )
+            INSERT INTO san_pham
+                  (ma_san_pham, ten, mo_ta, ngay_tao, trang_thai, don_gia)
                 VALUES
-                    (?, ?, ?, ?, ?, ?) 
+                  (?, ?, ?, ?, ?, ?);
                 """;
         try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setObject(1, sanPham.getMaSP());
             ps.setObject(2, sanPham.getTenSP());
             ps.setObject(3, sanPham.getMoTa());
-            ps.setObject(4, sanPham.getNgayTao());
+            java.util.Date ngayTao = sanPham.getNgayTao();
+            if (ngayTao != null) {
+                ps.setDate(4, new java.sql.Date(ngayTao.getTime()));
+            } else {
+                ps.setDate(4, null);
+            }
             ps.setObject(5, sanPham.isTrangThai());
             ps.setObject(6, sanPham.getDonGia());
             check = ps.executeUpdate();

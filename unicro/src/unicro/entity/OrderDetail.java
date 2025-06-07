@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  * @author Admin
  */
 public class OrderDetail {
-    
+
     private int id;
     private int order_id;
     private int product_detail_id;
@@ -68,6 +68,5 @@ public class OrderDetail {
     public void setNumber_of_product(int number_of_product) {
         this.number_of_product = number_of_product;
     }
-    
-    
+
 }

@@ -11,15 +11,16 @@ import java.sql.Date;
  * @author Admin
  */
 public class User {
-    private int id ;
+
+    private int id;
     private String username;
     private String fullname;
     private String address;
     private String phone_number;
     private Date date_of_birth;
-    private String password; 
-    private Date created_at; 
-    private Date update_at; 
+    private String password;
+    private Date created_at;
+    private Date update_at;
 
     public User() {
     }
@@ -107,6 +108,5 @@ public class User {
     public void setUpdate_at(Date update_at) {
         this.update_at = update_at;
     }
-    
-    
+
 }

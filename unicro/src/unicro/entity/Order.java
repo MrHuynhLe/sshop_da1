@@ -8,12 +8,12 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
 
-
 /**
  *
  * @author Admin
  */
 public class Order {
+
     private int id;
     private int user_id;
     private int voucher_id;
@@ -101,5 +101,4 @@ public class Order {
         this.status = status;
     }
 
-    
 }

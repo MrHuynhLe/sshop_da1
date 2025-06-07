@@ -11,7 +11,8 @@ import java.util.Objects;
  * @author Admin
  */
 public class MauSac {
-     private int id;
+
+    private int id;
     private String tenMau;
     private String maMauSac;
 
@@ -79,7 +80,5 @@ public class MauSac {
         }
         return Objects.equals(this.maMauSac, other.maMauSac);
     }
-    
-    
-    
+
 }

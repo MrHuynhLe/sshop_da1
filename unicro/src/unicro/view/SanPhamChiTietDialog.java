@@ -632,12 +632,12 @@ private void showDataToForm() {
         model.addRow(new Object[]{
             index.getAndIncrement(),
             spct.getId(),
-            spct.getTenSanPham(),        // tên sản phẩm
-            spct.getTenNhaCungCap(),     // tên nhà cung cấp
-            spct.getTenMau(),         // tên màu
-            spct.getTenSize(),           // tên size
-            spct.getTenChatLieu(),       // tên chất liệu
-            spct.getThuongHieu(),     // tên thương hiệu
+            spct.getTenSanPham(),        
+            spct.getTenNhaCungCap(),   
+            spct.getTenMau(),        
+            spct.getTenSize(),          
+            spct.getTenChatLieu(),     
+            spct.getThuongHieu(),   
             spct.getSoLuong(),
             formatCash(spct.getDonGia()),
             spct.getMoTa(),

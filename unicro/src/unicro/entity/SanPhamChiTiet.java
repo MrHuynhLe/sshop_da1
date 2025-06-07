@@ -11,7 +11,8 @@ import java.util.Date;
  * @author Admin
  */
 public class SanPhamChiTiet {
-     private int id;
+
+    private int id;
     private int idSp;
     private int maNhaCungCap;
     private int maMau;
@@ -27,9 +28,8 @@ public class SanPhamChiTiet {
     public SanPhamChiTiet() {
     }
 
-    // Constructor đầy đủ (có id)
     public SanPhamChiTiet(int id, int idSp, int maNhaCungCap, int maMau, int maSize, int maChatLieu,
-                          int soLuong, float donGia, String moTa, Date ngayTao, int maThuongHieu, boolean trangThai) {
+            int soLuong, float donGia, String moTa, Date ngayTao, int maThuongHieu, boolean trangThai) {
         this.id = id;
         this.idSp = idSp;
         this.maNhaCungCap = maNhaCungCap;
@@ -44,9 +44,8 @@ public class SanPhamChiTiet {
         this.trangThai = trangThai;
     }
 
-    // Constructor KHÔNG có id → dùng khi thêm mới
     public SanPhamChiTiet(int idSp, int maNhaCungCap, int maMau, int maSize, int maChatLieu,
-                          int soLuong, float donGia, String moTa, Date ngayTao, int maThuongHieu, boolean trangThai) {
+            int soLuong, float donGia, String moTa, Date ngayTao, int maThuongHieu, boolean trangThai) {
         this.idSp = idSp;
         this.maNhaCungCap = maNhaCungCap;
         this.maMau = maMau;
@@ -60,58 +59,117 @@ public class SanPhamChiTiet {
         this.trangThai = trangThai;
     }
 
-    // Getter - Setter
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public int getId() {
+        return id;
+    }
 
-    public int getIdSp() { return idSp; }
-    public void setIdSp(int idSp) { this.idSp = idSp; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public int getMaNhaCungCap() { return maNhaCungCap; }
-    public void setMaNhaCungCap(int maNhaCungCap) { this.maNhaCungCap = maNhaCungCap; }
+    public int getIdSp() {
+        return idSp;
+    }
 
-    public int getMaMau() { return maMau; }
-    public void setMaMau(int maMau) { this.maMau = maMau; }
+    public void setIdSp(int idSp) {
+        this.idSp = idSp;
+    }
 
-    public int getMaSize() { return maSize; }
-    public void setMaSize(int maSize) { this.maSize = maSize; }
+    public int getMaNhaCungCap() {
+        return maNhaCungCap;
+    }
 
-    public int getMaChatLieu() { return maChatLieu; }
-    public void setMaChatLieu(int maChatLieu) { this.maChatLieu = maChatLieu; }
+    public void setMaNhaCungCap(int maNhaCungCap) {
+        this.maNhaCungCap = maNhaCungCap;
+    }
 
-    public int getSoLuong() { return soLuong; }
-    public void setSoLuong(int soLuong) { this.soLuong = soLuong; }
+    public int getMaMau() {
+        return maMau;
+    }
 
-    public float getDonGia() { return donGia; }
-    public void setDonGia(float donGia) { this.donGia = donGia; }
+    public void setMaMau(int maMau) {
+        this.maMau = maMau;
+    }
 
-    public String getMoTa() { return moTa; }
-    public void setMoTa(String moTa) { this.moTa = moTa; }
+    public int getMaSize() {
+        return maSize;
+    }
 
-    public Date getNgayTao() { return ngayTao; }
-    public void setNgayTao(Date ngayTao) { this.ngayTao = ngayTao; }
+    public void setMaSize(int maSize) {
+        this.maSize = maSize;
+    }
 
-    public int getMaThuongHieu() { return maThuongHieu; }
-    public void setMaThuongHieu(int maThuongHieu) { this.maThuongHieu = maThuongHieu; }
+    public int getMaChatLieu() {
+        return maChatLieu;
+    }
 
-    public boolean isTrangThai() { return trangThai; }
-    public void setTrangThai(boolean trangThai) { this.trangThai = trangThai; }
+    public void setMaChatLieu(int maChatLieu) {
+        this.maChatLieu = maChatLieu;
+    }
+
+    public int getSoLuong() {
+        return soLuong;
+    }
+
+    public void setSoLuong(int soLuong) {
+        this.soLuong = soLuong;
+    }
+
+    public float getDonGia() {
+        return donGia;
+    }
+
+    public void setDonGia(float donGia) {
+        this.donGia = donGia;
+    }
+
+    public String getMoTa() {
+        return moTa;
+    }
+
+    public void setMoTa(String moTa) {
+        this.moTa = moTa;
+    }
+
+    public Date getNgayTao() {
+        return ngayTao;
+    }
+
+    public void setNgayTao(Date ngayTao) {
+        this.ngayTao = ngayTao;
+    }
+
+    public int getMaThuongHieu() {
+        return maThuongHieu;
+    }
+
+    public void setMaThuongHieu(int maThuongHieu) {
+        this.maThuongHieu = maThuongHieu;
+    }
+
+    public boolean isTrangThai() {
+        return trangThai;
+    }
+
+    public void setTrangThai(boolean trangThai) {
+        this.trangThai = trangThai;
+    }
 
     @Override
     public String toString() {
-        return "SanPhamChiTiet{" +
-                "id=" + id +
-                ", idSp=" + idSp +
-                ", maNhaCungCap=" + maNhaCungCap +
-                ", maMau=" + maMau +
-                ", maSize=" + maSize +
-                ", maChatLieu=" + maChatLieu +
-                ", soLuong=" + soLuong +
-                ", donGia=" + donGia +
-                ", moTa='" + moTa + '\'' +
-                ", ngayTao=" + ngayTao +
-                ", maThuongHieu=" + maThuongHieu +
-                ", trangThai=" + trangThai +
-                '}';
+        return "SanPhamChiTiet{"
+                + "id=" + id
+                + ", idSp=" + idSp
+                + ", maNhaCungCap=" + maNhaCungCap
+                + ", maMau=" + maMau
+                + ", maSize=" + maSize
+                + ", maChatLieu=" + maChatLieu
+                + ", soLuong=" + soLuong
+                + ", donGia=" + donGia
+                + ", moTa='" + moTa + '\''
+                + ", ngayTao=" + ngayTao
+                + ", maThuongHieu=" + maThuongHieu
+                + ", trangThai=" + trangThai
+                + '}';
     }
 }

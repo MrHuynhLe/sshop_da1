@@ -9,10 +9,11 @@ package unicro.entity;
  * @author Admin
  */
 public class Size {
-       private int id;
+
+    private int id;
     private String size_name;
     private String maSize;
-    private String ten ;
+    private String ten;
 
     public Size() {
     }
@@ -56,8 +57,4 @@ public class Size {
         this.ten = ten;
     }
 
-
-
-    
-    
 }

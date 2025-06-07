@@ -137,15 +137,6 @@ public class ThuocTinhRepo {
         }
     }
 
-//    public void deleteThuocTinh(String tenBang, String maThuocTinh) throws SQLException {
-//    String cotMaThuocTinh = tenBang.substring(0, tenBang.length() - 1); // Xác định tên cột mã 
-//    String sql = "DELETE FROM " + tenBang + " WHERE " + cotMaThuocTinh + " = ?";
-//    try (Connection con = DBConnect.getConnection();
-//         PreparedStatement ps = con.prepareStatement(sql)) {
-//        ps.setString(1, maThuocTinh);
-//        ps.executeUpdate();
-//    }
-//}
     public void deleteThuocTinh(String tenBang, String maThuocTinh) throws SQLException {
         String cotMaThuocTinh;
         switch (tenBang) {

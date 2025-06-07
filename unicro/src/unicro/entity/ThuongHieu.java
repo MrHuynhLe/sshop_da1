@@ -11,7 +11,8 @@ import java.util.Objects;
  * @author Admin
  */
 public class ThuongHieu {
-     private int id;
+
+    private int id;
     private String ten;
     private String maThuongHieu;
 
@@ -47,14 +48,6 @@ public class ThuongHieu {
     public void setMaThuongHieu(String maThuongHieu) {
         this.maThuongHieu = maThuongHieu;
     }
-
-    
-
- 
-
- 
-
-    
 
     @Override
     public String toString() {

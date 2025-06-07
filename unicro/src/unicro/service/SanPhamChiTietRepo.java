@@ -32,17 +32,26 @@ public class SanPhamChiTietRepo {
 
     public ArrayList<SanPhamChiTietResponse> getAllSPCT() {
         String sql = """
-               SELECT SPCT.ID, SP.TEN AS TEN_SAN_PHAM, NCC.TEN AS TEN_NHA_CUNG_CAP,
-                      MS.TEN AS TEN_MAU, SIZE.TEN AS TEN_SIZE, CHAT_LIEU.TEN AS TEN_CHAT_LIEU,
-                      SPCT.SO_LUONG, SPCT.DON_GIA, SPCT.MO_TA, SPCT.NGAY_TAO,
-                      THUONG_HIEU.TEN AS TEN_THUONG_HIEU, SPCT.TRANG_THAI
-               FROM SAN_PHAM_CHI_TIET SPCT
-               JOIN SAN_PHAM SP ON SPCT.IDSP = SP.ID
-               JOIN NHA_CUNG_CAP NCC ON SPCT.MA_NHA_CUNG_CAP = NCC.ID
-               JOIN MAU_SAC MS ON SPCT.MA_MAU = MS.ID
-               JOIN SIZE SIZE ON SPCT.MA_SIZE = SIZE.ID
-               JOIN CHAT_LIEU CHAT_LIEU ON SPCT.MA_CHAT_LIEU = CHAT_LIEU.ID
-               JOIN THUONG_HIEU THUONG_HIEU ON SPCT.MA_THUONG_HIEU = THUONG_HIEU.ID
+               SELECT 
+                   spct.id, 
+                   sp.ten AS ten_san_pham, 
+                   ncc.ten AS ten_nha_cung_cap,
+                   ms.ten AS ten_mau, 
+                   size.ten AS ten_size, 
+                   chat_lieu.ten AS ten_chat_lieu,
+                   spct.so_luong, 
+                   spct.don_gia, 
+                   spct.mo_ta, 
+                   spct.ngay_tao,
+                   thuong_hieu.ten AS ten_thuong_hieu, 
+                   spct.trang_thai
+               FROM san_pham_chi_tiet spct
+               JOIN san_pham sp ON spct.idsp = sp.id
+               JOIN nha_cung_cap ncc ON spct.ma_nha_cung_cap = ncc.id
+               JOIN mau_sac ms ON spct.ma_mau = ms.id
+               JOIN size size ON spct.ma_size = size.id
+               JOIN chat_lieu chat_lieu ON spct.ma_chat_lieu = chat_lieu.id
+               JOIN thuong_hieu thuong_hieu ON spct.ma_thuong_hieu = thuong_hieu.id;
            """;
 
         ArrayList<SanPhamChiTietResponse> list = new ArrayList<>();
@@ -71,65 +80,23 @@ public class SanPhamChiTietRepo {
         return list;
     }
 
-//    public boolean add(SanPhamChiTiet spct) {
-//        String sql = """
-//
-//                      INSERT INTO SAN_PHAM_CHI_TIET (IDSP, MA_NHA_CUNG_CAP, MA_MAU, MA_DO_CUNG_DUA, MA_DO_CANG, SO_LUONG, DON_GIA, MO_TA, NGAY_TAO, MA_CD_VOT, MA_DIEM_CAN_BANG, MA_TRONG_LUONG, MA_DO_BAY, MA_DANG_MAT_VOT, TRANG_THAI)
-//                             SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-//                             FROM SAN_PHAM SP
-//                             JOIN NHA_CUNG_CAP NCC ON ? = NCC.ID
-//                             JOIN MAU_SAC MS ON ? = MS.ID
-//                             JOIN DO_CUNG_DUA DCD ON ? = DCD.ID
-//                             JOIN DO_CANG DC ON ? = DC.ID
-//                             JOIN CHIEU_DAI_VOT CDV ON ? = CDV.ID
-//                             JOIN DIEM_CAN_BANG DCB ON ? = DCB.ID
-//                             JOIN TRONG_LUONG TL ON ? = TL.ID
-//                             JOIN DO_BAY DB ON ? = DB.ID
-//                             JOIN DANG_MAT_VOT DMV ON ? = DMV.ID
-//                             WHERE SP.ID = ?
-//            """;
-//        int check = 0;
-//        try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
-//
-//            ps.setInt(1, spct.getIdSp());
-//            ps.setInt(2, spct.getMaNhaCungCap());
-//            ps.setInt(3, spct.getMaMau());
-//            ps.setInt(4, spct.getMaDoCungDua());
-//            ps.setInt(5, spct.getMaDoCang());
-//            ps.setInt(6, spct.getSoLuong());
-//            ps.setFloat(7, spct.getDonGia());
-//            ps.setString(8, spct.getMoTa());
-//            ps.setInt(10, spct.getMaCdVot());
-//            ps.setInt(11, spct.getMaDiemCanBang());
-//            ps.setInt(12, spct.getMaTrongLuong());
-//            ps.setInt(13, spct.getMaDoBay());
-//            ps.setInt(14, spct.getMaDangMatVot());
-//            ps.setBoolean(15, spct.isTrangThai());
-//
-//            check = ps.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            JOptionPane.showMessageDialog(null, "Có lỗi xảy ra khi thêm sản phẩm chi tiết", "Lỗi", JOptionPane.ERROR_MESSAGE);
-//        }
-//        return check > 0;
-//    }
     public boolean update(SanPhamChiTiet spct) {
         String sql = """
      
-            UPDATE [dbo].[SAN_PHAM_CHI_TIET]
-            SET [IDSP] = ?,
-                [MA_NHA_CUNG_CAP] = ?,
-                [MA_MAU] = ?,
-                [MA_SIZE] = ?,
-                [MA_CHAT_LIEU] = ?,
-                [SO_LUONG] = ?,
-                [DON_GIA] = ?,
-                [MO_TA] = ?,
-                [NGAY_TAO] = ?,
-                [MA_THUONG_HIEU] = ?,
-               
-                [TRANG_THAI] = ?
-            WHERE ID = ?
+         UPDATE san_pham_chi_tiet
+            SET 
+                idsp = ?,
+                ma_nha_cung_cap = ?,
+                ma_mau = ?,
+                ma_size = ?,
+                ma_chat_lieu = ?,
+                so_luong = ?,
+                don_gia = ?,
+                mo_ta = ?,
+                ngay_tao = ?,
+                ma_thuong_hieu = ?,
+                trang_thai = ?
+            WHERE id = ?;
            """;
         int check = 0;
         try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
@@ -155,19 +122,28 @@ public class SanPhamChiTietRepo {
 
     public ArrayList<SanPhamChiTietResponse> search(String tenSanPham) {
         String sql = """
-        SELECT SPCT.ID, SP.MA_SAN_PHAM, SP.TEN AS TEN_SAN_PHAM,
-               NCC.TEN AS TEN_NHA_CUNG_CAP, MS.TEN AS TEN_MAU,
-               SIZE.TEN AS TEN_SIZE, CHAT_LIEU.TEN AS TEN_CHAT_LIEU,
-               SPCT.SO_LUONG, SPCT.DON_GIA, SPCT.MO_TA, SPCT.NGAY_TAO,
-               THUONG_HIEU.TEN AS TEN_THUONG_HIEU, SPCT.TRANG_THAI
-        FROM SAN_PHAM_CHI_TIET SPCT
-        JOIN SAN_PHAM SP ON SPCT.IDSP = SP.ID
-        JOIN NHA_CUNG_CAP NCC ON SPCT.MA_NHA_CUNG_CAP = NCC.ID
-        JOIN MAU_SAC MS ON SPCT.MA_MAU = MS.ID
-        JOIN SIZE SIZE ON SPCT.MA_SIZE = SIZE.ID
-        JOIN CHAT_LIEU CHAT_LIEU ON SPCT.MA_CHAT_LIEU = CHAT_LIEU.ID
-        JOIN THUONG_HIEU THUONG_HIEU ON SPCT.MA_THUONG_HIEU = THUONG_HIEU.ID
-        WHERE SP.TEN LIKE ?
+            SELECT 
+                    spct.id, 
+                    sp.ma_san_pham, 
+                    sp.ten AS ten_san_pham,
+                    ncc.ten AS ten_nha_cung_cap, 
+                    ms.ten AS ten_mau,
+                    s.ten AS ten_size, 
+                    cl.ten AS ten_chat_lieu,
+                    spct.so_luong, 
+                    spct.don_gia, 
+                    spct.mo_ta, 
+                    spct.ngay_tao,
+                    th.ten AS ten_thuong_hieu, 
+                    spct.trang_thai
+                FROM san_pham_chi_tiet spct
+                JOIN san_pham sp ON spct.idsp = sp.id
+                JOIN nha_cung_cap ncc ON spct.ma_nha_cung_cap = ncc.id
+                JOIN mau_sac ms ON spct.ma_mau = ms.id
+                JOIN size s ON spct.ma_size = s.id
+                JOIN chat_lieu cl ON spct.ma_chat_lieu = cl.id
+                JOIN thuong_hieu th ON spct.ma_thuong_hieu = th.id
+                WHERE sp.ten ILIKE ?
     """;
 
         ArrayList<SanPhamChiTietResponse> list = new ArrayList<>();
@@ -227,9 +203,9 @@ public class SanPhamChiTietRepo {
     public boolean updateSoLuong(SanPhamChiTiet spct) {
         String sql = """
  
-            UPDATE [dbo].[SAN_PHAM_CHI_TIET]
-            SET [SO_LUONG] = ?
-            WHERE ID = ?
+           UPDATE san_pham_chi_tiet
+            SET so_luong = ?
+            WHERE id = ?;
 
            """;
         int check = 0;
@@ -247,23 +223,22 @@ public class SanPhamChiTietRepo {
 
     public ArrayList<SanPhamChiTietResponse> LocSPCT(Integer mauSac_id, Integer size_id, Integer thuongHieu_id, Integer chatLieu_id) {
         String sql = """
-        SELECT SPCT.ID, SP.TEN AS TEN_SAN_PHAM, NCC.TEN AS TEN_NHA_CUNG_CAP,
-               MS.TEN AS TEN_MAU, SIZE.TEN AS TEN_SIZE, CHAT_LIEU.TEN AS TEN_CHAT_LIEU,
-               SPCT.SO_LUONG, SPCT.DON_GIA, SPCT.MO_TA, SPCT.NGAY_TAO,
-               THUONG_HIEU.TEN AS TEN_THUONG_HIEU,
-               SPCT.TRANG_THAI
-        FROM SAN_PHAM_CHI_TIET SPCT
-        JOIN SAN_PHAM SP ON SPCT.IDSP = SP.ID
-        JOIN NHA_CUNG_CAP NCC ON SPCT.MA_NHA_CUNG_CAP = NCC.ID
-        JOIN MAU_SAC MS ON SPCT.MA_MAU = MS.ID
-        JOIN SIZE SIZE ON SPCT.MA_SIZE = SIZE.ID
-        JOIN CHAT_LIEU CHAT_LIEU ON SPCT.MA_CHAT_LIEU = CHAT_LIEU.ID
-        JOIN THUONG_HIEU THUONG_HIEU ON SPCT.MA_THUONG_HIEU = THUONG_HIEU.ID
-        WHERE SP.TRANG_THAI = 0
-          AND (? IS NULL OR SPCT.MA_MAU = ?)
-          AND (? IS NULL OR SPCT.MA_SIZE = ?)
-          AND (? IS NULL OR SPCT.MA_THUONG_HIEU = ?)
-          AND (? IS NULL OR SPCT.MA_CHAT_LIEU = ?)
+       SELECT SPCT.id, SP.ten AS ten_san_pham, NCC.ten AS ten_nha_cung_cap,
+                 MS.ten AS ten_mau, S.ten AS ten_size, CL.ten AS ten_chat_lieu,
+                 SPCT.so_luong, SPCT.don_gia, SPCT.mo_ta, SPCT.ngay_tao,
+                 TH.ten AS ten_thuong_hieu, SPCT.trang_thai
+          FROM san_pham_chi_tiet SPCT
+          JOIN san_pham SP ON SPCT.idsp = SP.id
+          JOIN nha_cung_cap NCC ON SPCT.ma_nha_cung_cap = NCC.id
+          JOIN mau_sac MS ON SPCT.ma_mau = MS.id
+          JOIN size S ON SPCT.ma_size = S.id
+          JOIN chat_lieu CL ON SPCT.ma_chat_lieu = CL.id
+          JOIN thuong_hieu TH ON SPCT.ma_thuong_hieu = TH.id
+          WHERE SP.trang_thai = 0
+            AND ($1::UUID IS NULL OR SPCT.ma_mau = $1::UUID)
+            AND ($2::UUID IS NULL OR SPCT.ma_size = $2::UUID)
+            AND ($3::UUID IS NULL OR SPCT.ma_thuong_hieu = $3::UUID)
+            AND ($4::UUID IS NULL OR SPCT.ma_chat_lieu = $4::UUID);
     """;
 
         ArrayList<SanPhamChiTietResponse> list = new ArrayList<>();
@@ -411,19 +386,27 @@ public class SanPhamChiTietRepo {
 ////////////////////////////////////////////////////////////////////////////////////////////
     public ArrayList<SanPhamChiTietResponse> getProductDetailByIdProduct(Integer idSP) {
         String sql = """
-        SELECT SPCT.ID, SP.TEN AS TEN_SAN_PHAM, NCC.TEN AS TEN_NHA_CUNG_CAP,
-               MS.TEN AS TEN_MAU, SIZE.TEN AS TEN_SIZE, CHAT_LIEU.TEN AS TEN_CHAT_LIEU,
-               SPCT.SO_LUONG, SPCT.DON_GIA, SPCT.MO_TA, SPCT.NGAY_TAO,
-               THUONG_HIEU.TEN AS TEN_THUONG_HIEU,
-               SPCT.TRANG_THAI
-        FROM SAN_PHAM_CHI_TIET SPCT
-        JOIN SAN_PHAM SP ON SPCT.IDSP = SP.ID
-        JOIN NHA_CUNG_CAP NCC ON SPCT.MA_NHA_CUNG_CAP = NCC.ID
-        JOIN MAU_SAC MS ON SPCT.MA_MAU = MS.ID
-        JOIN SIZE SIZE ON SPCT.MA_SIZE = SIZE.ID
-        JOIN CHAT_LIEU CHAT_LIEU ON SPCT.MA_CHAT_LIEU = CHAT_LIEU.ID
-        JOIN THUONG_HIEU THUONG_HIEU ON SPCT.MA_THUONG_HIEU = THUONG_HIEU.ID
-        WHERE SPCT.IDSP = ?
+      SELECT 
+            SPCT.id, 
+            SP.ten AS ten_san_pham, 
+            NCC.ten AS ten_nha_cung_cap,
+            MS.ten AS ten_mau, 
+            S.ten AS ten_size, 
+            CL.ten AS ten_chat_lieu,
+            SPCT.so_luong, 
+            SPCT.don_gia, 
+            SPCT.mo_ta, 
+            SPCT.ngay_tao,
+            TH.ten AS ten_thuong_hieu, 
+            SPCT.trang_thai
+        FROM san_pham_chi_tiet SPCT
+        JOIN san_pham SP ON SPCT.idsp = SP.id
+        JOIN nha_cung_cap NCC ON SPCT.ma_nha_cung_cap = NCC.id
+        JOIN mau_sac MS ON SPCT.ma_mau = MS.id
+        JOIN size S ON SPCT.ma_size = S.id
+        JOIN chat_lieu CL ON SPCT.ma_chat_lieu = CL.id
+        JOIN thuong_hieu TH ON SPCT.ma_thuong_hieu = TH.id
+        WHERE SPCT.idsp = ?;
     """;
 
         ArrayList<SanPhamChiTietResponse> list = new ArrayList<>();
@@ -458,27 +441,27 @@ public class SanPhamChiTietRepo {
 
     public SanPhamChiTietResponse getProductDetailResponseById(Integer idSPCT) {
         String sql = """
-        SELECT SPCT.ID,
-               SP.MA_SAN_PHAM,
-               SP.TEN AS TEN_SAN_PHAM,
-               NCC.TEN AS TEN_NHA_CUNG_CAP,
-               MS.TEN AS TEN_MAU,
-               SIZE.TEN AS TEN_SIZE,
-               CHAT_LIEU.TEN AS TEN_CHAT_LIEU,
-               SPCT.SO_LUONG,
-               SPCT.DON_GIA,
-               SPCT.MO_TA,
-               SPCT.NGAY_TAO,
-               THUONG_HIEU.TEN AS THUONG_HIEU,
-               SPCT.TRANG_THAI
-        FROM SAN_PHAM_CHI_TIET SPCT
-        JOIN SAN_PHAM SP ON SPCT.IDSP = SP.ID
-        JOIN NHA_CUNG_CAP NCC ON SPCT.MA_NHA_CUNG_CAP = NCC.ID
-        JOIN MAU_SAC MS ON SPCT.MA_MAU = MS.ID
-        JOIN SIZE SIZE ON SPCT.MA_SIZE = SIZE.ID
-        JOIN CHAT_LIEU CHAT_LIEU ON SPCT.MA_CHAT_LIEU = CHAT_LIEU.ID
-        JOIN THUONG_HIEU THUONG_HIEU ON SPCT.MA_THUONG_HIEU = THUONG_HIEU.ID
-        WHERE SPCT.ID = ?
+        SELECT spct.id,
+               sp.ma_san_pham,
+               sp.ten AS ten_san_pham,
+               ncc.ten AS ten_nha_cung_cap,
+               ms.ten AS ten_mau,
+               size.ten AS ten_size,
+               chat_lieu.ten AS ten_chat_lieu,
+               spct.so_luong,
+               spct.don_gia,
+               spct.mo_ta,
+               spct.ngay_tao,
+               thuong_hieu.ten AS thuong_hieu,
+               spct.trang_thai
+        FROM san_pham_chi_tiet spct
+        JOIN san_pham sp ON spct.idsp = sp.id
+        JOIN nha_cung_cap ncc ON spct.ma_nha_cung_cap = ncc.id
+        JOIN mau_sac ms ON spct.ma_mau = ms.id
+        JOIN size size ON spct.ma_size = size.id
+        JOIN chat_lieu chat_lieu ON spct.ma_chat_lieu = chat_lieu.id
+        JOIN thuong_hieu thuong_hieu ON spct.ma_thuong_hieu = thuong_hieu.id
+        WHERE spct.id = $1;
     """;
 
         try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
@@ -511,9 +494,9 @@ public class SanPhamChiTietRepo {
     //udpate trạng thái
     public boolean updateStatus(Integer idSpct, Boolean trangThai) {
         String sql = """
-            UPDATE [dbo].[SAN_PHAM_CHI_TIET]
-            SET [TRANG_THAI] = ?
-            WHERE ID = ?
+           UPDATE san_pham_chi_tiet
+            SET trang_thai = $1
+            WHERE id = $2;
            """;
         int check = 0;
         try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
@@ -530,20 +513,20 @@ public class SanPhamChiTietRepo {
 
     public SanPhamChiTiet getProductDetailyId(Integer idSPCT) {
         String sql = """
-                  SELECT [ID]
-                           ,[IDSP]
-                           ,[MA_NHA_CUNG_CAP]
-                           ,[MA_MAU]
-                           ,[MA_SIZE]
-                           ,[MA_CHAT_LIEU]
-                           ,[SO_LUONG]
-                           ,[DON_GIA]
-                           ,[MO_TA]
-                           ,[NGAY_TAO]
-                           ,[MA_THUONG_HIEU]
-                           ,[TRANG_THAI]
-                       FROM [dbo].[SAN_PHAM_CHI_TIET]
-                     WHERE ID = ?
+               SELECT id,
+                         idsp,
+                         ma_nha_cung_cap,
+                         ma_mau,
+                         ma_size,
+                         ma_chat_lieu,
+                         so_luong,
+                         don_gia,
+                         mo_ta,
+                         ngay_tao,
+                         ma_thuong_hieu,
+                         trang_thai
+                  FROM san_pham_chi_tiet
+                  WHERE id = ?;
                     """;
         try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, idSPCT);
@@ -573,30 +556,20 @@ public class SanPhamChiTietRepo {
 
     public int creatNewProductDetail(SanPhamChiTiet spct) {
         String sql = """
-                  INSERT INTO [dbo].[SAN_PHAM_CHI_TIET]
-                                ([IDSP]
-                                                           ,[MA_NHA_CUNG_CAP]
-                                                           ,[MA_MAU]
-                                                           ,[MA_SIZE]
-                                                           ,[MA_CHAT_LIEU]
-                                                           ,[SO_LUONG]
-                                                           ,[DON_GIA]
-                                                           ,[MO_TA]
-                                                           ,[NGAY_TAO]
-                                                           ,[MA_THUONG_HIEU]
-                                                           ,[TRANG_THAI])
-                          VALUES
-                                (?
-                                ,?
-                                ,?
-                                ,?
-                                ,?
-                                ,?
-                                ,?
-                                ,?
-                                ,?
-                                ,?
-                                )
+                  INSERT INTO san_pham_chi_tiet
+                                    (idsp,
+                                     ma_nha_cung_cap,
+                                     ma_mau,
+                                     ma_size,
+                                     ma_chat_lieu,
+                                     so_luong,
+                                     don_gia,
+                                     mo_ta,
+                                     ngay_tao,
+                                     ma_thuong_hieu,
+                                     trang_thai)
+                                VALUES
+                                    (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
                     """;
         try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -608,7 +581,7 @@ public class SanPhamChiTietRepo {
             ps.setObject(6, spct.getSoLuong());
             ps.setObject(7, spct.getDonGia());
             ps.setObject(8, spct.getMoTa());
-            ps.setObject(9, spct.getNgayTao());
+           ps.setDate(9, new java.sql.Date(spct.getNgayTao().getTime()));
             ps.setObject(10, spct.getMaThuongHieu());
             ps.setObject(11, spct.isTrangThai());
 
@@ -622,17 +595,17 @@ public class SanPhamChiTietRepo {
 
     public int updateProductDetail(SanPhamChiTiet spct) {
         String sql = """
-                 UPDATE [dbo].[SAN_PHAM_CHI_TIET]
-                                   SET 
-                                      [MA_NHA_CUNG_CAP] = ?
-                                      ,[MA_MAU] = ?
-                                      ,[MA_SIZE] = ?
-                                      ,[MA_CHAT_LIEU] = ?
-                                      ,[SO_LUONG] = ?
-                                      ,[DON_GIA] = ?
-                                      ,[MO_TA] = ?
-                                      ,[MA_THUONG_HIEU] = ?
-                                 WHERE ID = ?
+                UPDATE san_pham_chi_tiet
+                                 SET
+                                     ma_nha_cung_cap = ?,
+                                     ma_mau = ?,
+                                     ma_size = ?,
+                                     ma_chat_lieu = ?,
+                                     so_luong = ?,
+                                     don_gia = ?,
+                                     mo_ta = ?,
+                                     ma_thuong_hieu = ?
+                                 WHERE id = ?;
                     """;
         try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
 

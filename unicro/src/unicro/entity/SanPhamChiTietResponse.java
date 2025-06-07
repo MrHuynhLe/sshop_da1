@@ -11,7 +11,8 @@ import java.util.Date;
  * @author Admin
  */
 public class SanPhamChiTietResponse {
-     private int id;
+
+    private int id;
     private String tenSanPham;
     private String tenNhaCungCap;
     private String tenMau;
@@ -46,7 +47,6 @@ public class SanPhamChiTietResponse {
     public void setId(int id) {
         this.id = id;
     }
-
 
     public String getTenSanPham() {
         return tenSanPham;
@@ -136,26 +136,22 @@ public class SanPhamChiTietResponse {
         this.trangThai = trangThai;
     }
 
-    
-    
-   
     @Override
     public String toString() {
-        return "SanPhamChiTietResponse{" +
-                "id=" + id +
-                ", tenSanPham='" + tenSanPham + '\'' +
-                ", tenNhaCungCap='" + tenNhaCungCap + '\'' +
-                ", tenMau='" + tenMau + '\'' +
-                ", tenSize='" + tenSize + '\'' +
-                ", tenChatLieu='" + tenChatLieu + '\'' +
-                ", soLuong=" + soLuong +
-                ", donGia=" + donGia +
-                ", moTa='" + moTa + '\'' +
-                ", ngayTao='" + ngayTao + '\'' +
-                ", thuongHieu='" + thuongHieu + '\'' +
-                ", trangThai=" + trangThai +
-                '}';
+        return "SanPhamChiTietResponse{"
+                + "id=" + id
+                + ", tenSanPham='" + tenSanPham + '\''
+                + ", tenNhaCungCap='" + tenNhaCungCap + '\''
+                + ", tenMau='" + tenMau + '\''
+                + ", tenSize='" + tenSize + '\''
+                + ", tenChatLieu='" + tenChatLieu + '\''
+                + ", soLuong=" + soLuong
+                + ", donGia=" + donGia
+                + ", moTa='" + moTa + '\''
+                + ", ngayTao='" + ngayTao + '\''
+                + ", thuongHieu='" + thuongHieu + '\''
+                + ", trangThai=" + trangThai
+                + '}';
     }
-
 
 }

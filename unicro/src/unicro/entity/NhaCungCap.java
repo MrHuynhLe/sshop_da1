@@ -9,7 +9,8 @@ package unicro.entity;
  * @author Admin
  */
 public class NhaCungCap {
-     private int id;
+
+    private int id;
     private String ten;
     private String diaChi;
     private String maNhaCungCap;
@@ -56,5 +57,4 @@ public class NhaCungCap {
         this.maNhaCungCap = maNhaCungCap;
     }
 
-    
 }

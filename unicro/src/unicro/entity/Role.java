@@ -9,6 +9,7 @@ package unicro.entity;
  * @author Admin
  */
 public class Role {
+
     private int id;
     private String name;
     private Boolean active;
@@ -45,6 +46,5 @@ public class Role {
     public void setActive(Boolean active) {
         this.active = active;
     }
-    
-    
+
 }

@@ -11,7 +11,7 @@ import java.util.Date;
  * @author Admin
  */
 public class SanPham {
-    
+
     private int id;
     private String maSP;
     private String tenSP;
@@ -98,7 +98,5 @@ public class SanPham {
     public void setSoLuong(int soLuong) {
         this.soLuong = soLuong;
     }
-    
-    
-    
+
 }

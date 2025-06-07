@@ -114,7 +114,7 @@ public class JPanelSanPham extends javax.swing.JPanel {
         });
 
 
-        // Hiển thị bảng thuộc tính màu sắc mặc định khi mở form
+  
         rbtMauSac.setSelected(true);
         hienThiThuocTinhTrenBang("MAU_SAC");
         selectedTable = "MAU_SAC";
@@ -135,7 +135,7 @@ public class JPanelSanPham extends javax.swing.JPanel {
         AtomicInteger index = new AtomicInteger(1);
         list.forEach(s -> mol.addRow(new Object[]{
             index.getAndIncrement(), s.getMaSP(), s.getTenSP(),
-            s.getSoLuong(),
+       
             s.isTrangThai() ? "Còn hàng" : "Hết hàng"
 
         }));
@@ -148,7 +148,6 @@ public class JPanelSanPham extends javax.swing.JPanel {
         txtTenSP.setText(sp.getTenSP());
         rdoConHang.setSelected(sp.isTrangThai());
         rdoHetHang.setSelected(!sp.isTrangThai());
-//        txtIDSP.setText(sp.getId() + "");
         txtMoTa.setText(sp.getMoTa());
 
     }
@@ -174,25 +173,7 @@ public class JPanelSanPham extends javax.swing.JPanel {
 
     }
 
-//    private void filterAndShowResults() {
-//        String tenSanPham = (String) cbbTen.getSelectedItem();
-//        String mauSac = (String) cbbMauSac1.getSelectedItem();
-//        String trongLuong = (String) cbbTrongLuong1.getSelectedItem();
-//        String doCang = (String) cbbDoCang1.getSelectedItem();
-//        String keyword = txtTimKiem1.getText().trim();
-//
-//        ArrayList<SanPhamChiTietResponse> filteredList = rpspct.getAllSPCT().stream()
-//                .filter(spct
-//                        -> (tenSanPham.equals("Tất cả") || spct.getTenSP().equalsIgnoreCase(tenSanPham))
-//                && (mauSac.equals("Tất cả") || spct.getMauSac().equalsIgnoreCase(mauSac))
-//                && (trongLuong.equals("Tất cả") || spct.getTrongLuong().equalsIgnoreCase(trongLuong))
-//                && (doCang.equals("Tất cả") || spct.getDoCang().equalsIgnoreCase(doCang))
-//                && (keyword.isEmpty() || spct.getTenSP().toLowerCase().contains(keyword.toLowerCase()))
-//                )
-//                .collect(Collectors.toCollection(ArrayList::new));
-//
-//        showSanPhamChiTietSearch(filteredList);
-//    }
+
     private void themDuLieuVaoCombobox(javax.swing.JComboBox<String> comboBox, String tenThuocTinh) {
         Set<String> giaTriDuyNhat = new HashSet<>();
         giaTriDuyNhat.add("Tất cả");
@@ -420,7 +401,7 @@ public class JPanelSanPham extends javax.swing.JPanel {
                 .addComponent(jLabel7)
                 .addGap(12, 12, 12)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(77, 77, 77))
         );
@@ -459,17 +440,17 @@ public class JPanelSanPham extends javax.swing.JPanel {
 
         tblSP.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "STT", "ID Sản Phẩm", "Tên Sản Phẩm", "Số Lượng", "Trạng Thái"
+                "STT", "ID Sản Phẩm", "Tên Sản Phẩm", "Trạng Thái"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -543,7 +524,7 @@ public class JPanelSanPham extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -771,7 +752,7 @@ public class JPanelSanPham extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1152, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(476, 476, 476)
                 .addComponent(jLabel5)
@@ -902,14 +883,7 @@ public class JPanelSanPham extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Tên thuộc tính không được quá 20 ký tự.");
             return;
         }
-        //
-        //        for (int i = 0; i < tblThuocTinh.getRowCount(); i++) {
-            //            String ma = tblThuocTinh.getValueAt(i, 1).toString();
-            //            if (ma.equals(maThuocTinh)) {
-                //                JOptionPane.showMessageDialog(this, "Trùng mã!");
-                //                return;
-                //            }
-            //        }
+ 
 
         try {
             if (!selectedTable.equalsIgnoreCase("NHA_CUNG_CAP")) {
@@ -1026,7 +1000,7 @@ public class JPanelSanPham extends javax.swing.JPanel {
     private javax.swing.JTextField txtTimKiem;
     // End of variables declaration//GEN-END:variables
 private boolean isValidCouponCode(String str) {
-        // Biểu thức chính quy cho phép các ký tự chữ và số
+       
         String regex = "^[$,^,&,*,<,>,|,!,;,:,  ,#,'',+,=,{}]+$";
         return str.matches(regex);
     }

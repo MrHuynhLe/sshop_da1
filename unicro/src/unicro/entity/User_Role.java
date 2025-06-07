@@ -9,13 +9,13 @@ package unicro.entity;
  * @author Admin
  */
 public class User_Role {
+
     private int user_id;
     private int role_id;
 
     public User_Role() {
     }
 
-    
     public User_Role(int user_id, int role_id) {
         this.user_id = user_id;
         this.role_id = role_id;
@@ -36,6 +36,5 @@ public class User_Role {
     public void setRole_id(int role_id) {
         this.role_id = role_id;
     }
-    
-    
+
 }

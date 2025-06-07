@@ -11,6 +11,7 @@ import java.util.Objects;
  * @author Admin
  */
 public class ChatLieu {
+
     private int id;
     private String ten;
     private String maChatLieu;
@@ -47,12 +48,6 @@ public class ChatLieu {
     public void setMaChatLieu(String maChatLieu) {
         this.maChatLieu = maChatLieu;
     }
-
- 
-
- 
-
-    
 
     @Override
     public String toString() {
