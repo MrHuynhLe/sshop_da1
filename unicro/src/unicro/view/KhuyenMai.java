@@ -34,16 +34,7 @@ public class KhuyenMai extends javax.swing.JPanel {
         initComponents();
          cboTrangThai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Đang hoạt động", "Không hoạt động"}));
         fillTable();
-        
-//         setLayout(new BorderLayout()); // hoặc GridBagLayout nếu cần căn chỉnh nâng cao
-//
-//        JPanel content = new JPanel();
-//        content.setLayout(new GridBagLayout()); // Căn giữa
-//
-//        JLabel label = new JLabel("Quản lý Voucher");
-//        content.add(label);
-//
-//        add(content, BorderLayout.NORTH); 
+
 
     }
 

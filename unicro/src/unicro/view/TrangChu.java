@@ -71,7 +71,7 @@ public class TrangChu extends javax.swing.JFrame {
 
         // ⚠️ Đảm bảo các class sau là JPanel, không phải JFrame!
         mainPanel.add(new BanHang(), "BanHang");
-        // mainPanel.add(new SanPhamPanel(), "QLSP"); // nhớ tạo class JPanel
+        mainPanel.add(new JPanelSanPham(), "QLSP"); 
         mainPanel.add(new ThongKe(), "ThongKe");
         mainPanel.add(new KhuyenMai(), "KhuyenMai");
         mainPanel.add(new NguoiDung(), "NguoiDung");

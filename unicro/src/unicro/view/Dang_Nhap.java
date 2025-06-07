@@ -43,47 +43,6 @@ public class Dang_Nhap extends javax.swing.JDialog {
         return true;
     }
 
-//    public Object[] checkLogin() throws SQLException {
-//        String inputUsername = txtTen.getText();
-//       String inputPassword = new String(txtMatKhau.getPassword());
-//        boolean validate = checkValidated();
-//
-//        if (!validate) {
-//            return new Object[]{false, "None"};
-//        }
-//
-//        try (Connection con = DriverManager.getConnection(url, this.username, this.password)) {
-//            String sql = """
-//            SELECT u.fullname, r.name AS role 
-//            FROM users u
-//            JOIN user_roles ur ON u.id = ur.user_id
-//            JOIN roles r ON ur.role_id = r.id
-//            WHERE u.username = ? AND u.password = ?
-//        """;
-//
-//            try (PreparedStatement stmt = con.prepareStatement(sql)) {
-//                stmt.setString(1, inputUsername);
-//                stmt.setString(2, inputPassword);
-//                ResultSet rs = stmt.executeQuery();
-//
-//                if (rs.next()) {
-//                    String fullname = rs.getString("fullname");
-//                    String role = rs.getString("role");
-//                    System.out.println("Logged in: " + fullname + " - Role: " + role);
-//                     
-//                    return new Object[]{true, role};
-//                 
-//                }
-//            }
-//        } catch (Exception e) {
-//             
-//            System.out.println("Lỗi kết nối hoặc truy vấn: " + e.getMessage());
-//           
-//        }
-//
-//        return new Object[]{false, "None"};
-//        
-//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -226,9 +185,9 @@ public class Dang_Nhap extends javax.swing.JDialog {
         String result = User_Service.login(username, password);
         if (result.contains("thành công")) {
             JOptionPane.showMessageDialog(null, result, "Thành công", JOptionPane.INFORMATION_MESSAGE);
-            // Mở giao diện Trang Chủ
+        
             new TrangChu().setVisible(true);
-            dispose(); // Đóng form login
+            dispose(); 
         } else {
             JOptionPane.showMessageDialog(null, result, "Thất bại", JOptionPane.ERROR_MESSAGE);
         }
