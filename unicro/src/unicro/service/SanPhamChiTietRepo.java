@@ -108,7 +108,7 @@ public class SanPhamChiTietRepo {
             ps.setInt(6, spct.getSoLuong());
             ps.setFloat(7, spct.getDonGia());
             ps.setString(8, spct.getMoTa());
-//           ps.setDate(9, new Date(spct.getNgayTao().getTime()));
+          ps.setDate(9, new Date(spct.getNgayTao().getTime()));
             ps.setInt(10, spct.getMaThuongHieu());
             ps.setBoolean(15, spct.isTrangThai());
             ps.setInt(16, spct.getId());

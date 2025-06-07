@@ -4,17 +4,32 @@
  */
 package unicro.view;
 
+import java.awt.image.SampleModel;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import unicro.entity.SanPhamChiTietResponse;
+import unicro.service.SanPhamChiTietRepo;
+
 /**
  *
  * @author Admin
  */
 public class BanHang extends javax.swing.JPanel {
 
+//    private DefaultTableModel model = new DefaultTableModel();
+//    private SanPhamChiTietRepo repo = new SanPhamChiTietRepo() ;
+//    private OrderDetail_Service or = new OrderDetail_Service();
+//    List<OrderDetail_Service>listHd = new ArrayList<>();
+// ArrayList<SanPhamChiTietResponse> list = new ArrayList<>();
     /**
      * Creates new form BanHang
      */
+
     public BanHang() {
         initComponents();
+//        loadDataToTable();
+//        loadDataToOrderTable();
     }
 
     /**
@@ -68,17 +83,17 @@ public class BanHang extends javax.swing.JPanel {
 
         tblHD.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "STT", "Mã HD", "Tên NV", "Tên KH", "Ngày tạo", "Trạng thái"
+                "STT", "Mã HD", "Tên NV", "Ngày tạo", "Trạng thái"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                true, false, false, false, false, false
+                true, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -392,22 +407,22 @@ public class BanHang extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void tblHDMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblHDMouseClicked
-  
         
+
     }//GEN-LAST:event_tblHDMouseClicked
 
     private void btnChonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChonActionPerformed
         // TODO add your handling code here:
-      
+        
     }//GEN-LAST:event_btnChonActionPerformed
 
     private void tblGioHangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblGioHangMouseClicked
-       
+        
     }//GEN-LAST:event_tblGioHangMouseClicked
 
     private void tblSanPhamChiTiet1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSanPhamChiTiet1MouseClicked
         // TODO add your handling code here:
-      
+        
     }//GEN-LAST:event_tblSanPhamChiTiet1MouseClicked
 
     private void btnThanhToanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThanhToanActionPerformed
@@ -449,4 +464,33 @@ public class BanHang extends javax.swing.JPanel {
     private javax.swing.JLabel txtTienThua;
     private javax.swing.JLabel txtTongTien;
     // End of variables declaration//GEN-END:variables
+
+//    void loadDataToTable() {
+//        
+//        model = (DefaultTableModel) tblSanPhamChiTiet1.getModel();
+//        model.setRowCount(0);
+//        list = repo.getAllSPCT();
+//        for (SanPhamChiTietResponse sp : list) {
+//            model.addRow(new Object[]{
+//                    sp.getId(),
+//                    sp.getTenSanPham(),
+//                    sp.getSoLuong(),
+//                    sp.getDonGia(),
+//                    sp.getTenMau(),
+//                    sp.getTenSize(),
+//                    sp.getTenChatLieu(),
+//                    sp.isTrangThai( )? "Còn hàng" :"Hết hàng"
+//                    }
+//                    );
+//        }
+//        
+//        
+//        
+//    }
+//
+//    private void loadDataToOrderTable() {
+//      model = (DefaultTableModel)tblGioHang.getModel();
+//      model.setRowCount(0);
+//      listHd = 
+//    }
 }
