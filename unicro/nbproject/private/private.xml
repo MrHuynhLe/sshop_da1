@@ -3,35 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/entity/User.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/service/SanPhamRepo.java</file>
+            <file>file:/G:/IT/PRO1041/unicro/src/unicro/view/ThongKe.java</file>
+            <file>file:/G:/IT/PRO1041/unicro/src/unicro/view/BanHang.java</file>
+            <file>file:/G:/IT/PRO1041/unicro/src/unicro/view/KhuyenMai.java</file>
             <file>file:/G:/IT/PRO1041/unicro/src/unicro/view/JPanelSanPham.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/service/MauSacRepo.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/entity/OrderDetail.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/entity/Voucher.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/entity/Order.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/entity/User_Role.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/view/TrangChu.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/service/OrderDetail_Service.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/entity/Role.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/entity/SanPham.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/service/ThuocTinhRepo.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/service/SanPhamChiTietRepo.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/service/SizeRepo.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/entity/ThuongHieu.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/entity/SanPhamChiTiet.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/service/User_Service.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/entity/NhaCungCap.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/service/ChatLieuRepo.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/entity/SanPhamChiTietResponse.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/service/ThuongHieuRepo.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/service/Order_Service.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/entity/Color.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/entity/MauSac.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/view/Dang_Nhap.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/view/SanPhamChiTietDialog.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/entity/ChatLieu.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/entity/Size.java</file>
         </group>
     </open-files>
 </project-private>
