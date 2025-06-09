@@ -5,20 +5,20 @@
         <group>
             <file>file:/G:/IT/PRO1041/unicro/src/unicro/entity/SanPhamChiTiet.java</file>
             <file>file:/G:/IT/PRO1041/unicro/src/unicro/view/BanHang.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/service/User_Service.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/service/Voucher_Service.java</file>
             <file>file:/G:/IT/PRO1041/unicro/src/unicro/service/SanPhamRepo.java</file>
             <file>file:/G:/IT/PRO1041/unicro/src/unicro/view/JPanelSanPham.java</file>
             <file>file:/G:/IT/PRO1041/unicro/src/unicro/entity/SanPhamChiTietResponse.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/service/MauSacRepo.java</file>
             <file>file:/G:/IT/PRO1041/unicro/src/unicro/entity/OrderDetail.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/entity/Voucher.java</file>
             <file>file:/G:/IT/PRO1041/unicro/src/unicro/service/Order_Service.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/view/TrangChu.java</file>
+            <file>file:/G:/IT/PRO1041/unicro/src/unicro/view/KhuyenMai.java</file>
             <file>file:/G:/IT/PRO1041/unicro/src/unicro/view/Dang_Nhap.java</file>
+            <file>file:/G:/IT/PRO1041/unicro/src/unicro/entity/SanPham.java</file>
             <file>file:/G:/IT/PRO1041/unicro/src/unicro/service/SanPhamChiTietRepo.java</file>
-            <file>file:/G:/IT/PRO1041/unicro/src/unicro/service/SizeRepo.java</file>
             <file>file:/G:/IT/PRO1041/unicro/src/unicro/view/SanPhamChiTietDialog.java</file>
+            <file>file:/G:/IT/PRO1041/unicro/src/unicro/entity/ChatLieu.java</file>
+            <file>file:/G:/IT/PRO1041/unicro/src/unicro/service/OrderDetailService.java</file>
+            <file>file:/G:/IT/PRO1041/unicro/src/unicro/entity/ThuongHieu.java</file>
+            <file>file:/G:/IT/PRO1041/unicro/src/unicro/service/SanPhamService.java</file>
         </group>
     </open-files>
 </project-private>

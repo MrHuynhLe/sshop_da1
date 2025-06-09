@@ -14,6 +14,7 @@ public class SanPhamChiTiet {
 
     private int id;
     private int idSp;
+     private String maSp;
     private int maNhaCungCap;
     private int maMau;
     private int maSize;
@@ -28,10 +29,10 @@ public class SanPhamChiTiet {
     public SanPhamChiTiet() {
     }
 
-    public SanPhamChiTiet(int id, int idSp, int maNhaCungCap, int maMau, int maSize, int maChatLieu,
-            int soLuong, float donGia, String moTa, Date ngayTao, int maThuongHieu, boolean trangThai) {
+    public SanPhamChiTiet(int id, int idSp, String maSp, int maNhaCungCap, int maMau, int maSize, int maChatLieu, int soLuong, float donGia, String moTa, Date ngayTao, int maThuongHieu, boolean trangThai) {
         this.id = id;
         this.idSp = idSp;
+        this.maSp = maSp;
         this.maNhaCungCap = maNhaCungCap;
         this.maMau = maMau;
         this.maSize = maSize;
@@ -44,8 +45,7 @@ public class SanPhamChiTiet {
         this.trangThai = trangThai;
     }
 
-    public SanPhamChiTiet(int idSp, int maNhaCungCap, int maMau, int maSize, int maChatLieu,
-            int soLuong, float donGia, String moTa, Date ngayTao, int maThuongHieu, boolean trangThai) {
+    public SanPhamChiTiet(int idSp, int maNhaCungCap, int maMau, int maSize, int maChatLieu, int soLuong, float donGia, String moTa, Date ngayTao, int maThuongHieu, boolean trangThai) {
         this.idSp = idSp;
         this.maNhaCungCap = maNhaCungCap;
         this.maMau = maMau;
@@ -59,6 +59,7 @@ public class SanPhamChiTiet {
         this.trangThai = trangThai;
     }
 
+    
     public int getId() {
         return id;
     }
@@ -73,6 +74,14 @@ public class SanPhamChiTiet {
 
     public void setIdSp(int idSp) {
         this.idSp = idSp;
+    }
+
+    public String getMaSp() {
+        return maSp;
+    }
+
+    public void setMaSp(String maSp) {
+        this.maSp = maSp;
     }
 
     public int getMaNhaCungCap() {
@@ -154,22 +163,7 @@ public class SanPhamChiTiet {
     public void setTrangThai(boolean trangThai) {
         this.trangThai = trangThai;
     }
+  
 
-    @Override
-    public String toString() {
-        return "SanPhamChiTiet{"
-                + "id=" + id
-                + ", idSp=" + idSp
-                + ", maNhaCungCap=" + maNhaCungCap
-                + ", maMau=" + maMau
-                + ", maSize=" + maSize
-                + ", maChatLieu=" + maChatLieu
-                + ", soLuong=" + soLuong
-                + ", donGia=" + donGia
-                + ", moTa='" + moTa + '\''
-                + ", ngayTao=" + ngayTao
-                + ", maThuongHieu=" + maThuongHieu
-                + ", trangThai=" + trangThai
-                + '}';
-    }
+  
 }

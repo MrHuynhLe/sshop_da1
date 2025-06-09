@@ -404,8 +404,7 @@ public class SanPhamChiTietDialog extends javax.swing.JDialog {
     private void btnThemSPCTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemSPCTActionPerformed
         // TODO add your handling code here:
         SanPhamChiTiet spct = getFormAddNewProductDetail();
-        //        Integer idSPCT = getSPCTID();
-        //        SanPhamChiTiet sanPhamChiTiet = chiTietRepo.getProductDetailyId(idSPCT);
+    
         if (spct != null) {
             //            if (checkLoopProductDetail(sanPhamChiTiet)) {
                 int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn thêm 1 sản phẩm chi tiết mới?", "Thêm sản phẩm chi tiết mới", JOptionPane.YES_NO_OPTION);
@@ -705,16 +704,19 @@ private void showDataToForm() {
             JOptionPane.showMessageDialog(this, "Chưa có");
             return null;
         }
-
-        
-
+       
+        String maSp;
+        int id;
+ 
         if (txtDescription.getText().length() > 50) {
             JOptionPane.showMessageDialog(this, "Mô tả không được quá 50 ký tự");
             return null;
         }
 
       return new SanPhamChiTiet(
-    this.idsp,           // đây là idSp
+            
+    this.idsp, 
+
     idNhaCungCap,
     mauSac.getId(),
     s.getId(),
@@ -728,7 +730,7 @@ private void showDataToForm() {
 );
 
     }
-    //Hàm này có tác dụng format lại tiền
+  
 
     private String formatCash(Double price) {
         try {
@@ -743,7 +745,6 @@ private void showDataToForm() {
 
     }
 
-    //Hàm này có tác dụng format lại tiền
     private String formatCash(float price) {
         try {
             NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));

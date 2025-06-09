@@ -536,16 +536,17 @@ public class SanPhamChiTietRepo {
                 SanPhamChiTiet spct = new SanPhamChiTiet(
                         rs.getInt(1),
                         rs.getInt(2),
-                        rs.getInt(3),
+                        rs.getString(3),
                         rs.getInt(4),
                         rs.getInt(5),
                         rs.getInt(6),
                         rs.getInt(7),
-                        rs.getFloat(8),
-                        rs.getString(9),
-                        rs.getDate(10),
-                        rs.getInt(11),
-                        rs.getBoolean(12));
+                        rs.getInt(8),
+                        rs.getFloat(9),
+                        rs.getString(10),
+                        rs.getDate(11),
+                        rs.getInt(12),
+                        rs.getBoolean(13));
                 return spct;
             }
         } catch (SQLException e) {

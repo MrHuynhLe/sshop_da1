@@ -17,17 +17,39 @@ public class OrderDetail {
     private int product_detail_id;
     private BigDecimal price;
     private int number_of_product;
+    private String tenSp;
+    private BigDecimal thanhTien;
+   
 
     public OrderDetail() {
     }
 
-    public OrderDetail(int id, int order_id, int product_detail_id, BigDecimal price, int number_of_product) {
+    public OrderDetail(int id, int order_id, int product_detail_id, BigDecimal price, int number_of_product, String tenSp, BigDecimal thanhTien) {
         this.id = id;
         this.order_id = order_id;
         this.product_detail_id = product_detail_id;
         this.price = price;
         this.number_of_product = number_of_product;
+        this.tenSp = tenSp;
+        this.thanhTien = thanhTien;
     }
+
+    public String getTenSp() {
+        return tenSp;
+    }
+
+    public void setTenSp(String tenSp) {
+        this.tenSp = tenSp;
+    }
+
+    public BigDecimal getThanhTien() {
+        return thanhTien;
+    }
+
+    public void setThanhTien(BigDecimal thanhTien) {
+        this.thanhTien = thanhTien;
+    }
+
 
     public int getId() {
         return id;
