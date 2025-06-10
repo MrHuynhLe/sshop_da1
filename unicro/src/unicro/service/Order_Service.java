@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import unicro.entity.Order;
 import java.sql.*;
+import unicro.entity.GioHang;
 
 /**
  *
@@ -119,48 +120,133 @@ public class Order_Service {
 
         return total;
     }
-    
-   public int taoHoaDon(int userId, Integer voucherId, BigDecimal tongTien, String status, String paymentMethod) {
-    String sql = "INSERT INTO orders (user_id, voucher_id, total, status, payment_method) VALUES (?, ?, ?, ?, ?) RETURNING id";
-    try (Connection conn = DriverManager.getConnection(url,username,password);
-         PreparedStatement ps = conn.prepareStatement(sql)) {
 
-        ps.setInt(1, userId);
-        if (voucherId == null) {
-            ps.setNull(2, Types.INTEGER);
-        } else {
-            ps.setInt(2, voucherId);
+    public int taoHoaDon(int userId, Integer voucherId, BigDecimal tongTien, String status, String paymentMethod) {
+        String sql = "INSERT INTO orders (user_id, voucher_id, total, status, payment_method) VALUES (?, ?, ?, ?, ?) RETURNING id";
+        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            if (voucherId == null) {
+                ps.setNull(2, Types.INTEGER);
+            } else {
+                ps.setInt(2, voucherId);
+            }
+            ps.setBigDecimal(3, tongTien);
+            ps.setString(4, status);
+            ps.setString(5, paymentMethod);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        ps.setBigDecimal(3, tongTien);
-        ps.setString(4, status); 
-        ps.setString(5, paymentMethod);
+        return -1;
+    }
 
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()) {
-            return rs.getInt("id");
+    public boolean themChiTietHoaDon(int orderId, int productDetailId, BigDecimal price, int quantity) {
+        String sql = "INSERT INTO order_details (order_id, product_detail_id, price, number_of_product) VALUES (?, ?, ?, ?)";
+        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, orderId);
+            ps.setInt(2, productDetailId);
+            ps.setBigDecimal(3, price);
+            ps.setInt(4, quantity);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public int createOrder(int userId, Integer voucherId, String note,
+            String paymentMethod, String status, List<GioHang> gh) throws SQLException {
+
+        double total = 0;
+        for (GioHang d : gh) {
+            total += d.getGiaBan() * d.getSoLuong();
         }
 
-    } catch (Exception e) {
-        e.printStackTrace();
+        String insertOrderSql = "INSERT INTO orders (user_id, voucher_id, note, total, payment_method, status) VALUES (?, ?, ?, ?, ?, ?) RETURNING id";
+        String insertDetailSql = "INSERT INTO order_details (order_id, product_detail_id, price, number_of_product) VALUES (?, ?, ?, ?)";
+
+        Connection conn = DriverManager.getConnection(
+                "jdbc:postgresql://localhost:5432/da_qlbh", "postgres", "password");
+
+        conn.setAutoCommit(false);
+        try (
+                PreparedStatement orderStmt = conn.prepareStatement(insertOrderSql); PreparedStatement detailStmt = conn.prepareStatement(insertDetailSql)) {
+            orderStmt.setInt(1, userId);
+            if (voucherId != null) {
+                orderStmt.setInt(2, voucherId);
+            } else {
+                orderStmt.setNull(2, Types.INTEGER);
+            }
+            orderStmt.setString(3, note);
+            orderStmt.setDouble(4, total);
+            orderStmt.setString(5, paymentMethod);
+            orderStmt.setString(6, status);
+
+            ResultSet rs = orderStmt.executeQuery();
+            int orderId = -1;
+            if (rs.next()) {
+                orderId = rs.getInt("id");
+            }
+           
+           
+
+            String getProductDetailIdSql = "SELECT ctsp.id "
+                    + "FROM san_pham_chi_tiet ctsp "
+                    + "JOIN san_pham sp ON ctsp.idsp = sp.id "
+                    + "WHERE sp.ma_san_pham = ?";
+
+            PreparedStatement getIdStmt = conn.prepareStatement(getProductDetailIdSql);
+
+            for (GioHang d : gh) {
+                getIdStmt.setString(1, d.getMaSPCT()); 
+                ResultSet rsId = getIdStmt.executeQuery();
+                int productDetailId = -1;
+
+                if (rsId.next()) {
+                    productDetailId = rsId.getInt("id");
+                } else {
+                    throw new SQLException("Không tìm thấy chi tiết sản phẩm với mã: " + d.getMaSPCT());
+                }
+
+                detailStmt.setInt(1, orderId);
+                detailStmt.setInt(2, productDetailId);
+                detailStmt.setDouble(3, d.getGiaBan());
+                detailStmt.setInt(4, d.getSoLuong());
+                detailStmt.addBatch();
+            }
+            conn.commit();
+            return orderId;
+        } catch (SQLException e) {
+            conn.rollback();
+            throw e;
+        } finally {
+            conn.setAutoCommit(true);
+        }
     }
-    return -1;
-}
-   
-   public boolean themChiTietHoaDon(int orderId, int productDetailId, BigDecimal price, int quantity) {
-    String sql = "INSERT INTO order_details (order_id, product_detail_id, price, number_of_product) VALUES (?, ?, ?, ?)";
-    try (Connection conn = DriverManager.getConnection(url,username,password);
-         PreparedStatement ps = conn.prepareStatement(sql)) {
 
-        ps.setInt(1, orderId);
-        ps.setInt(2, productDetailId);
-        ps.setBigDecimal(3, price);
-        ps.setInt(4, quantity);
+    public int getIdChiTietSanPhamTuMa(String maSP) throws SQLException {
+            String query = "SELECT ct.id "
+                    + "from san_pham_chi_tiet ct "
+                    + "JOIN san_pham sp ON ct.idsp = sp.id "
+                    + "WHERE sp.ma_san_pham = ?";
+        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement stmt = conn.prepareStatement(query)) {
 
-        return ps.executeUpdate() > 0;
-
-    } catch (Exception e) {
-        e.printStackTrace();
-        return false;
+            stmt.setString(1, maSP);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id"); 
+                }
+            }
+        }
+        return -1; 
     }
-}
 }

@@ -176,7 +176,7 @@ public class Voucher_Service {
             giam = voucher.getDiscount_value();
         }
 
-        // Nếu có giới hạn max giảm
+       
         if (voucher.getMax_purchase_amount()!= null && giam.compareTo(voucher.getMax_purchase_amount()) > 0) {
             giam = voucher.getMax_purchase_amount();
         }

@@ -9,7 +9,7 @@ package unicro.entity;
  * @author Admin
  */
 public class Session {
-     public static int currentUserId;
+     public static int currentUserId =-1;
     public static String currentUsername;
     public static String currentFullname;
      public static String currentRole;

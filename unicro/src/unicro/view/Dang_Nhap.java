@@ -189,21 +189,7 @@ private User_Service usr = new User_Service();
         }else{
               JOptionPane.showMessageDialog(null, result.message);
           }
-//        if (username.isEmpty() || password.isEmpty()) {
-//            JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin!", "Thông báo", JOptionPane.WARNING_MESSAGE);
-//            return;
-//        }
-//
-//        String result = User_Service.login(username, password);
-//        if (result.contains("thành công")) {
-//            JOptionPane.showMessageDialog(null, result, "Thành công", JOptionPane.INFORMATION_MESSAGE);
-//        
-//            new TrangChu().setVisible(true);
-//            dispose(); 
-//        } else {
-//            JOptionPane.showMessageDialog(null, result, "Thất bại", JOptionPane.ERROR_MESSAGE);
-//        }
-// 
+//       
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnThoatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThoatActionPerformed

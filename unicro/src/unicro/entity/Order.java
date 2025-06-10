@@ -37,6 +37,14 @@ public class Order {
         this.status = status;
     }
 
+    public Order(int id, int user_id, Date order_date, String status) {
+        this.id = id;
+        this.user_id = user_id;
+        this.order_date = order_date;
+        this.status = status;
+    }
+
+    
     public int getId() {
         return id;
     }

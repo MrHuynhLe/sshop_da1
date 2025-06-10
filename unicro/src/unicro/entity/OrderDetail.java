@@ -19,7 +19,16 @@ public class OrderDetail {
     private int number_of_product;
     private String tenSp;
     private BigDecimal thanhTien;
-   
+
+    public OrderDetail(int order_id, int product_detail_id, BigDecimal price, int number_of_product) {
+        this.order_id = order_id;
+        this.product_detail_id = product_detail_id;
+        this.price = price;
+        this.number_of_product = number_of_product;
+    }
+
+
+    
 
     public OrderDetail() {
     }
