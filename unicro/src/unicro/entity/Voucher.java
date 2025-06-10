@@ -41,6 +41,18 @@ public class Voucher {
         this.active = active;
     }
 
+    public Voucher(int id, String code, String discount_type, BigDecimal discount_value, BigDecimal max_purchase_amount, BigDecimal min_purchase_amount, Boolean active) {
+        this.id = id;
+        this.code = code;
+        this.discount_type = discount_type;
+        this.discount_value = discount_value;
+        this.max_purchase_amount = max_purchase_amount;
+        this.min_purchase_amount = min_purchase_amount;
+        this.active = active;
+    }
+
+
+
     public int getId() {
         return id;
     }
@@ -121,4 +133,10 @@ public class Voucher {
         this.active = active;
     }
 
+      @Override
+    public String toString() {
+        return code + " (" +
+               (discount_type.equalsIgnoreCase("percentage") ? discount_value + "%" : "-" + discount_value + "đ") +
+               ")";
+    }
 }

@@ -4,6 +4,7 @@
  */
 package unicro.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ public class Voucher_Service {
 
         try (Connection conn = DriverManager.getConnection(url, username, password);
                 PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+                 
 
             while (rs.next()) {
                 Voucher v = new Voucher();
@@ -115,4 +117,70 @@ public class Voucher_Service {
         return false;
     }
 }
+    public Voucher getVoucherByCode(String code) {
+    try (Connection conn = DriverManager.getConnection(url,username,password)) {
+        String sql = "SELECT * FROM vouchers WHERE code = ? AND active = true";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, code);
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            return new Voucher(
+                rs.getInt("id"),
+                rs.getString("code"),
+                rs.getString("discount_type"),
+                rs.getBigDecimal("discount_value"),
+               
+                rs.getBigDecimal("min_purchase_amount"),
+                rs.getBigDecimal("max_purchase_amount"),
+                rs.getBoolean("active")
+            );
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return null;
+}
+    
+     public List<Voucher> getAvailableVouchers(BigDecimal tongTien) {
+        List<Voucher> vouchers = new ArrayList<>();
+        String sql = "SELECT * FROM vouchers WHERE active = true AND CURRENT_DATE BETWEEN start_date AND end_date AND min_purchase_amount <= ?";
+
+        try (Connection conn = DriverManager.getConnection(url,username,password);PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setBigDecimal(1, tongTien);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Voucher v = new Voucher();
+                v.setId(rs.getInt("id"));
+                v.setCode(rs.getString("code"));
+                v.setDiscount_type(rs.getString("discount_type"));
+                v.setDiscount_value(rs.getBigDecimal("discount_value"));
+                v.setMin_purchase_amount(rs.getBigDecimal("min_purchase_amount"));
+                v.setMax_purchase_amount(rs.getBigDecimal("max_purchase_amount"));
+                vouchers.add(v);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return vouchers;
+    }
+     
+      public BigDecimal applyVoucher(Voucher voucher, BigDecimal tongTien) {
+        if (voucher == null) return tongTien;
+
+        BigDecimal giam = BigDecimal.ZERO;
+        if (voucher.getDiscount_type().equalsIgnoreCase("percent")) {
+            giam = tongTien.multiply(voucher.getDiscount_value()).divide(new BigDecimal(100));
+        } else if (voucher.getDiscount_type().equalsIgnoreCase("amount")) {
+            giam = voucher.getDiscount_value();
+        }
+
+        // Nếu có giới hạn max giảm
+        if (voucher.getMax_purchase_amount()!= null && giam.compareTo(voucher.getMax_purchase_amount()) > 0) {
+            giam = voucher.getMax_purchase_amount();
+        }
+
+        return tongTien.subtract(giam);
+    }
 }

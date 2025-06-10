@@ -119,4 +119,48 @@ public class Order_Service {
 
         return total;
     }
+    
+   public int taoHoaDon(int userId, Integer voucherId, BigDecimal tongTien, String status, String paymentMethod) {
+    String sql = "INSERT INTO orders (user_id, voucher_id, total, status, payment_method) VALUES (?, ?, ?, ?, ?) RETURNING id";
+    try (Connection conn = DriverManager.getConnection(url,username,password);
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setInt(1, userId);
+        if (voucherId == null) {
+            ps.setNull(2, Types.INTEGER);
+        } else {
+            ps.setInt(2, voucherId);
+        }
+        ps.setBigDecimal(3, tongTien);
+        ps.setString(4, status); 
+        ps.setString(5, paymentMethod);
+
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getInt("id");
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return -1;
+}
+   
+   public boolean themChiTietHoaDon(int orderId, int productDetailId, BigDecimal price, int quantity) {
+    String sql = "INSERT INTO order_details (order_id, product_detail_id, price, number_of_product) VALUES (?, ?, ?, ?)";
+    try (Connection conn = DriverManager.getConnection(url,username,password);
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setInt(1, orderId);
+        ps.setInt(2, productDetailId);
+        ps.setBigDecimal(3, price);
+        ps.setInt(4, quantity);
+
+        return ps.executeUpdate() > 0;
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    }
+}
 }

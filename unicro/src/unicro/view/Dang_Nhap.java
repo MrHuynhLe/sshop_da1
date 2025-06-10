@@ -6,6 +6,9 @@ package unicro.view;
 
 import java.sql.*;
 import javax.swing.JOptionPane;
+import unicro.entity.LoginResult;
+import unicro.entity.Session;
+import unicro.entity.User;
 import unicro.service.User_Service;
 
 /**
@@ -13,7 +16,7 @@ import unicro.service.User_Service;
  * @author Admin
  */
 public class Dang_Nhap extends javax.swing.JDialog {
-
+private User_Service usr = new User_Service();
     private final String url = "jdbc:postgresql://localhost:5432/vn_qlbh";
     private final String username = "postgres";
     private final String password = "password";
@@ -173,25 +176,34 @@ public class Dang_Nhap extends javax.swing.JDialog {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         // TODO add your handling code here:
-       
-        String username = txtTen.getText().trim();
+          String username = txtTen.getText().trim();
         String password = new String(txtMatKhau.getPassword());
-
-        if (username.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin!", "Thông báo", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        String result = User_Service.login(username, password);
-        if (result.contains("thành công")) {
-            JOptionPane.showMessageDialog(null, result, "Thành công", JOptionPane.INFORMATION_MESSAGE);
-        
-            new TrangChu().setVisible(true);
-            dispose(); 
-        } else {
-            JOptionPane.showMessageDialog(null, result, "Thất bại", JOptionPane.ERROR_MESSAGE);
-        }
-    
+        LoginResult result = usr.login(username, password);
+          if (result.success) {
+            Session.currentUserId = result.userId;
+            Session.currentFullname = result.fullName;
+            Session.currentRole = result.role;
+            JOptionPane.showMessageDialog(null, result.message + "(Vai trò:)"+ result.role+")");
+             new TrangChu().setVisible(true);
+           dispose();
+        }else{
+              JOptionPane.showMessageDialog(null, result.message);
+          }
+//        if (username.isEmpty() || password.isEmpty()) {
+//            JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+//            return;
+//        }
+//
+//        String result = User_Service.login(username, password);
+//        if (result.contains("thành công")) {
+//            JOptionPane.showMessageDialog(null, result, "Thành công", JOptionPane.INFORMATION_MESSAGE);
+//        
+//            new TrangChu().setVisible(true);
+//            dispose(); 
+//        } else {
+//            JOptionPane.showMessageDialog(null, result, "Thất bại", JOptionPane.ERROR_MESSAGE);
+//        }
+// 
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnThoatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThoatActionPerformed
