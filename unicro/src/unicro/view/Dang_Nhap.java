@@ -16,7 +16,8 @@ import unicro.service.User_Service;
  * @author Admin
  */
 public class Dang_Nhap extends javax.swing.JDialog {
-private User_Service usr = new User_Service();
+
+    private User_Service usr = new User_Service();
     private final String url = "jdbc:postgresql://localhost:5432/vn_qlbh";
     private final String username = "postgres";
     private final String password = "password";
@@ -29,7 +30,6 @@ private User_Service usr = new User_Service();
 
         initComponents();
         setLocationRelativeTo(null);
-        //setDefaultCloseOperation(Main.DO_NOTHING_ON_CLOSE);
     }
 
     private boolean checkValidated() {
@@ -45,7 +45,6 @@ private User_Service usr = new User_Service();
         }
         return true;
     }
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -176,24 +175,23 @@ private User_Service usr = new User_Service();
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         // TODO add your handling code here:
-          String username = txtTen.getText().trim();
+        String username = txtTen.getText().trim();
         String password = new String(txtMatKhau.getPassword());
         LoginResult result = usr.login(username, password);
-          if (result.success) {
+        if (result.success) {
             Session.currentUserId = result.userId;
             Session.currentFullname = result.fullName;
             Session.currentRole = result.role;
-            JOptionPane.showMessageDialog(null, result.message + "(Vai trò:)"+ result.role+")");
-             new TrangChu().setVisible(true);
-           dispose();
-        }else{
-              JOptionPane.showMessageDialog(null, result.message);
-          }
-//       
+            JOptionPane.showMessageDialog(null, result.message + "(Vai trò:)" + result.role + ")");
+            new TrangChu().setVisible(true);
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(null, result.message);
+        }
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnThoatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThoatActionPerformed
-btnThoat.addActionListener(e -> System.exit(0));        // TODO add your handling code here:
+        btnThoat.addActionListener(e -> System.exit(0));        // TODO add your handling code here:
     }//GEN-LAST:event_btnThoatActionPerformed
 
     /**

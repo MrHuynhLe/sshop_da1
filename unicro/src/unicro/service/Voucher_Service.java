@@ -86,7 +86,7 @@ public class Voucher_Service {
             ps.setDate(4, java.sql.Date.valueOf(v.getStart_date()));
             ps.setDate(5, java.sql.Date.valueOf(v.getEnd_date()));
             ps.setTimestamp(6, Timestamp.valueOf(v.getCreated_at()));
-            ps.setBoolean(7, v.getActive()); 
+            ps.setBoolean(7, v.getActive());
 
             int rows = ps.executeUpdate();
             return rows > 0;

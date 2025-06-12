@@ -34,24 +34,23 @@ public class SanPhamChiTietDialog extends javax.swing.JDialog {
     /**
      * Creates new form SanPhamChiTietDialog
      */
-     SanPhamChiTietRepo chiTietRepo = new SanPhamChiTietRepo();
+    SanPhamChiTietRepo chiTietRepo = new SanPhamChiTietRepo();
     ThuocTinhRepo thuocTinhRepo = new ThuocTinhRepo();
 
     private Integer idsp = 0;
     private Integer idSP;
 
-   public SanPhamChiTietDialog(Frame parent, boolean modal, Integer idSP, String tenSP) {
+    public SanPhamChiTietDialog(Frame parent, boolean modal, Integer idSP, String tenSP) {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(null);
 
-       
         this.idsp = idSP;
         this.tblProductDetail.setRowHeight(25);
         this.loadDataToTable(chiTietRepo.getProductDetailByIdProduct(idSP));
         cbbProductName.addItem(tenSP);
         lbl.setText("Các sản phẩm chi tiết của: " + tenSP);
-        
+
         this.loadDataToCombobox(cbbThuongHieu, thuocTinhRepo.getTH());
         this.loadDataToCombobox(cbbSize, thuocTinhRepo.getSize());
         this.loadDataToCombobox(cbbChatLieu, thuocTinhRepo.getCL());
@@ -405,16 +404,16 @@ public class SanPhamChiTietDialog extends javax.swing.JDialog {
     private void btnThemSPCTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemSPCTActionPerformed
         // TODO add your handling code here:
         SanPhamChiTiet spct = getFormAddNewProductDetail();
-    
+
         if (spct != null) {
             //            if (checkLoopProductDetail(sanPhamChiTiet)) {
-                int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn thêm 1 sản phẩm chi tiết mới?", "Thêm sản phẩm chi tiết mới", JOptionPane.YES_NO_OPTION);
-                if (confirm == JOptionPane.YES_OPTION) {
-                    System.out.println(getFormAddNewProductDetail());
-                    chiTietRepo.creatNewProductDetail(spct);
-                    loadDataToTable(chiTietRepo.getProductDetailByIdProduct(this.idsp));
-                }
-                //            }
+            int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn thêm 1 sản phẩm chi tiết mới?", "Thêm sản phẩm chi tiết mới", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                System.out.println(getFormAddNewProductDetail());
+                chiTietRepo.creatNewProductDetail(spct);
+                loadDataToTable(chiTietRepo.getProductDetailByIdProduct(this.idsp));
+            }
+            //            }
 
         }
     }//GEN-LAST:event_btnThemSPCTActionPerformed
@@ -444,7 +443,7 @@ public class SanPhamChiTietDialog extends javax.swing.JDialog {
         }
 
     }//GEN-LAST:event_btnSuaSPCTActionPerformed
-private Integer getSPCTID() {
+    private Integer getSPCTID() {
         if (tblProductDetail.getSelectedRow() >= 0) {
             Integer idSPCT = Integer.valueOf(tblProductDetail.getValueAt(tblProductDetail.getSelectedRow(), 1).toString());
             return idSPCT;
@@ -462,8 +461,8 @@ private Integer getSPCTID() {
                 return true;
             }
             if (spct.getIdSp() == spct2.getIdSp()
-                    && spct.getMaSize()== spct2.getMaSize()
-                    && spct.getMaChatLieu()== spct2.getMaChatLieu()
+                    && spct.getMaSize() == spct2.getMaSize()
+                    && spct.getMaChatLieu() == spct2.getMaChatLieu()
                     && spct.getMaThuongHieu() == spct2.getMaThuongHieu()
                     && spct.getMaMau() == spct2.getMaMau()) {
                 JOptionPane.showMessageDialog(this, "Sản phẩm chi tiết này đã tồn tại");
@@ -481,8 +480,8 @@ private Integer getSPCTID() {
                 return true;
             }
             if (spct.getIdSp() == spct2.getIdSp()
-                    && spct.getMaSize()== spct2.getMaSize()
-                    && spct.getMaChatLieu()== spct2.getMaChatLieu()
+                    && spct.getMaSize() == spct2.getMaSize()
+                    && spct.getMaChatLieu() == spct2.getMaChatLieu()
                     && spct.getMaThuongHieu() == spct2.getMaThuongHieu()
                     && spct.getMaMau() == spct2.getMaMau()) {
                 JOptionPane.showMessageDialog(this, "Sản phẩm chi tiết này đã tồn tại");
@@ -492,6 +491,7 @@ private Integer getSPCTID() {
         return true;
 
     }
+
     /**
      * @param args the command line arguments
      */
@@ -565,9 +565,9 @@ private Integer getSPCTID() {
     // End of variables declaration//GEN-END:variables
 private void showDataToForm() {
         Integer idSPCT = getSPCTID();
-       SanPhamChiTietResponse sanPhamChiTietResponse = chiTietRepo.getProductDetailResponseById(idSPCT);
+        SanPhamChiTietResponse sanPhamChiTietResponse = chiTietRepo.getProductDetailResponseById(idSPCT);
         SanPhamChiTiet spct = chiTietRepo.getProductDetailyId(idSPCT);
-        if(spct == null){
+        if (spct == null) {
             System.out.println("Không tìm thấy sản phẩm chi tiết " + idSPCT);
             return;
         }
@@ -588,30 +588,28 @@ private void showDataToForm() {
 
         showDataToCbb(thuocTinhRepo.getSize(), cbbSize, spct);
         showDataToCbb(thuocTinhRepo.getCL(), cbbChatLieu, spct);
- 
+
         showDataToCbb(thuocTinhRepo.getTH(), cbbThuongHieu, spct);
 
     }
 
-
- 
-  void showDataToCbb(List<?> listObj, JComboBox cbb, SanPhamChiTiet spct) {
+    void showDataToCbb(List<?> listObj, JComboBox cbb, SanPhamChiTiet spct) {
         for (var obj : listObj) {
 
             if (obj instanceof Size s) {
-                if (spct.getMaSize()== s.getId()) {
+                if (spct.getMaSize() == s.getId()) {
                     cbb.setSelectedItem(obj);
                 }
             }
 
             if (obj instanceof ThuongHieu th) {
-                if (spct.getMaThuongHieu()== th.getId()) {
+                if (spct.getMaThuongHieu() == th.getId()) {
                     cbb.setSelectedItem(obj);
                 }
             }
 
             if (obj instanceof ChatLieu cl) {
-                if (spct.getMaChatLieu()== cl.getId()) {
+                if (spct.getMaChatLieu() == cl.getId()) {
                     cbb.setSelectedItem(obj);
                 }
             }
@@ -622,31 +620,30 @@ private void showDataToForm() {
             }
         }
     }
-  
-   private void loadDataToTable(ArrayList<SanPhamChiTietResponse> list) {
-    DefaultTableModel model = (DefaultTableModel) tblProductDetail.getModel();
-    model.setRowCount(0);
-    AtomicInteger index = new AtomicInteger(1);
 
-    list.forEach(spct -> {
-        model.addRow(new Object[]{
-            index.getAndIncrement(),
-            spct.getId(),
-            spct.getMaSp(),        
-            spct.getTenNhaCungCap(),   
-            spct.getTenMau(),        
-            spct.getTenSize(),          
-            spct.getTenChatLieu(),     
-            spct.getThuongHieu(),   
-            spct.getSoLuong(),
-            formatCash(spct.getDonGia()),
-            spct.getMoTa(),
-            spct.getNgayTao(),
-            spct.isTrangThai() ? "Ngừng bán" : "Đang bán"
+    private void loadDataToTable(ArrayList<SanPhamChiTietResponse> list) {
+        DefaultTableModel model = (DefaultTableModel) tblProductDetail.getModel();
+        model.setRowCount(0);
+        AtomicInteger index = new AtomicInteger(1);
+
+        list.forEach(spct -> {
+            model.addRow(new Object[]{
+                index.getAndIncrement(),
+                spct.getId(),
+                spct.getMaSp(),
+                spct.getTenNhaCungCap(),
+                spct.getTenMau(),
+                spct.getTenSize(),
+                spct.getTenChatLieu(),
+                spct.getThuongHieu(),
+                spct.getSoLuong(),
+                formatCash(spct.getDonGia()),
+                spct.getMoTa(),
+                spct.getNgayTao(),
+                spct.isTrangThai() ? "Ngừng bán" : "Đang bán"
+            });
         });
-    });
-}
-
+    }
 
     private void loadDataToCombobox(JComboBox cbb, List<?> list) {
         DefaultComboBoxModel cmodel = (DefaultComboBoxModel) cbb.getModel();
@@ -705,33 +702,30 @@ private void showDataToForm() {
             JOptionPane.showMessageDialog(this, "Chưa có");
             return null;
         }
-       
+
         String maSp;
         int id;
- 
+
         if (txtDescription.getText().length() > 50) {
             JOptionPane.showMessageDialog(this, "Mô tả không được quá 50 ký tự");
             return null;
         }
 
-      return new SanPhamChiTiet(
-            
-    this.idsp, 
-
-    idNhaCungCap,
-    mauSac.getId(),
-    s.getId(),
-    cl.getId(),
-    soLuong,
-    donGia,
-    txtDescription.getText(),
-    new Date(),
-    th.getId(),
-    false
-);
+        return new SanPhamChiTiet(
+                this.idsp,
+                idNhaCungCap,
+                mauSac.getId(),
+                s.getId(),
+                cl.getId(),
+                soLuong,
+                donGia,
+                txtDescription.getText(),
+                new Date(),
+                th.getId(),
+                false
+        );
 
     }
-  
 
     private String formatCash(Double price) {
         try {

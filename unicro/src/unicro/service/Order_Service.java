@@ -79,7 +79,7 @@ public class Order_Service {
     }
 
     public BigDecimal getTongDoanhThu(Date fromDate, Date toDate) {
-        String sql = "SELECT SUM(total) AS total_revenue FROM orders WHERE order_date BETWEEN ? AND ? AND status like 'Completed'";
+        String sql = "SELECT SUM(total) AS total_revenue FROM orders WHERE order_date BETWEEN ? AND ? AND status like 'Đã thanh toán'";
         BigDecimal total = BigDecimal.ZERO;
 
         try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
@@ -198,8 +198,6 @@ public class Order_Service {
             if (rs.next()) {
                 orderId = rs.getInt("id");
             }
-           
-           
 
             String getProductDetailIdSql = "SELECT ctsp.id "
                     + "FROM san_pham_chi_tiet ctsp "
@@ -209,7 +207,7 @@ public class Order_Service {
             PreparedStatement getIdStmt = conn.prepareStatement(getProductDetailIdSql);
 
             for (GioHang d : gh) {
-                getIdStmt.setString(1, d.getMaSPCT()); 
+                getIdStmt.setString(1, d.getMaSPCT());
                 ResultSet rsId = getIdStmt.executeQuery();
                 int productDetailId = -1;
 
@@ -236,31 +234,30 @@ public class Order_Service {
     }
 
     public int getIdChiTietSanPhamTuMa(String maSP) throws SQLException {
-            String query = "SELECT ct.id "
-                    + "from san_pham_chi_tiet ct "
-                    + "JOIN san_pham sp ON ct.idsp = sp.id "
-                    + "WHERE sp.ma_san_pham = ?";
+        String query = "SELECT ct.id "
+                + "from san_pham_chi_tiet ct "
+                + "JOIN san_pham sp ON ct.idsp = sp.id "
+                + "WHERE sp.ma_san_pham = ?";
         try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, maSP);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getInt("id"); 
+                    return rs.getInt("id");
                 }
             }
         }
-        return -1; 
+        return -1;
     }
-    
+
     public boolean capNhatHoaDon(int orderId, Integer voucherId, BigDecimal tongTien,
-                                 String paymentMethod, String note) throws SQLException {
+            String paymentMethod, String note) throws SQLException {
 
         String sql = "UPDATE orders SET voucher_id = ?, total = ?, payment_method = ?, "
-                   + "note = ?, status = 'Đã thanh toán', order_date = CURRENT_TIMESTAMP "
-                   + "WHERE id = ?";
+                + "note = ?, status = 'Đã thanh toán', order_date = CURRENT_TIMESTAMP "
+                + "WHERE id = ?";
 
-        try (Connection conn = DriverManager.getConnection(url,username,password);
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             if (voucherId != null) {
                 ps.setInt(1, voucherId);
@@ -276,21 +273,21 @@ public class Order_Service {
             return ps.executeUpdate() > 0;
         }
     }
-public void capNhatSoLuongSanPhamSauKhiDatHang(List<OrderDetail> chiTietDonHang) {
-    String sql = "UPDATE san_pham_chi_tiet SET so_luong = so_luong - ? WHERE id = ?";
 
-    try (Connection conn = DriverManager.getConnection(url,username,password);
-         PreparedStatement ps = conn.prepareStatement(sql)) {
+    public void capNhatSoLuongSanPhamSauKhiDatHang(List<OrderDetail> chiTietDonHang) {
+        String sql = "UPDATE san_pham_chi_tiet SET so_luong = so_luong - ? WHERE id = ?";
 
-        for (OrderDetail ct : chiTietDonHang) {
-            ps.setInt(1, ct.getNumber_of_product()); 
-            ps.setInt(2, ct.getProduct_detail_id()); 
-            ps.addBatch(); 
+        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            for (OrderDetail ct : chiTietDonHang) {
+                ps.setInt(1, ct.getNumber_of_product());
+                ps.setInt(2, ct.getProduct_detail_id());
+                ps.addBatch();
+            }
+
+            ps.executeBatch();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        ps.executeBatch(); // thực hiện cập nhật hàng loạt
-    } catch (Exception e) {
-        e.printStackTrace();
     }
-}
 }

@@ -33,16 +33,11 @@ import java.util.*;
  * @author Admin
  */
 public class JPanelSanPham extends javax.swing.JPanel {
- private SanPhamRepo rp = new SanPhamRepo();
-    private DefaultTableModel mol = new DefaultTableModel();
 
-    ////spct
-    
+    private SanPhamRepo rp = new SanPhamRepo();
+    private DefaultTableModel mol = new DefaultTableModel();
     private SanPhamChiTietRepo rpspct = new SanPhamChiTietRepo();
     private DefaultTableModel molspct = new DefaultTableModel();
-    ////San Pham chi tiet////
-
-    ////thuoc tinh
     private ThuocTinhRepo thuocTinhRepo = new ThuocTinhRepo();
     private DefaultTableModel model;
     private String selectedTable;
@@ -53,27 +48,21 @@ public class JPanelSanPham extends javax.swing.JPanel {
      */
     public JPanelSanPham() {
         initComponents();
-           this.showDataTableSP(rp.getAll());
-
-//        this.showDataTable(rpspct.getAllSPCT());
-       
+        this.showDataTableSP(rp.getAll());
         tblSP.setRowHeight(25);
         tblSP.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblSPMouseClicked(evt);
             }
         });
-
         model = new DefaultTableModel(new String[]{"STT", "Mã Thuộc Tính", "Tên Thuộc Tính",}, 0);
         tblThuocTinh.setModel(model);
-
         ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(rbtMauSac);
         buttonGroup.add(rbtSize);
         buttonGroup.add(rbtNhaCungCap);
         buttonGroup.add(rbtThuongHieu);
         buttonGroup.add(rbtChatLieu);
-
         rbtMauSac.addActionListener(e -> {
             if (rbtMauSac.isSelected()) {
                 selectedTable = "MAU_SAC";
@@ -81,7 +70,6 @@ public class JPanelSanPham extends javax.swing.JPanel {
                 hienThiThuocTinhTrenBang(selectedTable);
             }
         });
-       
         rbtSize.addActionListener(e -> {
             if (rbtSize.isSelected()) {
                 selectedTable = "SIZE";
@@ -113,14 +101,13 @@ public class JPanelSanPham extends javax.swing.JPanel {
             }
         });
 
-
-  
         rbtMauSac.setSelected(true);
         hienThiThuocTinhTrenBang("MAU_SAC");
         selectedTable = "MAU_SAC";
         matt = "MA_MAU";
     }
- public static void main(String[] args) {
+
+    public static void main(String[] args) {
         JFrame jFrame = new JFrame("SP");
         JPanelSanPham jbh = new JPanelSanPham();
         jFrame.add(jbh);
@@ -135,7 +122,6 @@ public class JPanelSanPham extends javax.swing.JPanel {
         AtomicInteger index = new AtomicInteger(1);
         list.forEach(s -> mol.addRow(new Object[]{
             index.getAndIncrement(), s.getMaSP(), s.getTenSP(),
-       
             s.isTrangThai() ? "Còn hàng" : "Hết hàng"
 
         }));
@@ -155,12 +141,12 @@ public class JPanelSanPham extends javax.swing.JPanel {
     private SanPham getFormData() {
         try {
             SanPham sp = new SanPham();
-                    sp.setMaSP(generateProductCode(8));
-                    sp.setTenSP(txtTenSP.getText());
-                    sp.setTrangThai(rdoConHang.isSelected());
-                    sp.setMoTa(txtMoTa.getText());
-                    sp.setNgayTao(new Date());
-                    return sp;
+            sp.setMaSP(generateProductCode(8));
+            sp.setTenSP(txtTenSP.getText());
+            sp.setTrangThai(rdoConHang.isSelected());
+            sp.setMoTa(txtMoTa.getText());
+            sp.setNgayTao(new Date());
+            return sp;
         } catch (NumberFormatException e) {
             return null;
         }
@@ -172,7 +158,6 @@ public class JPanelSanPham extends javax.swing.JPanel {
         txtTenSP.setText("");
 
     }
-
 
     private void themDuLieuVaoCombobox(javax.swing.JComboBox<String> comboBox, String tenThuocTinh) {
         Set<String> giaTriDuyNhat = new HashSet<>();
@@ -187,7 +172,7 @@ public class JPanelSanPham extends javax.swing.JPanel {
         });
         List<String> sortedList = new ArrayList<>(giaTriDuyNhat);
         int tatCaIndex = sortedList.indexOf("Tất cả");
-        if (tatCaIndex != -1) { // Kiểm tra xem "Tất cả" có tồn tại trong danh sách không
+        if (tatCaIndex != -1) {
             Collections.swap(sortedList, 0, tatCaIndex);
         }
         comboBox.setModel(new javax.swing.DefaultComboBoxModel<>(sortedList.toArray(new String[0])));
@@ -204,6 +189,7 @@ public class JPanelSanPham extends javax.swing.JPanel {
         }
         return couponCode.toString();
     }
+
     public static String generatePropertiesCode(int length) {
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         StringBuilder couponCode = new StringBuilder();
@@ -220,8 +206,6 @@ public class JPanelSanPham extends javax.swing.JPanel {
 
     }
 
-
-    //// Thuoc Tinh /////
     private void hienThiThuocTinhTrenBang(String tenBang) {
         model.setRowCount(0);
         ArrayList<Object[]> listThuocTinh = thuocTinhRepo.getAllThuocTinh(tenBang);
@@ -230,6 +214,7 @@ public class JPanelSanPham extends javax.swing.JPanel {
             model.addRow(new Object[]{i + 1, thuocTinh[0], thuocTinh[1]});
         }
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -779,7 +764,6 @@ public class JPanelSanPham extends javax.swing.JPanel {
             if (checkFormCreateProduct()) {
                 if (rp.add(newSanPham)) {
                     JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công!");
-                    //                clearInputFields();
                     showDataTableSP(rp.getAll());
                 } else {
                     JOptionPane.showMessageDialog(this, "Thêm sản phẩm thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -787,7 +771,7 @@ public class JPanelSanPham extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_btnThemActionPerformed
-  private boolean isDialogOpen = false;
+    private boolean isDialogOpen = false;
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
         // TODO add your handling code here:
         int index = tblSP.getSelectedRow();
@@ -815,15 +799,12 @@ public class JPanelSanPham extends javax.swing.JPanel {
         // TODO add your handling code here:
         txtTenSP.setText("");
         txtMaSP.setText("");
-        //buttonGroup1.clearSelection();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void tblSPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSPMouseClicked
-
         int index = tblSP.getSelectedRow();
         this.detailSanPham(index);
-
-        String maSP =txtMaSP.getText();
+        String maSP = txtMaSP.getText();
         if (evt.getClickCount() == 2 && !isDialogOpen) {
             isDialogOpen = true;
             Integer idSP = Integer.parseInt(tblSP.getValueAt(index, 0).toString());
@@ -873,18 +854,14 @@ public class JPanelSanPham extends javax.swing.JPanel {
         // TODO add your haString maThuocTinh = txtMaThuocTinh.getText();
         String maThuocTinh = txtMaThuocTinh.getText();
         String tenThuocTinh = txtTenThuocTinh.getText();
-
-        if ( tenThuocTinh.isBlank()) {
+        if (tenThuocTinh.isBlank()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ tên thuộc tính.");
             return;
         }
-
-        if(tenThuocTinh.length() > 20){
+        if (tenThuocTinh.length() > 20) {
             JOptionPane.showMessageDialog(this, "Tên thuộc tính không được quá 20 ký tự.");
             return;
         }
- 
-
         try {
             if (!selectedTable.equalsIgnoreCase("NHA_CUNG_CAP")) {
                 thuocTinhRepo.addThuocTinh(selectedTable, generatePropertiesCode(6), tenThuocTinh);
@@ -899,7 +876,6 @@ public class JPanelSanPham extends javax.swing.JPanel {
                 txtMaThuocTinh.setText("");
                 txtTenThuocTinh.setText("");
             }
-
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Lỗi khi thêm " + selectedTable + ": " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
@@ -913,12 +889,10 @@ public class JPanelSanPham extends javax.swing.JPanel {
         } else {
             String maThuocTinh = txtMaThuocTinh.getText();
             String tenThuocTinh = txtTenThuocTinh.getText();
-
             if (maThuocTinh.isBlank() || tenThuocTinh.isBlank()) {
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ mã và tên thuộc tính.");
                 return;
             }
-
             try {
                 if (!selectedTable.equalsIgnoreCase("NHA_CUNG_CAP")) {
                     thuocTinhRepo.updateThuocTinh(selectedTable, maThuocTinh, matt, tenThuocTinh);
@@ -949,9 +923,7 @@ public class JPanelSanPham extends javax.swing.JPanel {
     }//GEN-LAST:event_tblThuocTinhMouseClicked
 
     private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
-        // TODO add your handling code here:
-        //        Node = new JPanelSanPhamCT();
-        //        setView(JpanelRoot);
+
     }//GEN-LAST:event_jTabbedPane1MouseClicked
 
 
@@ -1000,7 +972,7 @@ public class JPanelSanPham extends javax.swing.JPanel {
     private javax.swing.JTextField txtTimKiem;
     // End of variables declaration//GEN-END:variables
 private boolean isValidCouponCode(String str) {
-       
+
         String regex = "^[$,^,&,*,<,>,|,!,;,:,  ,#,'',+,=,{}]+$";
         return str.matches(regex);
     }

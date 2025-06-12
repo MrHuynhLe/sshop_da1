@@ -31,8 +31,8 @@ public class SanPhamChiTietRepo {
     private final String username = "postgres";
     private final String password = "password";
 
-  public ArrayList<SanPhamChiTietResponse> getAllSPCT() {
-    String sql = """
+    public ArrayList<SanPhamChiTietResponse> getAllSPCT() {
+        String sql = """
            SELECT 
                spct.id, 
                sp.ma_san_pham AS ma_san_pham,
@@ -56,34 +56,33 @@ public class SanPhamChiTietRepo {
            JOIN thuong_hieu thuong_hieu ON spct.ma_thuong_hieu = thuong_hieu.id;
        """;
 
-    ArrayList<SanPhamChiTietResponse> list = new ArrayList<>();
-    try (Connection con = DriverManager.getConnection(url, username, password);
-         PreparedStatement ps = con.prepareStatement(sql);
-         ResultSet rs = ps.executeQuery()) {
+        ArrayList<SanPhamChiTietResponse> list = new ArrayList<>();
+        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
-        while (rs.next()) {
-            SanPhamChiTietResponse spct = new SanPhamChiTietResponse(
-                    rs.getInt("id"),
-                    rs.getString("ma_san_pham"),
-                    rs.getString("ten_san_pham"),
-                    rs.getString("ten_nha_cung_cap"),
-                    rs.getString("ten_mau"),
-                    rs.getString("ten_size"),
-                    rs.getString("ten_chat_lieu"),
-                    rs.getInt("so_luong"),
-                    rs.getFloat("don_gia"),
-                    rs.getString("mo_ta"),
-                    rs.getDate("ngay_tao"),
-                    rs.getString("ten_thuong_hieu"),
-                    rs.getBoolean("trang_thai")
-            );
-            list.add(spct);
+            while (rs.next()) {
+                SanPhamChiTietResponse spct = new SanPhamChiTietResponse(
+                        rs.getInt("id"),
+                        rs.getString("ma_san_pham"),
+                        rs.getString("ten_san_pham"),
+                        rs.getString("ten_nha_cung_cap"),
+                        rs.getString("ten_mau"),
+                        rs.getString("ten_size"),
+                        rs.getString("ten_chat_lieu"),
+                        rs.getInt("so_luong"),
+                        rs.getFloat("don_gia"),
+                        rs.getString("mo_ta"),
+                        rs.getDate("ngay_tao"),
+                        rs.getString("ten_thuong_hieu"),
+                        rs.getBoolean("trang_thai")
+                );
+                list.add(spct);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return list;
     }
-    return list;
-}
+
     public boolean update(SanPhamChiTiet spct) {
         String sql = """
      
@@ -389,7 +388,6 @@ public class SanPhamChiTietRepo {
         return null;
     }
 
-////////////////////////////////////////////////////////////////////////////////////////////
     public ArrayList<SanPhamChiTietResponse> getProductDetailByIdProduct(Integer idSP) {
         String sql = """
         SELECT 
@@ -448,8 +446,8 @@ public class SanPhamChiTietRepo {
         return list;
     }
 
-   public SanPhamChiTietResponse getProductDetailResponseById(Integer idSPCT) {
-    String sql = """
+    public SanPhamChiTietResponse getProductDetailResponseById(Integer idSPCT) {
+        String sql = """
         SELECT spct.id,
                sp.ma_san_pham,
                sp.ten AS ten_san_pham,
@@ -473,36 +471,34 @@ public class SanPhamChiTietRepo {
         WHERE spct.id = ?;
     """;
 
-    try (Connection con = DriverManager.getConnection(url, username, password);
-         PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
 
-        ps.setObject(1, idSPCT);
-        ResultSet rs = ps.executeQuery();
+            ps.setObject(1, idSPCT);
+            ResultSet rs = ps.executeQuery();
 
-        if (rs.next()) {
-            return new SanPhamChiTietResponse(
-                    rs.getInt("id"),
-                    rs.getString("ma_san_pham"),
-                    rs.getString("ten_san_pham"),
-                    rs.getString("ten_nha_cung_cap"),
-                    rs.getString("ten_mau"),
-                    rs.getString("ten_size"),
-                    rs.getString("ten_chat_lieu"),
-                    rs.getInt("so_luong"),
-                    rs.getFloat("don_gia"),
-                    rs.getString("mo_ta"),
-                    rs.getDate("ngay_tao"),
-                    rs.getString("ten_thuong_hieu"),
-                    rs.getBoolean("trang_thai")
-            );
+            if (rs.next()) {
+                return new SanPhamChiTietResponse(
+                        rs.getInt("id"),
+                        rs.getString("ma_san_pham"),
+                        rs.getString("ten_san_pham"),
+                        rs.getString("ten_nha_cung_cap"),
+                        rs.getString("ten_mau"),
+                        rs.getString("ten_size"),
+                        rs.getString("ten_chat_lieu"),
+                        rs.getInt("so_luong"),
+                        rs.getFloat("don_gia"),
+                        rs.getString("mo_ta"),
+                        rs.getDate("ngay_tao"),
+                        rs.getString("ten_thuong_hieu"),
+                        rs.getBoolean("trang_thai")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(System.out);
         }
-    } catch (SQLException e) {
-        e.printStackTrace(System.out);
+        return null;
     }
-    return null;
-}
 
-    //udpate trạng thái
     public boolean updateStatus(Integer idSpct, Boolean trangThai) {
         String sql = """
            UPDATE san_pham_chi_tiet

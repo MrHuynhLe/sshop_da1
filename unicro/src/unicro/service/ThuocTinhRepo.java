@@ -22,13 +22,14 @@ import unicro.entity.ThuongHieu;
  * @author Admin
  */
 public class ThuocTinhRepo {
-       private final String url = "jdbc:postgresql://localhost:5432/da_qlbh";
+
+    private final String url = "jdbc:postgresql://localhost:5432/da_qlbh";
     private final String username = "postgres";
     private final String password = "password";
-     public ArrayList<Object[]> getAllThuocTinh(String tenBang) {
+
+    public ArrayList<Object[]> getAllThuocTinh(String tenBang) {
         ArrayList<Object[]> listThuocTinh = new ArrayList<>();
         try (Connection conn = DriverManager.getConnection(url, username, password); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery("SELECT * FROM " + tenBang
-        //                     + "WHERE TrangThai = 0 ORDER BY" + getColumnNameForTable(tenBang) + "DESC"
         )) {
             while (rs.next()) {
                 if (tenBang.equalsIgnoreCase("MAU_SAC")) {
@@ -51,11 +52,10 @@ public class ThuocTinhRepo {
                     String maThuongHieu = rs.getString("MA_THUONG_HIEU");
                     String tenThuongHieu = rs.getString("TEN");
                     listThuocTinh.add(new Object[]{maThuongHieu, tenThuongHieu});
-                
+
                 } else {
-                    // Các bảng khác, lấy mã thuộc tính và tên thuộc tính
-                    String maThuocTinh = rs.getString(1); // Cột đầu tiên là mã
-                    String tenThuocTinh = rs.getString(2); // Cột thứ hai là tên
+                    String maThuocTinh = rs.getString(1);
+                    String tenThuocTinh = rs.getString(2);
                     listThuocTinh.add(new Object[]{maThuocTinh, tenThuocTinh});
                 }
             }
@@ -73,9 +73,9 @@ public class ThuocTinhRepo {
                 return "MA_NHA_CUNG_CAP";
             case "SIZE":
                 return "MA_SIZE";
-            // ... (các bảng khác)
+
             default:
-                return "MA_THUOC_TINH"; // Giả sử các bảng khác đều có cột MA_THUOC_TINH
+                return "MA_THUOC_TINH";
         }
     }
 
@@ -94,15 +94,15 @@ public class ThuocTinhRepo {
     }
 
     public void addThuocTinh(String tenBang, String maThuocTinh, String tenThuocTinh) throws SQLException {
-            String sql = "INSERT INTO " + tenBang + " VALUES (?, ?)";
-            try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, maThuocTinh);
-                ps.setString(2, tenThuocTinh);
-                ps.executeUpdate();
-            }
+        String sql = "INSERT INTO " + tenBang + " VALUES (?, ?)";
+        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, maThuocTinh);
+            ps.setString(2, tenThuocTinh);
+            ps.executeUpdate();
+        }
     }
-    
-     public void addNhaCC(String tenBang, String maThuocTinh, String tenThuocTinh, String diaChi) throws SQLException {
+
+    public void addNhaCC(String tenBang, String maThuocTinh, String tenThuocTinh, String diaChi) throws SQLException {
         if (tenBang.equalsIgnoreCase("NHA_CUNG_CAP")) {
             String sql = "INSERT INTO " + tenBang + " VALUES (?, ?, ?)";
             try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -112,9 +112,9 @@ public class ThuocTinhRepo {
                 ps.executeUpdate();
             }
         }
-     }
-     
-     public void updateNhaCC(String tenBang, String maThuocTinh, String maTT, String tenThuocTinhMoi, String diaChi) throws SQLException {
+    }
+
+    public void updateNhaCC(String tenBang, String maThuocTinh, String maTT, String tenThuocTinhMoi, String diaChi) throws SQLException {
         String sql = "UPDATE " + tenBang + " SET TEN = ?, DIA_CHI = ? WHERE " + maTT + " = ?";
         try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, tenThuocTinhMoi);
@@ -123,10 +123,6 @@ public class ThuocTinhRepo {
             ps.executeUpdate();
         }
     }
-     
-     
-     
-     
 
     public void updateThuocTinh(String tenBang, String maThuocTinh, String maTT, String tenThuocTinhMoi) throws SQLException {
         String sql = "UPDATE " + tenBang + " SET TEN = ? WHERE " + maTT + " = ?";
@@ -158,7 +154,6 @@ public class ThuocTinhRepo {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public ArrayList<Size> getSize() {
         ArrayList<Size> listDoCang = new ArrayList<>();
         String query = "SELECT * FROM SIZE";
@@ -216,8 +211,6 @@ public class ThuocTinhRepo {
         return listDoCang;
     }
 
-   
-
     public ArrayList<MauSac> getMauSac() {
         ArrayList<MauSac> listDoCang = new ArrayList<>();
         String query = "SELECT * FROM MAU_SAC";
@@ -255,5 +248,4 @@ public class ThuocTinhRepo {
         return listDoCang;
     }
 
-   
 }

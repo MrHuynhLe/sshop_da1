@@ -7,6 +7,7 @@ package unicro.view;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
@@ -14,12 +15,15 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
+import unicro.entity.Session;
 import unicro.view.KhuyenMai;
 
 /**
@@ -33,6 +37,7 @@ public class TrangChu extends javax.swing.JFrame {
      */
     private JPanel mainPanel;
     private CardLayout cardLayout;
+    private Session s;
 
     public TrangChu() {
         initComponents();
@@ -41,18 +46,35 @@ public class TrangChu extends javax.swing.JFrame {
         setSize(1000, 600);
         setLocationRelativeTo(null);
 
-        // ===== MENU PANEL (Top Buttons) =====
-        JPanel menuPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        menuPanel.setBackground(Color.WHITE);
-        menuPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // padding
+      
 
-        // Font & màu
+        JPanel menuPanel = new JPanel();
+        menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
+        menuPanel.setBackground(Color.WHITE);
+        menuPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+          JPanel userInfoPanel = new JPanel();
+        userInfoPanel.setLayout(new BoxLayout(userInfoPanel, BoxLayout.Y_AXIS));
+        userInfoPanel.setBackground(Color.WHITE);
+        userInfoPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel lblUser = new JLabel("" + Session.currentFullname);
+        JLabel lblRole = new JLabel("    " + Session.currentRole);
+        lblUser.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        lblRole.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblUser.setForeground(Color.DARK_GRAY);
+        lblRole.setForeground(Color.GRAY);
+
+        userInfoPanel.add(lblUser);
+        userInfoPanel.add(lblRole);
+        userInfoPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+
+        menuPanel.add(userInfoPanel);
         Font menuFont = new Font("Segoe UI", Font.PLAIN, 14);
         Color btnColor = new Color(52, 152, 219);
         Color btnText = Color.WHITE;
 
-        // Tạo các button menu
-        String[] menuNames = {"Bán Hàng", "Quản lý sản phẩm", "Thống kê", "Khuyến mãi", "Người dùng"};
+        String[] menuNames = {"Bán Hàng", "Quản lý sản phẩm", "Thống kê", "Khuyến mãi", "Quản lý nhân viên", "Quản lý hoá đơn", "Đăng xuất"};
         JButton[] menuButtons = new JButton[menuNames.length];
         for (int i = 0; i < menuNames.length; i++) {
             JButton btn = new JButton(menuNames[i]);
@@ -60,43 +82,54 @@ public class TrangChu extends javax.swing.JFrame {
             btn.setFont(menuFont);
             btn.setBackground(btnColor);
             btn.setForeground(btnText);
-            btn.setPreferredSize(new Dimension(160, 35));
+            btn.setMaximumSize(new Dimension(160, 40));
+            btn.setAlignmentX(Component.CENTER_ALIGNMENT);
             menuButtons[i] = btn;
             menuPanel.add(btn);
+            menuPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
 
-        // ===== MAIN PANEL (CardLayout) =====
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
-
-        // ⚠️ Đảm bảo các class sau là JPanel, không phải JFrame!
         mainPanel.add(new BanHang(), "BanHang");
-        mainPanel.add(new JPanelSanPham(), "QLSP"); 
+        mainPanel.add(new JPanelSanPham(), "QLSP");
         mainPanel.add(new ThongKe(), "ThongKe");
         mainPanel.add(new KhuyenMai(), "KhuyenMai");
         mainPanel.add(new NguoiDung(), "NguoiDung");
 
-        // ===== GÁN SỰ KIỆN MENU =====
         menuButtons[0].addActionListener(e -> cardLayout.show(mainPanel, "BanHang"));
         menuButtons[1].addActionListener(e -> cardLayout.show(mainPanel, "QLSP"));
         menuButtons[2].addActionListener(e -> cardLayout.show(mainPanel, "ThongKe"));
         menuButtons[3].addActionListener(e -> cardLayout.show(mainPanel, "KhuyenMai"));
         menuButtons[4].addActionListener(e -> cardLayout.show(mainPanel, "NguoiDung"));
+        menuButtons[5].addActionListener(e -> cardLayout.show(mainPanel, "HoaDon"));
+        menuButtons[6].addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn đăng xuất?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                dispose();
+                new Dang_Nhap(this, rootPaneCheckingEnabled).setVisible(true);
+            }
+        });
 
-        // ===== HEADER + MENU COMBO =====
         JLabel titleLabel = new JLabel("PHẦN MỀM QUẢN LÝ BÁN HÀNG", JLabel.CENTER);
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
         titleLabel.setForeground(new Color(41, 128, 185));
 
-        JPanel headerPanel = new JPanel(new BorderLayout());
-        headerPanel.add(titleLabel, BorderLayout.NORTH);
-        headerPanel.add(menuPanel, BorderLayout.SOUTH);
-        headerPanel.setBackground(Color.WHITE);
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        titlePanel.setBackground(Color.WHITE);
+        titlePanel.add(titleLabel, BorderLayout.CENTER);
 
-        // ===== SETUP FRAME =====
         setLayout(new BorderLayout());
-        add(headerPanel, BorderLayout.NORTH);
+        add(titlePanel, BorderLayout.NORTH);
+        add(menuPanel, BorderLayout.WEST);
         add(mainPanel, BorderLayout.CENTER);
+
+        if ("Nhân Viên".equalsIgnoreCase(Session.currentRole)) {
+
+            menuButtons[1].setEnabled(false);
+            menuButtons[3].setEnabled(false);
+            menuButtons[4].setEnabled(false);
+        }
     }
 
     /**
@@ -118,7 +151,7 @@ public class TrangChu extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-       try {
+        try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     UIManager.setLookAndFeel(info.getClassName());
@@ -129,10 +162,10 @@ public class TrangChu extends javax.swing.JFrame {
             ex.printStackTrace();
         }
 
-        // Chạy ứng dụng
         EventQueue.invokeLater(() -> new TrangChu().setVisible(true));
-    
+
     }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
