@@ -14,7 +14,7 @@ public class SanPhamChiTiet {
 
     private int id;
     private int idSp;
-     private String maSp;
+    private String maSp;
     private int maNhaCungCap;
     private int maMau;
     private int maSize;

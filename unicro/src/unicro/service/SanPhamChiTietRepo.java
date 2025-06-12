@@ -4,6 +4,7 @@
  */
 package unicro.service;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,56 +31,59 @@ public class SanPhamChiTietRepo {
     private final String username = "postgres";
     private final String password = "password";
 
-    public ArrayList<SanPhamChiTietResponse> getAllSPCT() {
-        String sql = """
-               SELECT 
-                   spct.id, 
-                   sp.ten AS ten_san_pham, 
-                   ncc.ten AS ten_nha_cung_cap,
-                   ms.ten AS ten_mau, 
-                   size.ten AS ten_size, 
-                   chat_lieu.ten AS ten_chat_lieu,
-                   spct.so_luong, 
-                   spct.don_gia, 
-                   spct.mo_ta, 
-                   spct.ngay_tao,
-                   thuong_hieu.ten AS ten_thuong_hieu, 
-                   spct.trang_thai
-               FROM san_pham_chi_tiet spct
-               JOIN san_pham sp ON spct.idsp = sp.id
-               JOIN nha_cung_cap ncc ON spct.ma_nha_cung_cap = ncc.id
-               JOIN mau_sac ms ON spct.ma_mau = ms.id
-               JOIN size size ON spct.ma_size = size.id
-               JOIN chat_lieu chat_lieu ON spct.ma_chat_lieu = chat_lieu.id
-               JOIN thuong_hieu thuong_hieu ON spct.ma_thuong_hieu = thuong_hieu.id;
-           """;
+  public ArrayList<SanPhamChiTietResponse> getAllSPCT() {
+    String sql = """
+           SELECT 
+               spct.id, 
+               sp.ma_san_pham AS ma_san_pham,
+               sp.ten AS ten_san_pham, 
+               ncc.ten AS ten_nha_cung_cap,
+               ms.ten AS ten_mau, 
+               size.ten AS ten_size, 
+               chat_lieu.ten AS ten_chat_lieu,
+               spct.so_luong, 
+               spct.don_gia, 
+               spct.mo_ta, 
+               spct.ngay_tao,
+               thuong_hieu.ten AS ten_thuong_hieu, 
+               spct.trang_thai
+           FROM san_pham_chi_tiet spct
+           JOIN san_pham sp ON spct.idsp = sp.id
+           JOIN nha_cung_cap ncc ON spct.ma_nha_cung_cap = ncc.id
+           JOIN mau_sac ms ON spct.ma_mau = ms.id
+           JOIN size size ON spct.ma_size = size.id
+           JOIN chat_lieu chat_lieu ON spct.ma_chat_lieu = chat_lieu.id
+           JOIN thuong_hieu thuong_hieu ON spct.ma_thuong_hieu = thuong_hieu.id;
+       """;
 
-        ArrayList<SanPhamChiTietResponse> list = new ArrayList<>();
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+    ArrayList<SanPhamChiTietResponse> list = new ArrayList<>();
+    try (Connection con = DriverManager.getConnection(url, username, password);
+         PreparedStatement ps = con.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
 
-            while (rs.next()) {
-                SanPhamChiTietResponse spctResponse = new SanPhamChiTietResponse(
-                        rs.getInt("ID"),
-                        rs.getString("TEN_SAN_PHAM"),
-                        rs.getString("TEN_NHA_CUNG_CAP"),
-                        rs.getString("TEN_MAU"),
-                        rs.getString("TEN_SIZE"),
-                        rs.getString("TEN_CHAT_LIEU"),
-                        rs.getInt("SO_LUONG"),
-                        rs.getFloat("DON_GIA"),
-                        rs.getString("MO_TA"),
-                        rs.getDate("NGAY_TAO"),
-                        rs.getString("TEN_THUONG_HIEU"),
-                        rs.getBoolean("TRANG_THAI")
-                );
-                list.add(spctResponse);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        while (rs.next()) {
+            SanPhamChiTietResponse spct = new SanPhamChiTietResponse(
+                    rs.getInt("id"),
+                    rs.getString("ma_san_pham"),
+                    rs.getString("ten_san_pham"),
+                    rs.getString("ten_nha_cung_cap"),
+                    rs.getString("ten_mau"),
+                    rs.getString("ten_size"),
+                    rs.getString("ten_chat_lieu"),
+                    rs.getInt("so_luong"),
+                    rs.getFloat("don_gia"),
+                    rs.getString("mo_ta"),
+                    rs.getDate("ngay_tao"),
+                    rs.getString("ten_thuong_hieu"),
+                    rs.getBoolean("trang_thai")
+            );
+            list.add(spct);
         }
-        return list;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
-
+    return list;
+}
     public boolean update(SanPhamChiTiet spct) {
         String sql = """
      
@@ -108,7 +112,7 @@ public class SanPhamChiTietRepo {
             ps.setInt(6, spct.getSoLuong());
             ps.setFloat(7, spct.getDonGia());
             ps.setString(8, spct.getMoTa());
-          ps.setDate(9, new Date(spct.getNgayTao().getTime()));
+            ps.setDate(9, new Date(spct.getNgayTao().getTime()));
             ps.setInt(10, spct.getMaThuongHieu());
             ps.setBoolean(15, spct.isTrangThai());
             ps.setInt(16, spct.getId());
@@ -155,6 +159,7 @@ public class SanPhamChiTietRepo {
             while (rs.next()) {
                 SanPhamChiTietResponse spctResponse = new SanPhamChiTietResponse(
                         rs.getInt("ID"),
+                        rs.getString("MA_SAN_PHAM"),
                         rs.getString("TEN_SAN_PHAM"),
                         rs.getString("TEN_NHA_CUNG_CAP"),
                         rs.getString("TEN_MAU"),
@@ -258,6 +263,7 @@ public class SanPhamChiTietRepo {
             while (rs.next()) {
                 SanPhamChiTietResponse spctResponse = new SanPhamChiTietResponse(
                         rs.getInt("ID"),
+                        rs.getString("MA_SAN_PHAM"),
                         rs.getString("TEN_SAN_PHAM"),
                         rs.getString("TEN_NHA_CUNG_CAP"),
                         rs.getString("TEN_MAU"),
@@ -386,8 +392,9 @@ public class SanPhamChiTietRepo {
 ////////////////////////////////////////////////////////////////////////////////////////////
     public ArrayList<SanPhamChiTietResponse> getProductDetailByIdProduct(Integer idSP) {
         String sql = """
-      SELECT 
+        SELECT 
             SPCT.id, 
+            sp.ma_san_pham AS ma_san_pham,
             SP.ten AS ten_san_pham, 
             NCC.ten AS ten_nha_cung_cap,
             MS.ten AS ten_mau, 
@@ -412,35 +419,37 @@ public class SanPhamChiTietRepo {
         ArrayList<SanPhamChiTietResponse> list = new ArrayList<>();
 
         try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+
             ps.setObject(1, idSP);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
                 SanPhamChiTietResponse spctResponse = new SanPhamChiTietResponse(
-                        rs.getInt("ID"),
-                        rs.getString("TEN_SAN_PHAM"),
-                        rs.getString("TEN_NHA_CUNG_CAP"),
-                        rs.getString("TEN_MAU"),
-                        rs.getString("TEN_SIZE"),
-                        rs.getString("TEN_CHAT_LIEU"),
-                        rs.getInt("SO_LUONG"),
-                        rs.getFloat("DON_GIA"),
-                        rs.getString("MO_TA"),
-                        rs.getDate("NGAY_TAO"),
-                        rs.getString("TEN_THUONG_HIEU"),
-                        rs.getBoolean("TRANG_THAI")
+                        rs.getInt("id"),
+                        rs.getString("ma_san_pham"),
+                        rs.getString("ten_san_pham"),
+                        rs.getString("ten_nha_cung_cap"),
+                        rs.getString("ten_mau"),
+                        rs.getString("ten_size"),
+                        rs.getString("ten_chat_lieu"),
+                        rs.getInt("so_luong"),
+                        rs.getFloat("don_gia"),
+                        rs.getString("mo_ta"),
+                        rs.getDate("ngay_tao"),
+                        rs.getString("ten_thuong_hieu"),
+                        rs.getBoolean("trang_thai")
                 );
                 list.add(spctResponse);
             }
         } catch (SQLException e) {
-            e.printStackTrace(System.out);
+            System.err.println("Lỗi khi truy vấn chi tiết sản phẩm: " + e.getMessage());
         }
 
         return list;
     }
 
-    public SanPhamChiTietResponse getProductDetailResponseById(Integer idSPCT) {
-        String sql = """
+   public SanPhamChiTietResponse getProductDetailResponseById(Integer idSPCT) {
+    String sql = """
         SELECT spct.id,
                sp.ma_san_pham,
                sp.ten AS ten_san_pham,
@@ -452,7 +461,7 @@ public class SanPhamChiTietRepo {
                spct.don_gia,
                spct.mo_ta,
                spct.ngay_tao,
-               thuong_hieu.ten AS thuong_hieu,
+               thuong_hieu.ten AS ten_thuong_hieu,
                spct.trang_thai
         FROM san_pham_chi_tiet spct
         JOIN san_pham sp ON spct.idsp = sp.id
@@ -461,35 +470,37 @@ public class SanPhamChiTietRepo {
         JOIN size size ON spct.ma_size = size.id
         JOIN chat_lieu chat_lieu ON spct.ma_chat_lieu = chat_lieu.id
         JOIN thuong_hieu thuong_hieu ON spct.ma_thuong_hieu = thuong_hieu.id
-        WHERE spct.id = $1;
+        WHERE spct.id = ?;
     """;
 
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+    try (Connection con = DriverManager.getConnection(url, username, password);
+         PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setObject(1, idSPCT);
-            ResultSet rs = ps.executeQuery();
+        ps.setObject(1, idSPCT);
+        ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                return new SanPhamChiTietResponse(
-                        rs.getInt("ID"),
-                        rs.getString("MA_SAN_PHAM"),
-                        rs.getString("TEN_NHA_CUNG_CAP"),
-                        rs.getString("TEN_MAU"),
-                        rs.getString("TEN_SIZE"),
-                        rs.getString("TEN_CHAT_LIEU"),
-                        rs.getInt("SO_LUONG"),
-                        rs.getFloat("DON_GIA"),
-                        rs.getString("MO_TA"),
-                        rs.getDate("NGAY_TAO"), // hoặc .toString() tùy theo field khai báo
-                        rs.getString("THUONG_HIEU"),
-                        rs.getBoolean("TRANG_THAI")
-                );
-            }
-        } catch (SQLException e) {
-            e.printStackTrace(System.out);
+        if (rs.next()) {
+            return new SanPhamChiTietResponse(
+                    rs.getInt("id"),
+                    rs.getString("ma_san_pham"),
+                    rs.getString("ten_san_pham"),
+                    rs.getString("ten_nha_cung_cap"),
+                    rs.getString("ten_mau"),
+                    rs.getString("ten_size"),
+                    rs.getString("ten_chat_lieu"),
+                    rs.getInt("so_luong"),
+                    rs.getFloat("don_gia"),
+                    rs.getString("mo_ta"),
+                    rs.getDate("ngay_tao"),
+                    rs.getString("ten_thuong_hieu"),
+                    rs.getBoolean("trang_thai")
+            );
         }
-        return null;
+    } catch (SQLException e) {
+        e.printStackTrace(System.out);
     }
+    return null;
+}
 
     //udpate trạng thái
     public boolean updateStatus(Integer idSpct, Boolean trangThai) {
@@ -513,26 +524,30 @@ public class SanPhamChiTietRepo {
 
     public SanPhamChiTiet getProductDetailyId(Integer idSPCT) {
         String sql = """
-               SELECT id,
-                         idsp,
-                         ma_nha_cung_cap,
-                         ma_mau,
-                         ma_size,
-                         ma_chat_lieu,
-                         so_luong,
-                         don_gia,
-                         mo_ta,
-                         ngay_tao,
-                         ma_thuong_hieu,
-                         trang_thai
-                  FROM san_pham_chi_tiet
-                  WHERE id = ?;
+              SELECT 
+                   spct.id,
+                   spct.idsp,
+                   sp.ma_san_pham,
+                   spct.ma_nha_cung_cap,
+                   spct.ma_mau,
+                   spct.ma_size,
+                   spct.ma_chat_lieu,
+                   spct.so_luong,
+                   spct.don_gia,
+                   spct.mo_ta,
+                   spct.ngay_tao,
+                   spct.ma_thuong_hieu,
+                   spct.trang_thai
+               FROM san_pham_chi_tiet spct
+               JOIN san_pham sp ON spct.idsp = sp.id
+               WHERE spct.id = ?;
                     """;
         try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, idSPCT);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
+                float donGia = rs.getBigDecimal(9).floatValue();
                 SanPhamChiTiet spct = new SanPhamChiTiet(
                         rs.getInt(1),
                         rs.getInt(2),
@@ -542,7 +557,7 @@ public class SanPhamChiTietRepo {
                         rs.getInt(6),
                         rs.getInt(7),
                         rs.getInt(8),
-                        rs.getFloat(9),
+                        donGia,
                         rs.getString(10),
                         rs.getDate(11),
                         rs.getInt(12),
@@ -582,7 +597,7 @@ public class SanPhamChiTietRepo {
             ps.setObject(6, spct.getSoLuong());
             ps.setObject(7, spct.getDonGia());
             ps.setObject(8, spct.getMoTa());
-           ps.setDate(9, new java.sql.Date(spct.getNgayTao().getTime()));
+            ps.setDate(9, new java.sql.Date(spct.getNgayTao().getTime()));
             ps.setObject(10, spct.getMaThuongHieu());
             ps.setObject(11, spct.isTrangThai());
 

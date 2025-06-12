@@ -13,6 +13,7 @@ import java.util.Date;
 public class SanPhamChiTietResponse {
 
     private int id;
+    private String maSp;
     private String tenSanPham;
     private String tenNhaCungCap;
     private String tenMau;
@@ -25,8 +26,12 @@ public class SanPhamChiTietResponse {
     private String thuongHieu;
     private boolean trangThai;
 
-    public SanPhamChiTietResponse(int id, String tenSanPham, String tenNhaCungCap, String tenMau, String tenSize, String tenChatLieu, int soLuong, float donGia, String moTa, Date ngayTao, String thuongHieu, boolean trangThai) {
+    public SanPhamChiTietResponse() {
+    }
+
+    public SanPhamChiTietResponse(int id, String maSp, String tenSanPham, String tenNhaCungCap, String tenMau, String tenSize, String tenChatLieu, int soLuong, float donGia, String moTa, Date ngayTao, String thuongHieu, boolean trangThai) {
         this.id = id;
+        this.maSp = maSp;
         this.tenSanPham = tenSanPham;
         this.tenNhaCungCap = tenNhaCungCap;
         this.tenMau = tenMau;
@@ -46,6 +51,14 @@ public class SanPhamChiTietResponse {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getMaSp() {
+        return maSp;
+    }
+
+    public void setMaSp(String maSp) {
+        this.maSp = maSp;
     }
 
     public String getTenSanPham() {
@@ -138,20 +151,7 @@ public class SanPhamChiTietResponse {
 
     @Override
     public String toString() {
-        return "SanPhamChiTietResponse{"
-                + "id=" + id
-                + ", tenSanPham='" + tenSanPham + '\''
-                + ", tenNhaCungCap='" + tenNhaCungCap + '\''
-                + ", tenMau='" + tenMau + '\''
-                + ", tenSize='" + tenSize + '\''
-                + ", tenChatLieu='" + tenChatLieu + '\''
-                + ", soLuong=" + soLuong
-                + ", donGia=" + donGia
-                + ", moTa='" + moTa + '\''
-                + ", ngayTao='" + ngayTao + '\''
-                + ", thuongHieu='" + thuongHieu + '\''
-                + ", trangThai=" + trangThai
-                + '}';
+        return "SanPhamChiTietResponse{" + "id=" + id + ", maSp=" + maSp + ", tenSanPham=" + tenSanPham + ", tenNhaCungCap=" + tenNhaCungCap + ", tenMau=" + tenMau + ", tenSize=" + tenSize + ", tenChatLieu=" + tenChatLieu + ", soLuong=" + soLuong + ", donGia=" + donGia + ", moTa=" + moTa + ", ngayTao=" + ngayTao + ", thuongHieu=" + thuongHieu + ", trangThai=" + trangThai + '}';
     }
 
 }

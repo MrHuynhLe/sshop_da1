@@ -9,8 +9,10 @@ import java.awt.GridBagLayout;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -24,17 +26,18 @@ import unicro.service.Voucher_Service;
  * @author Admin
  */
 public class KhuyenMai extends javax.swing.JPanel {
- private DefaultTableModel model;
+
+    private DefaultTableModel model;
     List<Voucher> list = new ArrayList<>();
     private Voucher_Service service = new Voucher_Service();
+
     /**
      * Creates new form KhuyenMai
      */
     public KhuyenMai() {
         initComponents();
-         cboTrangThai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Đang hoạt động", "Không hoạt động"}));
+        cboTrangThai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Đang hoạt động", "Không hoạt động"}));
         fillTable();
-
 
     }
 
@@ -64,10 +67,10 @@ public class KhuyenMai extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         cboTrangThai = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
-        txtNgayKt = new javax.swing.JTextField();
-        txtNgayBd = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        JdBd = new com.toedter.calendar.JDateChooser();
+        jdKt = new com.toedter.calendar.JDateChooser();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Thông tin khuyến mãi", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("sansserif", 1, 12))); // NOI18N
 
@@ -225,40 +228,43 @@ public class KhuyenMai extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(txtMaVoucher, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
-                        .addGap(136, 136, 136)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(32, 32, 32)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtNgayBd, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtNgayKt, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(txtGiamGia2, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtGiamGia1))
                         .addGap(153, 153, 153)
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(82, 82, 82)
-                        .addComponent(cboTrangThai, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)))
-                .addGap(23, 23, 23))
+                        .addGap(82, 82, 82))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(txtMaVoucher, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
+                        .addGap(136, 136, 136)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(51, 51, 51)))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cboTrangThai, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(JdBd, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
+                    .addComponent(jdKt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(32, 32, 32))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtMaVoucher, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtNgayBd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addGap(32, 32, 32)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtGiamGia1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addComponent(txtNgayKt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtMaVoucher, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2)
+                        .addComponent(jLabel5))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(JdBd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(26, 26, 26)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtGiamGia1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel3)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jdKt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtGiamGia2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -300,8 +306,10 @@ public class KhuyenMai extends javax.swing.JPanel {
             txtMaVoucher.setText(tblVoucher.getValueAt(selectedRow, 0).toString());
             txtGiamGia1.setText(tblVoucher.getValueAt(selectedRow, 1).toString());
             txtGiamGia2.setText(tblVoucher.getValueAt(selectedRow, 2).toString());
-            txtNgayBd.setText(tblVoucher.getValueAt(selectedRow, 3).toString());
-            txtNgayKt.setText(tblVoucher.getValueAt(selectedRow, 4).toString());
+            Date endDate = (Date) tblVoucher.getValueAt(selectedRow, 4);
+            Date startDate = (Date) tblVoucher.getValueAt(selectedRow, 3);
+            JdBd.setDate(startDate);
+            jdKt.setDate(endDate);
             String trangThai = tblVoucher.getValueAt(selectedRow, 6).toString();
             if (trangThai.equalsIgnoreCase("Đang hoạt động")) {
                 cboTrangThai.setSelectedItem("Đang hoạt động");
@@ -313,15 +321,22 @@ public class KhuyenMai extends javax.swing.JPanel {
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         // TODO add your handling code here:
+
         try {
             String code = txtMaVoucher.getText().trim();
             String discountType = txtGiamGia1.getText().trim();
             BigDecimal discountValue = new BigDecimal(txtGiamGia2.getText().trim());
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-M-d");
-            String ngayBdRaw = txtNgayBd.getText().trim();
-            String ngayKtRaw = txtNgayKt.getText().trim();
-            LocalDate startLocalDate = LocalDate.parse(ngayBdRaw, dateFormatter);
-            LocalDate endLocalDate = LocalDate.parse(ngayKtRaw, dateFormatter);
+            // String ngayBdRaw = txtNgayBd.getText().trim();
+            Date fromDate = JdBd.getDate();
+            LocalDate startLocalDate = fromDate.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            Date toDate = jdKt.getDate();
+            LocalDate endLocalDate = toDate.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+
             LocalDateTime createdAt = LocalDateTime.now();
             boolean isActive = cboTrangThai.getSelectedItem().toString().equals("Đang hoạt động");
             Voucher v = new Voucher();
@@ -350,14 +365,28 @@ public class KhuyenMai extends javax.swing.JPanel {
         try {
             String code = txtMaVoucher.getText().trim();
             String discountType = txtGiamGia1.getText().trim();
-            BigDecimal discountValue = new BigDecimal(txtGiamGia2.getText().trim());
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-M-d");
-            String ngayBdRaw = txtNgayBd.getText().trim();
-            String ngayKtRaw = txtNgayKt.getText().trim();
-            LocalDate startLocalDate = LocalDate.parse(ngayBdRaw, dateFormatter);
-            LocalDate endLocalDate = LocalDate.parse(ngayKtRaw, dateFormatter);
+
+            BigDecimal discountValue;
+            try {
+                discountValue = new BigDecimal(txtGiamGia2.getText().trim());
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Giá trị giảm giá không hợp lệ!");
+                return;
+            }
+
+            Date fromDate = JdBd.getDate(); // java.util.Date
+            LocalDate startLocalDate = fromDate.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+
+            Date toDate = jdKt.getDate(); // java.util.Date
+            LocalDate endLocalDate = toDate.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+
             LocalDateTime createdAt = LocalDateTime.now();
             boolean active = cboTrangThai.getSelectedIndex() == 0;
+
             Voucher v = new Voucher();
             v.setCode(code);
             v.setDiscount_type(discountType);
@@ -366,6 +395,7 @@ public class KhuyenMai extends javax.swing.JPanel {
             v.setEnd_date(endLocalDate);
             v.setCreated_at(createdAt);
             v.setActive(active);
+
             boolean result = service.updateVoucher(v);
             if (result) {
                 JOptionPane.showMessageDialog(this, "Cập nhật voucher thành công!");
@@ -408,8 +438,8 @@ public class KhuyenMai extends javax.swing.JPanel {
         txtMaVoucher.setText("");
         txtGiamGia1.setText("");
         txtGiamGia2.setText("");
-        txtNgayBd.setText("");
-        txtNgayKt.setText("");
+        jdKt.setDate(null);
+        JdBd.setDate(null);
     }//GEN-LAST:event_btnResetActionPerformed
 
     private void txtGiamGia2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtGiamGia2ActionPerformed
@@ -418,6 +448,7 @@ public class KhuyenMai extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.toedter.calendar.JDateChooser JdBd;
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSua;
     private javax.swing.JButton btnThem;
@@ -433,23 +464,26 @@ public class KhuyenMai extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private com.toedter.calendar.JDateChooser jdKt;
     private javax.swing.JTable tblVoucher;
     private javax.swing.JTextField txtGiamGia1;
     private javax.swing.JTextField txtGiamGia2;
     private javax.swing.JTextField txtMaVoucher;
-    private javax.swing.JTextField txtNgayBd;
-    private javax.swing.JTextField txtNgayKt;
     // End of variables declaration//GEN-END:variables
  public void fillTable() {
         model = (DefaultTableModel) tblVoucher.getModel();
         model.setRowCount(0);
         list = service.getAllVouchers();
+
         for (Voucher v : list) {
+            Date startDate = Date.from(v.getStart_date().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            Date endDate = Date.from(v.getEnd_date().atStartOfDay(ZoneId.systemDefault()).toInstant());
             model.addRow(new Object[]{
                 v.getCode(),
                 v.getDiscount_type(),
                 v.getDiscount_value(),
-                v.getStart_date(),
+                startDate,
+                endDate,
                 v.getEnd_date(),
                 v.getCreated_at(),
                 v.getActive() ? "Đang hoạt động" : "Ngưng hoạt đông"

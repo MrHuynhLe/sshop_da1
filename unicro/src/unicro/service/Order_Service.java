@@ -11,6 +11,8 @@ import java.util.List;
 import unicro.entity.Order;
 import java.sql.*;
 import unicro.entity.GioHang;
+import unicro.entity.OrderDetail;
+import unicro.entity.SanPhamChiTiet;
 
 /**
  *
@@ -249,4 +251,46 @@ public class Order_Service {
         }
         return -1; 
     }
+    
+    public boolean capNhatHoaDon(int orderId, Integer voucherId, BigDecimal tongTien,
+                                 String paymentMethod, String note) throws SQLException {
+
+        String sql = "UPDATE orders SET voucher_id = ?, total = ?, payment_method = ?, "
+                   + "note = ?, status = 'Đã thanh toán', order_date = CURRENT_TIMESTAMP "
+                   + "WHERE id = ?";
+
+        try (Connection conn = DriverManager.getConnection(url,username,password);
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            if (voucherId != null) {
+                ps.setInt(1, voucherId);
+            } else {
+                ps.setNull(1, Types.INTEGER);
+            }
+
+            ps.setBigDecimal(2, tongTien);
+            ps.setString(3, paymentMethod);
+            ps.setString(4, note);
+            ps.setInt(5, orderId);
+
+            return ps.executeUpdate() > 0;
+        }
+    }
+public void capNhatSoLuongSanPhamSauKhiDatHang(List<OrderDetail> chiTietDonHang) {
+    String sql = "UPDATE san_pham_chi_tiet SET so_luong = so_luong - ? WHERE id = ?";
+
+    try (Connection conn = DriverManager.getConnection(url,username,password);
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        for (OrderDetail ct : chiTietDonHang) {
+            ps.setInt(1, ct.getNumber_of_product()); 
+            ps.setInt(2, ct.getProduct_detail_id()); 
+            ps.addBatch(); 
+        }
+
+        ps.executeBatch(); // thực hiện cập nhật hàng loạt
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
 }

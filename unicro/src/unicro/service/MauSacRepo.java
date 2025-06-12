@@ -46,7 +46,7 @@ public class MauSacRepo {
         String sql = "INSERT INTO MAU_SAC (TEN, MA_MAU) VALUES (?, ?)";
         try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, tenMauSac);
-            ps.setString(2, maMau); 
+            ps.setString(2, maMau);
             ps.executeUpdate();
         }
     }
