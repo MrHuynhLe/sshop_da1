@@ -18,7 +18,7 @@ import java.sql.*;
  */
 public class ChatLieuRepo {
 
-    private static final String url = "jdbc:postgresql://localhost:5432/da_qlbh";
+    private static final String url = "jdbc:postgresql://localhost:5432/unicro_qlbh";
     private static final String username = "postgres";
     private static final String password = "password";
 

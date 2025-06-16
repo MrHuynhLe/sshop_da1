@@ -21,7 +21,7 @@ import unicro.entity.LoginResult;
  * @author Admin
  */
 public class User_Service {
-    private final String url = "jdbc:postgresql://localhost:5432/da_qlbh";
+    private final String url = "jdbc:postgresql://localhost:5432/unicro_qlbh";
     private final String username = "postgres";
     private final String password = "password";
     public static LoginResult login(String username, String password) {

@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import unicro.entity.Order;
 import java.sql.*;
+import javax.swing.JOptionPane;
 import unicro.entity.GioHang;
 import unicro.entity.OrderDetail;
 import unicro.entity.SanPhamChiTiet;
@@ -20,7 +21,7 @@ import unicro.entity.SanPhamChiTiet;
  */
 public class Order_Service {
 
-    private final String url = "jdbc:postgresql://localhost:5432/da_qlbh";
+    private final String url = "jdbc:postgresql://localhost:5432/unicro_qlbh";
     private final String username = "postgres";
     private final String password = "password";
 
@@ -177,7 +178,7 @@ public class Order_Service {
         String insertDetailSql = "INSERT INTO order_details (order_id, product_detail_id, price, number_of_product) VALUES (?, ?, ?, ?)";
 
         Connection conn = DriverManager.getConnection(
-                "jdbc:postgresql://localhost:5432/da_qlbh", "postgres", "password");
+                "jdbc:postgresql://localhost:5432/unicro_qlbh", "postgres", "password");
 
         conn.setAutoCommit(false);
         try (
@@ -274,20 +275,34 @@ public class Order_Service {
         }
     }
 
-    public void capNhatSoLuongSanPhamSauKhiDatHang(List<OrderDetail> chiTietDonHang) {
-        String sql = "UPDATE san_pham_chi_tiet SET so_luong = so_luong - ? WHERE id = ?";
-
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            for (OrderDetail ct : chiTietDonHang) {
-                ps.setInt(1, ct.getNumber_of_product());
-                ps.setInt(2, ct.getProduct_detail_id());
-                ps.addBatch();
-            }
-
-            ps.executeBatch();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//    public void capNhatSoLuongSauKhiDatHang(List<GioHang> gioHangList) {
+//        String sql = "UPDATE san_pham_chi_tiet SET so_luong = ? WHERE id = ?";
+//        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+//            for (GioHang gh : gioHangList) {
+//                // Tìm lại SPCT từ mã SPCT
+//                SanPhamChiTiet spct = chiTietRepo.findByMaSPCT(gh.getMaSPCT());
+//                int soLuongMoi = spct.getSoLuong() - gh.getSoLuong();
+//                ps.setInt(1, soLuongMoi);
+//                ps.setInt(2, spct.getId());
+//                ps.addBatch();
+//            }
+//            ps.executeBatch();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            JOptionPane.showMessageDialog(null, "Lỗi cập nhật tồn kho hàng loạt!");
+//        }
+//    }
+    
+    public void capNhatSoLuongTon(int idSpct, int soLuongMoi) {
+    String sql = "UPDATE san_pham_chi_tiet SET so_luong = ? WHERE id = ?";
+    try (Connection conn = DriverManager.getConnection(url, username, password);
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, soLuongMoi);
+        ps.setInt(2, idSpct);
+        ps.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Lỗi khi cập nhật số lượng tồn kho sản phẩm!");
     }
+}
 }

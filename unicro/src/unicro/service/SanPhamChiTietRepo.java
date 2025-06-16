@@ -27,7 +27,7 @@ import java.sql.*;
  */
 public class SanPhamChiTietRepo {
 
-    private final String url = "jdbc:postgresql://localhost:5432/da_qlbh";
+    private final String url = "jdbc:postgresql://localhost:5432/unicro_qlbh";
     private final String username = "postgres";
     private final String password = "password";
 
@@ -638,5 +638,50 @@ public class SanPhamChiTietRepo {
         }
         return 0;
     }
-
+ public void capNhatSoLuongTon(int idSpct, int soLuongMoi) {
+    String sql = "UPDATE san_pham_chi_tiet SET so_luong = ? WHERE id = ?";
+    try (Connection conn = DriverManager.getConnection(url, username, password);
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, soLuongMoi);
+        ps.setInt(2, idSpct);
+        ps.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Lỗi khi cập nhật số lượng tồn kho sản phẩm!");
+    }
+}
+   
+   public SanPhamChiTiet findById(int id) {
+    String sql = """
+        SELECT spct.*, sp.ma_san_pham
+        FROM san_pham_chi_tiet spct
+        JOIN san_pham sp ON sp.id = spct.idsp
+        WHERE spct.id = ?
+    """;
+    try (Connection conn = DriverManager.getConnection(url, username, password);
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            SanPhamChiTiet sp = new SanPhamChiTiet();
+            sp.setId(rs.getInt("id"));
+            sp.setIdSp(rs.getInt("idsp"));
+            sp.setMaSp(rs.getString("ma_san_pham"));
+            sp.setMaNhaCungCap(rs.getInt("ma_nha_cung_cap"));
+            sp.setMaMau(rs.getInt("ma_mau"));
+            sp.setMaSize(rs.getInt("ma_size"));
+            sp.setMaChatLieu(rs.getInt("ma_chat_lieu"));
+            sp.setSoLuong(rs.getInt("so_luong"));
+            sp.setDonGia(rs.getFloat("don_gia"));
+            sp.setMoTa(rs.getString("mo_ta"));
+            sp.setNgayTao(rs.getDate("ngay_tao"));
+            sp.setMaThuongHieu(rs.getInt("ma_thuong_hieu"));
+            sp.setTrangThai(rs.getBoolean("trang_thai"));
+            return sp;
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return null;
+}
 }

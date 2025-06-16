@@ -19,32 +19,32 @@ import java.sql.*;
  */
 public class SanPhamRepo {
 
-    private static final String url = "jdbc:postgresql://localhost:5432/da_qlbh";
+    private static final String url = "jdbc:postgresql://localhost:5432/unicro_qlbh";
     private static final String username = "postgres";
     private static final String password = "password";
 
     public ArrayList<SanPham> getAll() {
         String sql = """
-         SELECT 
-                        sp.id,
-                        sp.ma_san_pham,
-                        sp.ten,
-                        sp.mo_ta,
-                        sp.ngay_tao,
-                        sp.trang_thai,
-                        sp.don_gia,
-                        SUM(spct.so_luong) AS so_luong
-                    FROM 
-                        san_pham sp
-                        LEFT JOIN san_pham_chi_tiet spct ON spct.idsp = sp.id
-                    GROUP BY 
-                        sp.id,
-                        sp.ma_san_pham,
-                        sp.ten,
-                        sp.mo_ta,
-                        sp.ngay_tao,
-                        sp.trang_thai,
-                        sp.don_gia;
+        SELECT 
+             sp.id,
+             sp.ma_san_pham,
+             sp.ten,
+             sp.mo_ta,
+             sp.ngay_tao,
+             sp.trang_thai,
+             sp.don_gia,
+             COALESCE(SUM(spct.so_luong), 0) AS so_luong
+         FROM 
+             san_pham sp
+             LEFT JOIN san_pham_chi_tiet spct ON spct.idsp = sp.id
+         GROUP BY 
+             sp.id,
+             sp.ma_san_pham,
+             sp.ten,
+             sp.mo_ta,
+             sp.ngay_tao,
+             sp.trang_thai,
+             sp.don_gia;
         """;
         ArrayList<SanPham> list = new ArrayList<>();
 
@@ -53,14 +53,14 @@ public class SanPhamRepo {
 
             while (rs.next()) {
                 SanPham sanPham = new SanPham();
-                sanPham.setId(rs.getInt("ID"));
-                sanPham.setMaSP(rs.getString("MA_SAN_PHAM"));
-                sanPham.setTenSP(rs.getString("TEN"));
-                sanPham.setMoTa(rs.getString("MO_TA"));
-                sanPham.setNgayTao(rs.getDate("NGAY_TAO"));
-                sanPham.setTrangThai(rs.getBoolean("TRANG_THAI"));
-                sanPham.setDonGia(rs.getFloat("DON_GIA"));
-                sanPham.setSoLuong(rs.getInt("SO_LUONG"));
+                sanPham.setId(rs.getInt("id"));
+                sanPham.setMaSP(rs.getString("ma_san_pham"));
+                sanPham.setTenSP(rs.getString("ten"));
+                sanPham.setMoTa(rs.getString("mo_ta"));
+                sanPham.setNgayTao(rs.getDate("ngay_tao"));
+                sanPham.setTrangThai(rs.getBoolean("trang_thai"));
+                sanPham.setDonGia(rs.getFloat("don_gia"));
+                sanPham.setSoLuong(rs.getInt("so_luong"));
 
                 list.add(sanPham);
             }

@@ -631,7 +631,7 @@ private void showDataToForm() {
                 index.getAndIncrement(),
                 spct.getId(),
                 spct.getMaSp(),
-                spct.getTenNhaCungCap(),
+                spct.getTenSanPham(),
                 spct.getTenMau(),
                 spct.getTenSize(),
                 spct.getTenChatLieu(),

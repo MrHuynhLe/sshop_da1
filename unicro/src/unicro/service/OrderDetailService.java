@@ -18,7 +18,7 @@ import unicro.entity.SanPhamChiTiet;
  */
 public class OrderDetailService {
 
-    private static final String URL = "jdbc:postgresql://localhost:5432/da_qlbh";
+    private static final String URL = "jdbc:postgresql://localhost:5432/unicro_qlbh";
     private static final String USER = "postgres";
     private static final String PASSWORD = "password";
 
@@ -54,7 +54,8 @@ public class OrderDetailService {
 
     public List<OrderDetail> getByOrderId(int orderId) {
         List<OrderDetail> list = new ArrayList<>();
-        String sql = "SELECT od.product_detail_id, sp.ten AS ten_san_pham, "
+        String sql = "SELECT od.product_detail_id,"
+                + " sp.ten AS ten_san_pham, "
                 + "od.number_of_product, od.price, "
                 + "od.number_of_product * od.price AS thanh_tien "
                 + "FROM order_details od "
@@ -80,5 +81,25 @@ public class OrderDetailService {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public String getMaSPByIdSpct(int idSpct) {
+        String sql = """
+       SELECT sp.ma_san_pham FROM san_pham sp "
+                       + "JOIN san_pham_chi_tiet spct ON sp.id = spct.idsp "
+                       + "WHERE spct.id = ?
+    """;
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idSpct);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("ma_san_pham");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

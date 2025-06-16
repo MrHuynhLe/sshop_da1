@@ -120,11 +120,20 @@ public class JPanelSanPham extends javax.swing.JPanel {
         mol = (DefaultTableModel) tblSP.getModel();
         mol.setRowCount(0);
         AtomicInteger index = new AtomicInteger(1);
-        list.forEach(s -> mol.addRow(new Object[]{
-            index.getAndIncrement(), s.getMaSP(), s.getTenSP(),
-            s.isTrangThai() ? "Còn hàng" : "Hết hàng"
-
-        }));
+//        list.forEach(s -> mol.addRow(new Object[]{
+//            index.getAndIncrement(), s.getMaSP(), s.getTenSP(),
+//            s.isTrangThai() ? "Còn hàng" : "Hết hàng"
+//
+//        }));
+           for (SanPham sanPham : list) {
+               mol.addRow(new Object[]{
+               index.getAndIncrement(),
+                   sanPham.getMaSP(),
+                   sanPham.getTenSP(),
+                   sanPham.isTrangThai() ? "Còn hàng" : "Hết hàng"
+               });
+            
+        }
 
     }
 
@@ -431,7 +440,7 @@ public class JPanelSanPham extends javax.swing.JPanel {
                 {null, null, null, null}
             },
             new String [] {
-                "STT", "ID Sản Phẩm", "Tên Sản Phẩm", "Trạng Thái"
+                "STT", "Mã SP", "Tên Sản Phẩm", "Trạng Thái"
             }
         ) {
             boolean[] canEdit = new boolean [] {

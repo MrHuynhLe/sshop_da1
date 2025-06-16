@@ -13,7 +13,7 @@ import java.sql.SQLException;
  * @author Admin
  */
 public class Connect {
-        private static final String URL = "jdbc:postgresql://localhost:5432/da_qlbh"; 
+        private static final String URL = "jdbc:postgresql://localhost:5432/unicro_qlbh"; 
     private static final String USER = "postgres";
     private static final String PASSWORD = "password";
 
@@ -26,5 +26,7 @@ public class Connect {
             return null;
         }
     }
-
+    public static void main(String[] args) {
+        getConnection();
+    }
 }

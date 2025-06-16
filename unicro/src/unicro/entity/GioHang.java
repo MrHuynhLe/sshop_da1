@@ -9,19 +9,29 @@ package unicro.entity;
  * @author Admin
  */
 public class GioHang {
+    private int idSpct;
      private String maSPCT;
     private String tenSP;
     private int soLuong;
     private float giaBan;
 
-    public GioHang(String maSPCT, String tenSP, int soLuong, float giaBan) {
+    public GioHang() {
+    }
+
+    public GioHang(int idSpct, String maSPCT, String tenSP, int soLuong, float giaBan) {
+        this.idSpct = idSpct;
         this.maSPCT = maSPCT;
         this.tenSP = tenSP;
         this.soLuong = soLuong;
         this.giaBan = giaBan;
     }
 
-    public GioHang() {
+    public int getIdSpct() {
+        return idSpct;
+    }
+
+    public void setIdSpct(int idSpct) {
+        this.idSpct = idSpct;
     }
 
     public String getMaSPCT() {
@@ -55,6 +65,7 @@ public class GioHang {
     public void setGiaBan(float giaBan) {
         this.giaBan = giaBan;
     }
-    
+
+   
     
 }

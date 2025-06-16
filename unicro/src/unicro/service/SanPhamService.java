@@ -20,7 +20,7 @@ import unicro.entity.SanPhamChiTiet;
  */
 public class SanPhamService {
 
-    private final String url = "jdbc:postgresql://localhost:5432/da_qlbh";
+    private final String url = "jdbc:postgresql://localhost:5432/unicro_qlbh";
     private final String user = "postgres";
     private final String password = "password";
 

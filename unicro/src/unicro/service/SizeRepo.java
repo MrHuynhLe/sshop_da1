@@ -17,7 +17,7 @@ import unicro.entity.Size;
  */
 public class SizeRepo {
 
-    private final String url = "jdbc:postgresql://localhost:5432/da_qlbh";
+    private final String url = "jdbc:postgresql://localhost:5432/unicro_qlbh";
     private final String username = "postgres";
     private final String password = "password";
 
