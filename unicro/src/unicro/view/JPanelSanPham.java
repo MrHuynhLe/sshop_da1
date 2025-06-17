@@ -826,14 +826,14 @@ public class JPanelSanPham extends javax.swing.JPanel {
     }//GEN-LAST:event_tblSPMouseClicked
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        // TODO add your handling code here:
-        String keyword = txtTimKiem.getText();
-        ArrayList<SanPham> ketQuaTimKiem = rp.search(keyword);
-        if (ketQuaTimKiem != null) {
-            showDataTableSP(ketQuaTimKiem);
-        } else {
-            JOptionPane.showMessageDialog(this, "Không tìm thấy sản phẩm phù hợp.");
-        }
+//        // TODO add your handling code here:
+//        String keyword = txtTimKiem.getText();
+//        ArrayList<SanPham> ketQuaTimKiem = rp.search(keyword);
+//        if (ketQuaTimKiem != null) {
+//            showDataTableSP(ketQuaTimKiem);
+//        } else {
+//            JOptionPane.showMessageDialog(this, "Không tìm thấy sản phẩm phù hợp.");
+//        }
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnLamMoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLamMoiActionPerformed

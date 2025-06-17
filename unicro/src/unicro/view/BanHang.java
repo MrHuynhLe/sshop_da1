@@ -58,10 +58,10 @@ public class BanHang extends javax.swing.JPanel {
     SanPhamChiTietRepo chiTietRepo = new SanPhamChiTietRepo();
 
     private int currentOrderId = -1;
-    private int currentUserId = -1;
+    private int currentUserId = Session.currentUserId;
     private int idHoaDonDangChon = -1;
     private Integer currentOrderId1 = null;
-    private String currentOrderStatus = null;
+    private String currentOrderStatus = "Pending";
 
     private DefaultTableModel modelHD;
     private DefaultTableModel modelCT;
@@ -160,7 +160,6 @@ public class BanHang extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblHoaDon = new javax.swing.JTable();
-        btnTaoHoaDon = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         cboKhuyenMai = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
@@ -240,30 +239,18 @@ public class BanHang extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tblHoaDon);
 
-        btnTaoHoaDon.setText("Tạo hóa đơn");
-        btnTaoHoaDon.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnTaoHoaDonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnTaoHoaDon))
-                    .addComponent(jScrollPane1))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 673, Short.MAX_VALUE)
                 .addGap(9, 9, 9))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(btnTaoHoaDon)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(29, 29, 29)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -708,69 +695,69 @@ public class BanHang extends javax.swing.JPanel {
 
     private void btnThanhToanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThanhToanActionPerformed
         // TODO add your handling code here:
-       String status = txtThanhToan.getText();
+        String status = txtThanhToan.getText();
         if (status.equalsIgnoreCase("Đã thanh toán")) {
             JOptionPane.showMessageDialog(null, "Hoá đơn đã thanh toán");
         } else {
-             try {
-            int orderId = Integer.parseInt(txtMaHd.getText().trim());
-            BigDecimal tongTien = new BigDecimal(txtTongtien.getText().replace(",", "").trim());
+            try {
+                int orderId = Integer.parseInt(txtMaHd.getText().trim());
+                BigDecimal tongTien = new BigDecimal(txtTongtien.getText().replace(",", "").trim());
 
-            String phuongThuc = cboPhuongThucThanhToan.getSelectedItem().toString();
-            String ghiChu = txtNote.getText();
+                String phuongThuc = cboPhuongThucThanhToan.getSelectedItem().toString();
+                String ghiChu = txtNote.getText();
 
-            Voucher selectedVoucher = (Voucher) cboKhuyenMai.getSelectedItem();
-            Integer voucherId = (selectedVoucher != null) ? selectedVoucher.getId() : null;
+                Voucher selectedVoucher = (Voucher) cboKhuyenMai.getSelectedItem();
+                Integer voucherId = (selectedVoucher != null) ? selectedVoucher.getId() : null;
 
-            BigDecimal tienKhachDua = BigDecimal.ZERO;
-            BigDecimal tienThua = BigDecimal.ZERO;
+                BigDecimal tienKhachDua = BigDecimal.ZERO;
+                BigDecimal tienThua = BigDecimal.ZERO;
 
-            if (phuongThuc.equalsIgnoreCase("Cash")) {
-                String tienKhachStr = txtTienKhachDua.getText().replace(",", "").trim();
-                if (tienKhachStr.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Vui lòng nhập tiền khách đưa!");
-                    return;
+                if (phuongThuc.equalsIgnoreCase("Cash")) {
+                    String tienKhachStr = txtTienKhachDua.getText().replace(",", "").trim();
+                    if (tienKhachStr.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Vui lòng nhập tiền khách đưa!");
+                        return;
+                    }
+                    try {
+                        tienKhachDua = new BigDecimal(tienKhachStr);
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(null, "Tiền khách đưa phải là số hợp lệ!");
+                        return;
+                    }
+                    tienThua = tienKhachDua.subtract(tongTien);
+
+                    if (tienThua.compareTo(BigDecimal.ZERO) < 0) {
+                        JOptionPane.showMessageDialog(null, "Tiền khách đưa không đủ!");
+                        return;
+                    }
+                    txtTienThua.setText(String.format("%,.0f", tienThua));
+                } else {
+                    tienKhachDua = tongTien;
+                    tienThua = BigDecimal.ZERO;
+                    txtTienThua.setText("0");
                 }
-                try {
-                    tienKhachDua = new BigDecimal(tienKhachStr);
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(null, "Tiền khách đưa phải là số hợp lệ!");
-                    return;
-                }
-                tienThua = tienKhachDua.subtract(tongTien);
+                Order_Service service = new Order_Service();
+                boolean ok = service.capNhatHoaDon(orderId, voucherId, tongTien, phuongThuc, ghiChu);
 
-                if (tienThua.compareTo(BigDecimal.ZERO) < 0) {
-                    JOptionPane.showMessageDialog(null, "Tiền khách đưa không đủ!");
-                    return;
+                if (ok) {
+                    JOptionPane.showMessageDialog(null, "Thanh toán thành công!");
+                    loadTableHoaDon();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Không tìm thấy hóa đơn cần cập nhật!");
                 }
-                txtTienThua.setText(String.format("%,.0f", tienThua));
-            } else {
-                tienKhachDua = tongTien;
-                tienThua = BigDecimal.ZERO;
-                txtTienThua.setText("0");
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "Lỗi định dạng mã hóa đơn hoặc tổng tiền!");
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Lỗi thanh toán: " + e.getMessage());
             }
-            Order_Service service = new Order_Service();
-            boolean ok = service.capNhatHoaDon(orderId, voucherId, tongTien, phuongThuc, ghiChu);
-
-            if (ok) {
-                JOptionPane.showMessageDialog(null, "Thanh toán thành công!");
-                loadTableHoaDon();
-            } else {
-                JOptionPane.showMessageDialog(null, "Không tìm thấy hóa đơn cần cập nhật!");
+            int row = tblHoaDon.getSelectedRow();
+            if (row == -1) {
+                return;
             }
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(null, "Lỗi định dạng mã hóa đơn hoặc tổng tiền!");
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Lỗi thanh toán: " + e.getMessage());
+            loadTableHoaDon();
         }
-        int row = tblHoaDon.getSelectedRow();
-        if (row == -1) {
-            return;
-        }
-        loadTableHoaDon();
-        }
-       
+
     }//GEN-LAST:event_btnThanhToanActionPerformed
 
     private void btnThemSanPhamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemSanPhamActionPerformed
@@ -780,7 +767,6 @@ public class BanHang extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm!");
             return;
         }
-
         DefaultTableModel model = (DefaultTableModel) tblSanPham.getModel();
         int idSpct = Integer.parseInt(model.getValueAt(selectedRow, 1).toString());
         String tenSpct = model.getValueAt(selectedRow, 3).toString();
@@ -790,12 +776,10 @@ public class BanHang extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Không tìm thấy sản phẩm!");
             return;
         }
-
         String input = JOptionPane.showInputDialog(null, "Nhập số lượng:");
         if (input == null) {
             return;
         }
-
         int soLuongNhap;
         try {
             soLuongNhap = Integer.parseInt(input);
@@ -812,8 +796,20 @@ public class BanHang extends javax.swing.JPanel {
             return;
         }
 
-        if (currentOrderStatus.equalsIgnoreCase("Pending")) {
+        if (currentOrderId1 == null || !"Pending".equalsIgnoreCase(currentOrderStatus)) {
+            Order newOrder = orderService.createPendingOrder(currentUserId);
+            if (newOrder == null) {
+                JOptionPane.showMessageDialog(null, "Không thể tạo hóa đơn mới!");
+                return;
+            }
+            currentOrderId1 = newOrder.getId();
+            currentOrderStatus = newOrder.getStatus();
+            loadTableHoaDon();
+        }
+
+        if ("Pending".equalsIgnoreCase(currentOrderStatus)) {
             OrderDetail existing = orderDetailService.findByOrderIdAndProductDetailId(currentOrderId1, spct.getId());
+
             if (existing != null) {
                 int soLuongMoi = existing.getNumber_of_product() + soLuongNhap;
                 if (soLuongMoi > spct.getSoLuong()) {
@@ -848,124 +844,53 @@ public class BanHang extends javax.swing.JPanel {
                 }
             }
 
-        } else if (currentOrderStatus.equalsIgnoreCase("Đã thanh toán")) {
-            if (gioHang.isEmpty()) {
-                gioHang.clear();
-            }
-            boolean daCo = false;
-            for (GioHang gh : gioHang) {
-                if (gh.getIdSpct() == spct.getId()) {
-                    int soLuongMoi = gh.getSoLuong() + soLuongNhap;
-                    if (soLuongMoi > spct.getSoLuong()) {
-                        JOptionPane.showMessageDialog(null, "Sản phẩm trong giỏ vượt quá tồn kho!");
-                        return;
-                    }
-                    gh.setSoLuong(soLuongMoi);
-                    daCo = true;
-                    break;
-                }
-            }
-            if (!daCo) {
-                gioHang.add(new GioHang(
-                        spct.getId(),
-                        spct.getMaSp(),
-                        tenSpct,
-                        soLuongNhap,
-                        spct.getDonGia()
-                ));
-            }
-
-            chiTietRepo.capNhatSoLuongTon(spct.getId(), spct.getSoLuong() - soLuongNhap);
-            capNhatBangGioHang();
+        } else {
+            JOptionPane.showMessageDialog(null, "Không thể thêm vào hóa đơn đã thanh toán. Hãy tạo hóa đơn mới.");
         }
+
         upvoucher();
+
     }//GEN-LAST:event_btnThemSanPhamActionPerformed
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
-        // TODO add your handling code here:
         int selectedRow = tblChiTietHoaDon.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm cần xoá!");
             return;
         }
-        int confirm = JOptionPane.showConfirmDialog(null, "Bạn có muốn xoá?", "Xác nhận xoá", JOptionPane.YES_NO_OPTION);
+
+        if (currentOrderStatus == null || !currentOrderStatus.equalsIgnoreCase("Pending")) {
+            JOptionPane.showMessageDialog(null, "Chỉ được xoá sản phẩm khi hóa đơn đang ở trạng thái 'Pending' hoặc chưa thanh toán!");
+            return;
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(null, "Bạn có muốn xoá sản phẩm này khỏi hóa đơn?", "Xác nhận xoá", JOptionPane.YES_NO_OPTION);
         if (confirm != JOptionPane.YES_OPTION) {
             return;
         }
+
         DefaultTableModel model = (DefaultTableModel) tblChiTietHoaDon.getModel();
         int idSpct = Integer.parseInt(model.getValueAt(selectedRow, 1).toString());
         int soLuongXoa = Integer.parseInt(model.getValueAt(selectedRow, 4).toString());
         SanPhamChiTiet spct = chiTietRepo.findById(idSpct);
         if (spct != null) {
-            int soLuongCapNhat = spct.getSoLuong() + soLuongXoa;
-            chiTietRepo.capNhatSoLuongTon(idSpct, soLuongCapNhat);
+            chiTietRepo.capNhatSoLuongTon(idSpct, spct.getSoLuong() + soLuongXoa);
         }
-        if (currentOrderStatus != null && currentOrderStatus.equalsIgnoreCase("Pending")) {
-            boolean deleted = orderDetailService.deleteByOrderIdAndProductDetailId(currentOrderId1, idSpct);
-            if (!deleted) {
-                JOptionPane.showMessageDialog(null, "Xóa thất bại trong CSDL!");
-                return;
-            }
-            JOptionPane.showMessageDialog(null, "Đã xoá khỏi hóa đơn!");
 
-        } else {
-            Iterator<GioHang> iterator = gioHang.iterator();
-            while (iterator.hasNext()) {
-                GioHang gh = iterator.next();
-                if (gh.getIdSpct() == idSpct) {
-                    iterator.remove();
-                    break;
-                }
-            }
-            JOptionPane.showMessageDialog(null, "Đã xoá khỏi giỏ hàng!");
+        boolean deleted = orderDetailService.deleteByOrderIdAndProductDetailId(currentOrderId1, idSpct);
+        if (!deleted) {
+            JOptionPane.showMessageDialog(null, "Xóa thất bại trong CSDL!");
+            return;
         }
+
+        JOptionPane.showMessageDialog(null, "Đã xoá sản phẩm khỏi hóa đơn!");
         model.removeRow(selectedRow);
+
+        loadChiTietHoaDonVaoTable(orderDetailService.getByOrderId1(currentOrderId1));
         loadTableSanPhamChiTiet();
         upvoucher();
+
     }//GEN-LAST:event_btnXoaActionPerformed
-
-    private void btnTaoHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTaoHoaDonActionPerformed
-        try {
-            DefaultTableModel model = (DefaultTableModel) tblChiTietHoaDon.getModel();
-            List<GioHang> gioHang = new ArrayList<>();
-            for (int i = 0; i < model.getRowCount(); i++) {
-                int idChiTietSanPham = (int) model.getValueAt(i, 1);
-                String tenSP = (String) model.getValueAt(i, 3);
-                String maSpct = (String) model.getValueAt(i, 2);
-                int soLuong = (int) model.getValueAt(i, 4);
-                float donGia = (float) model.getValueAt(i, 5);
-                gioHang.add(new GioHang(idChiTietSanPham, maSpct, tenSP, soLuong, donGia));
-            }
-            int userId = Session.currentUserId;
-            Integer voucherId = null;
-            String paymentMethod = (String) cboPhuongThucThanhToan.getSelectedItem();
-            String status = "Pending";
-            String note = txtNote.getText();
-
-            Order_Service service = new Order_Service();
-            int newOrderId = service.createOrder(userId, voucherId, note, paymentMethod, status, gioHang);
-
-            if (newOrderId != -1) {
-                JOptionPane.showMessageDialog(this, "Tạo hóa đơn thành công. Mã: " + newOrderId);
-
-                for (GioHang item : gioHang) {
-                    BigDecimal donGia = BigDecimal.valueOf(item.getGiaBan());
-                    OrderDetail ord = new OrderDetail(newOrderId, item.getIdSpct(), donGia, item.getSoLuong());
-
-                    orderDetailService.insert(ord);
-                    chiTietRepo.capNhatSoLuongTon(item.getIdSpct(), -item.getSoLuong());
-                }
-                model.setRowCount(0);
-                loadTableHoaDon();
-            } else {
-                JOptionPane.showMessageDialog(this, "Tạo hóa đơn thất bại!");
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Lỗi tạo hóa đơn: " + ex.getMessage());
-        }
-    }//GEN-LAST:event_btnTaoHoaDonActionPerformed
 
     private void cboKhuyenMaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboKhuyenMaiActionPerformed
         // TODO add your handling code here:
@@ -1019,7 +944,6 @@ public class BanHang extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnTaoHoaDon;
     private javax.swing.JButton btnThanhToan;
     private javax.swing.JButton btnThemSanPham;
     private javax.swing.JButton btnTimkiem;
@@ -1103,8 +1027,7 @@ public class BanHang extends javax.swing.JPanel {
                 spct.getMaSp(),
                 spct.getTenSanPham(),
                 soLuong,
-                df.format(spct.getDonGia())
-                ,
+                df.format(spct.getDonGia()),
                 (spct.getTenMau()),
                 spct.getTenSize(),
                 spct.getTenChatLieu(),
@@ -1118,7 +1041,7 @@ public class BanHang extends javax.swing.JPanel {
         modelCT.setRowCount(0);
         List<OrderDetail> dsCT = orderDetailService.getByOrderId(orderId);
         int stt = 1;
-DecimalFormat df = new DecimalFormat("#,###");
+        DecimalFormat df = new DecimalFormat("#,###");
         for (OrderDetail ct : dsCT) {
             int idSpct = ct.getProduct_detail_id();
             String maSp = orderDetailService.getMaSPByIdSpct(idSpct);
@@ -1133,7 +1056,7 @@ DecimalFormat df = new DecimalFormat("#,###");
                 maSp,
                 tenSP,
                 soLuongBan,
-                df.format(gia),            
+                df.format(gia),
                 df.format(thanhTien),
                 ct.getId()
             });
@@ -1152,8 +1075,8 @@ DecimalFormat df = new DecimalFormat("#,###");
                 sp.getMaSPCT(),
                 sp.getTenSP(),
                 sp.getSoLuong(),
-                df.format(sp.getGiaBan()),              
-               df.format( sp.getGiaBan() * sp.getSoLuong())
+                df.format(sp.getGiaBan()),
+                df.format(sp.getGiaBan() * sp.getSoLuong())
             });
         }
     }
@@ -1275,6 +1198,28 @@ DecimalFormat df = new DecimalFormat("#,###");
             model.addElement(v);
         }
         cboKhuyenMai.setModel((ComboBoxModel) model);
+    }
+
+    public Order createPendingOrder(int userId) {
+        try {
+            Order order = new Order();
+            order.setUser_id(userId);
+            LocalDateTime ldt = LocalDateTime.now();
+            ZoneId zoneId = ZoneId.systemDefault();
+            Date date = (Date) Date.from(ldt.atZone(zoneId).toInstant());
+            order.setOrder_date(date); //
+            order.setStatus("Pending");
+            order.setTotal(BigDecimal.ZERO);
+
+            boolean success = orderService.insert(order);
+            if (success) {
+                Order pendingOrder = orderService.findPendingByUser(userId);
+                return pendingOrder;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

@@ -410,8 +410,8 @@ public class Order_Service {
                 hd.setId(rs.getInt("id"));
                 hd.setVoucher_id(rs.getInt("voucher_id"));
                 hd.setOrder_date(rs.getDate("order_date"));
-                hd.setTotal(rs.getBigDecimal("total"));              
-               hd.setStatus(rs.getString("status"));
+                hd.setTotal(rs.getBigDecimal("total"));
+                hd.setStatus(rs.getString("status"));
                 list.add(hd);
             }
         } catch (Exception e) {
@@ -420,4 +420,72 @@ public class Order_Service {
 
         return list;
     }
+
+    public boolean insert(Order order) {
+        String sql = "INSERT INTO orders (user_id, order_date, status, total) VALUES (?, ?, ?, ?)";
+        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, order.getUser_id());
+
+            ps.setDate(2, new java.sql.Date(order.getOrder_date().getTime()));
+            ps.setString(3, order.getStatus());
+            ps.setBigDecimal(4, order.getTotal());
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public Order findPendingByUser(int userId) {
+        String sql = "SELECT * FROM orders WHERE user_id = ? AND status = 'Pending' ORDER BY order_date DESC LIMIT 1";
+        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Order o = new Order();
+                o.setId(rs.getInt("id"));
+                o.setUser_id(rs.getInt("user_id"));
+                ps.setDate(2, new java.sql.Date(o.getOrder_date().getTime()));
+                o.setStatus(rs.getString("status"));
+                o.setTotal(rs.getBigDecimal("total_price"));
+                return o;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Order createPendingOrder(int userId) {
+        String sql = "INSERT INTO orders (user_id, order_date, status, total) VALUES (?, ?, ?, ?) RETURNING id";
+        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            Date now = new Date();
+            ps.setInt(1, userId);
+            ps.setDate(2, new java.sql.Date(now.getTime()));
+            ps.setString(3, "Pending");
+            ps.setBigDecimal(4, BigDecimal.ZERO);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                int orderId = rs.getInt("id");
+                Order o = new Order();
+                o.setId(orderId);
+                o.setUser_id(userId);
+                o.setOrder_date(now);
+                o.setStatus("Pending");
+                o.setTotal(BigDecimal.ZERO);
+                return o;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
