@@ -96,6 +96,7 @@ public class TrangChu extends javax.swing.JFrame {
         mainPanel.add(new ThongKe(), "ThongKe");
         mainPanel.add(new KhuyenMai(), "KhuyenMai");
         mainPanel.add(new NguoiDung(), "NguoiDung");
+          mainPanel.add(new HoaDon(), "HoaDon");
 
         menuButtons[0].addActionListener(e -> cardLayout.show(mainPanel, "BanHang"));
         menuButtons[1].addActionListener(e -> cardLayout.show(mainPanel, "QLSP"));

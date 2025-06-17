@@ -26,6 +26,7 @@ import unicro.service.Order_Service;
 import unicro.service.SanPhamChiTietRepo;
 import unicro.service.SanPhamService;
 import java.sql.*;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Collections;
@@ -707,8 +708,11 @@ public class BanHang extends javax.swing.JPanel {
 
     private void btnThanhToanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThanhToanActionPerformed
         // TODO add your handling code here:
-
-        try {
+       String status = txtThanhToan.getText();
+        if (status.equalsIgnoreCase("Đã thanh toán")) {
+            JOptionPane.showMessageDialog(null, "Hoá đơn đã thanh toán");
+        } else {
+             try {
             int orderId = Integer.parseInt(txtMaHd.getText().trim());
             BigDecimal tongTien = new BigDecimal(txtTongtien.getText().replace(",", "").trim());
 
@@ -765,6 +769,8 @@ public class BanHang extends javax.swing.JPanel {
             return;
         }
         loadTableHoaDon();
+        }
+       
     }//GEN-LAST:event_btnThanhToanActionPerformed
 
     private void btnThemSanPhamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemSanPhamActionPerformed
@@ -1081,6 +1087,7 @@ public class BanHang extends javax.swing.JPanel {
     private void loadTableSanPhamChiTiet() {
         modelSPCT.setRowCount(0);
         List<SanPhamChiTietResponse> ds = chiTietRepo.getAllSPCT();
+        DecimalFormat df = new DecimalFormat("#,###");
         int stt = 1;
         for (SanPhamChiTietResponse spct : ds) {
             String trangThai;
@@ -1096,7 +1103,8 @@ public class BanHang extends javax.swing.JPanel {
                 spct.getMaSp(),
                 spct.getTenSanPham(),
                 soLuong,
-                spct.getDonGia(),
+                df.format(spct.getDonGia())
+                ,
                 (spct.getTenMau()),
                 spct.getTenSize(),
                 spct.getTenChatLieu(),
@@ -1110,7 +1118,7 @@ public class BanHang extends javax.swing.JPanel {
         modelCT.setRowCount(0);
         List<OrderDetail> dsCT = orderDetailService.getByOrderId(orderId);
         int stt = 1;
-
+DecimalFormat df = new DecimalFormat("#,###");
         for (OrderDetail ct : dsCT) {
             int idSpct = ct.getProduct_detail_id();
             String maSp = orderDetailService.getMaSPByIdSpct(idSpct);
@@ -1125,8 +1133,8 @@ public class BanHang extends javax.swing.JPanel {
                 maSp,
                 tenSP,
                 soLuongBan,
-                gia,
-                thanhTien,
+                df.format(gia),            
+                df.format(thanhTien),
                 ct.getId()
             });
         }
@@ -1136,6 +1144,7 @@ public class BanHang extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) tblChiTietHoaDon.getModel();
         model.setRowCount(0);
         int stt = 1;
+        DecimalFormat df = new DecimalFormat("#,###");
         for (GioHang sp : gioHang) {
             model.addRow(new Object[]{
                 stt++,
@@ -1143,8 +1152,8 @@ public class BanHang extends javax.swing.JPanel {
                 sp.getMaSPCT(),
                 sp.getTenSP(),
                 sp.getSoLuong(),
-                sp.getGiaBan(),
-                sp.getGiaBan() * sp.getSoLuong()
+                df.format(sp.getGiaBan()),              
+               df.format( sp.getGiaBan() * sp.getSoLuong())
             });
         }
     }
@@ -1193,7 +1202,7 @@ public class BanHang extends javax.swing.JPanel {
         BigDecimal tongTien = BigDecimal.ZERO;
         DefaultTableModel model = (DefaultTableModel) tblChiTietHoaDon.getModel();
         for (int i = 0; i < model.getRowCount(); i++) {
-            Object thanhTienObj = model.getValueAt(i, 5);
+            Object thanhTienObj = model.getValueAt(i, 6);
             if (thanhTienObj != null) {
                 try {
                     String thanhTienStr = thanhTienObj.toString().replace(",", "");
@@ -1231,6 +1240,7 @@ public class BanHang extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) tblChiTietHoaDon.getModel();
         model.setRowCount(0);
         int stt = 1;
+        DecimalFormat df = new DecimalFormat("#,###");
         for (OrderDetailResponse od : dsCT) {
             model.addRow(new Object[]{
                 stt++,
@@ -1238,8 +1248,8 @@ public class BanHang extends javax.swing.JPanel {
                 od.getMaSp(),
                 od.getTenSp(),
                 od.getSoLuong(),
-                od.getGia(),
-                od.getThanhTien()
+                df.format(od.getGia()),
+                df.format(od.getThanhTien())
             });
         }
     }

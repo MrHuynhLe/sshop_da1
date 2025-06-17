@@ -301,4 +301,123 @@ public class Order_Service {
         }
         return null;
     }
+
+    public String getTenNhanVienByOrderId(int orderId) {
+        String sql = "SELECT u.fullname FROM orders o JOIN users u ON o.user_id = u.id WHERE o.id = ?";
+        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, orderId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("fullname");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public BigDecimal getTienGiam(int voucherId, BigDecimal tongTien) {
+        String sql = "SELECT discount_type, discount_value FROM vouchers WHERE id = ?";
+        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, voucherId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String type = rs.getString("discount_type");
+                BigDecimal value = rs.getBigDecimal("discount_value");
+                if ("percent".equalsIgnoreCase(type)) {
+                    return tongTien.multiply(value).divide(BigDecimal.valueOf(100));
+                } else if ("amount".equalsIgnoreCase(type)) {
+                    return value;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return BigDecimal.ZERO;
+    }
+
+    public List<Order> timKiemTheoID(int idHoaDon) {
+        List<Order> list = new ArrayList<>();
+        String sql = """
+        SELECT o.id, u.fullname AS ten_nhan_vien, o.voucher_id, o.order_date, o.total, o.status
+        FROM orders o
+        JOIN users u ON o.user_id = u.id
+        WHERE o.id = ?
+    """;
+
+        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idHoaDon);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Order hd = new Order();
+                hd.setId(rs.getInt("id"));
+                hd.setVoucher_id(rs.getInt("voucher_id"));
+                hd.setOrder_date(rs.getDate("order_date"));
+                hd.setTotal(rs.getBigDecimal("total"));
+                hd.setStatus(rs.getString("status"));
+                list.add(hd);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public List<Order> LocTrangThai(String status) {
+        List<Order> list = new ArrayList<>();
+        String sql = """
+        SELECT o.id, u.fullname AS ten_nhan_vien, o.voucher_id, o.order_date, o.total, o.status
+        FROM orders o
+        JOIN users u ON o.user_id = u.id
+        WHERE o.status = ?
+    """;
+
+        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Order hd = new Order();
+                hd.setId(rs.getInt("id"));
+                hd.setVoucher_id(rs.getInt("voucher_id"));
+                hd.setOrder_date(rs.getDate("order_date"));
+                hd.setTotal(rs.getBigDecimal("total"));
+                hd.setStatus(rs.getString("status"));
+                list.add(hd);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public List<Order> locTheoNgay(Date fromDate, Date toDate) {
+        List<Order> list = new ArrayList<>();
+        String sql = """
+        SELECT o.id, u.fullname AS ten_nhan_vien, o.voucher_id, o.order_date, o.total, o.status
+        FROM orders o
+        JOIN users u ON o.user_id = u.id
+        WHERE DATE(o.order_date) BETWEEN ? AND ?
+    """;
+
+        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setDate(1, new java.sql.Date(fromDate.getTime()));
+            ps.setDate(2, new java.sql.Date(toDate.getTime()));
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Order hd = new Order();
+                hd.setId(rs.getInt("id"));
+                hd.setVoucher_id(rs.getInt("voucher_id"));
+                hd.setOrder_date(rs.getDate("order_date"));
+                hd.setTotal(rs.getBigDecimal("total"));              
+               hd.setStatus(rs.getString("status"));
+                list.add(hd);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
 }
