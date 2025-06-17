@@ -234,23 +234,22 @@ public class Order_Service {
         }
     }
 
-    public int getIdChiTietSanPhamTuMa(String maSP) throws SQLException {
-        String query = "SELECT ct.id "
-                + "from san_pham_chi_tiet ct "
-                + "JOIN san_pham sp ON ct.idsp = sp.id "
-                + "WHERE sp.ma_san_pham = ?";
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setString(1, maSP);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("id");
-                }
-            }
-        }
-        return -1;
-    }
-
+//    public int getIdChiTietSanPhamTuMa(String maSP) throws SQLException {
+//        String query = "SELECT ct.id "
+//                + "from san_pham_chi_tiet ct "
+//                + "JOIN san_pham sp ON ct.idsp = sp.id "
+//                + "WHERE sp.ma_san_pham = ?";
+//        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement stmt = conn.prepareStatement(query)) {
+//
+//            stmt.setString(1, maSP);
+//            try (ResultSet rs = stmt.executeQuery()) {
+//                if (rs.next()) {
+//                    return rs.getInt("id");
+//                }
+//            }
+//        }
+//        return -1;
+//    }
     public boolean capNhatHoaDon(int orderId, Integer voucherId, BigDecimal tongTien,
             String paymentMethod, String note) throws SQLException {
 
@@ -275,34 +274,31 @@ public class Order_Service {
         }
     }
 
-//    public void capNhatSoLuongSauKhiDatHang(List<GioHang> gioHangList) {
-//        String sql = "UPDATE san_pham_chi_tiet SET so_luong = ? WHERE id = ?";
-//        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
-//            for (GioHang gh : gioHangList) {
-//                // Tìm lại SPCT từ mã SPCT
-//                SanPhamChiTiet spct = chiTietRepo.findByMaSPCT(gh.getMaSPCT());
-//                int soLuongMoi = spct.getSoLuong() - gh.getSoLuong();
-//                ps.setInt(1, soLuongMoi);
-//                ps.setInt(2, spct.getId());
-//                ps.addBatch();
-//            }
-//            ps.executeBatch();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            JOptionPane.showMessageDialog(null, "Lỗi cập nhật tồn kho hàng loạt!");
-//        }
-//    }
-    
     public void capNhatSoLuongTon(int idSpct, int soLuongMoi) {
-    String sql = "UPDATE san_pham_chi_tiet SET so_luong = ? WHERE id = ?";
-    try (Connection conn = DriverManager.getConnection(url, username, password);
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setInt(1, soLuongMoi);
-        ps.setInt(2, idSpct);
-        ps.executeUpdate();
-    } catch (SQLException e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(null, "Lỗi khi cập nhật số lượng tồn kho sản phẩm!");
+        String sql = "UPDATE san_pham_chi_tiet SET so_luong = ? WHERE id = ?";
+        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, soLuongMoi);
+            ps.setInt(2, idSpct);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Lỗi khi cập nhật số lượng tồn kho sản phẩm!");
+        }
     }
-}
+
+    public String getUserNameByUserId(int userId) {
+        String sql = "SELECT fullname FROM users WHERE id = ?";
+        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("fullname");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

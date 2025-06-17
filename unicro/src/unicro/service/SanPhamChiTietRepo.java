@@ -638,50 +638,87 @@ public class SanPhamChiTietRepo {
         }
         return 0;
     }
- public void capNhatSoLuongTon(int idSpct, int soLuongMoi) {
-    String sql = "UPDATE san_pham_chi_tiet SET so_luong = ? WHERE id = ?";
-    try (Connection conn = DriverManager.getConnection(url, username, password);
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setInt(1, soLuongMoi);
-        ps.setInt(2, idSpct);
-        ps.executeUpdate();
-    } catch (SQLException e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(null, "Lỗi khi cập nhật số lượng tồn kho sản phẩm!");
+
+    public void capNhatSoLuongTon(int idSpct, int soLuongMoi) {
+        String sql = "UPDATE san_pham_chi_tiet SET so_luong = ? WHERE id = ?";
+        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, soLuongMoi);
+            ps.setInt(2, idSpct);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Lỗi khi cập nhật số lượng tồn kho sản phẩm!");
+        }
     }
-}
-   
-   public SanPhamChiTiet findById(int id) {
-    String sql = """
+
+    public SanPhamChiTiet findById(int id) {
+        String sql = """
         SELECT spct.*, sp.ma_san_pham
         FROM san_pham_chi_tiet spct
         JOIN san_pham sp ON sp.id = spct.idsp
         WHERE spct.id = ?
     """;
-    try (Connection conn = DriverManager.getConnection(url, username, password);
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setInt(1, id);
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()) {
-            SanPhamChiTiet sp = new SanPhamChiTiet();
-            sp.setId(rs.getInt("id"));
-            sp.setIdSp(rs.getInt("idsp"));
-            sp.setMaSp(rs.getString("ma_san_pham"));
-            sp.setMaNhaCungCap(rs.getInt("ma_nha_cung_cap"));
-            sp.setMaMau(rs.getInt("ma_mau"));
-            sp.setMaSize(rs.getInt("ma_size"));
-            sp.setMaChatLieu(rs.getInt("ma_chat_lieu"));
-            sp.setSoLuong(rs.getInt("so_luong"));
-            sp.setDonGia(rs.getFloat("don_gia"));
-            sp.setMoTa(rs.getString("mo_ta"));
-            sp.setNgayTao(rs.getDate("ngay_tao"));
-            sp.setMaThuongHieu(rs.getInt("ma_thuong_hieu"));
-            sp.setTrangThai(rs.getBoolean("trang_thai"));
-            return sp;
+        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                SanPhamChiTiet sp = new SanPhamChiTiet();
+                sp.setId(rs.getInt("id"));
+                sp.setIdSp(rs.getInt("idsp"));
+                sp.setMaSp(rs.getString("ma_san_pham"));
+                sp.setMaNhaCungCap(rs.getInt("ma_nha_cung_cap"));
+                sp.setMaMau(rs.getInt("ma_mau"));
+                sp.setMaSize(rs.getInt("ma_size"));
+                sp.setMaChatLieu(rs.getInt("ma_chat_lieu"));
+                sp.setSoLuong(rs.getInt("so_luong"));
+                sp.setDonGia(rs.getFloat("don_gia"));
+                sp.setMoTa(rs.getString("mo_ta"));
+                sp.setNgayTao(rs.getDate("ngay_tao"));
+                sp.setMaThuongHieu(rs.getInt("ma_thuong_hieu"));
+                sp.setTrangThai(rs.getBoolean("trang_thai"));
+                return sp;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return null;
     }
-    return null;
-}
+
+    public List<SanPhamChiTietResponse> findByTenSanPham(String keyword) {
+        List<SanPhamChiTietResponse> list = new ArrayList<>();
+        String sql = """
+        SELECT spct.id, sp.ma_san_pham, sp.ten AS ten_san_pham, 
+               spct.so_luong, spct.don_gia,
+               ms.ten AS ten_mau, size.ten AS ten_size, chat_lieu.ten AS ten_chat_lieu,
+               spct.trang_thai
+        FROM san_pham_chi_tiet spct
+        JOIN san_pham sp ON spct.idsp = sp.id
+        JOIN mau_sac ms ON spct.ma_mau = ms.id
+        JOIN size ON spct.ma_size = size.id
+        JOIN chat_lieu ON spct.ma_chat_lieu = chat_lieu.id
+        WHERE sp.ten ILIKE ?
+    """;
+
+        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, "%" + keyword + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                SanPhamChiTietResponse sp = new SanPhamChiTietResponse();
+                sp.setId(rs.getInt("id"));
+                sp.setMaSp(rs.getString("ma_san_pham"));
+                sp.setTenSanPham(rs.getString("ten_san_pham"));
+                sp.setSoLuong(rs.getInt("so_luong"));
+                sp.setDonGia(rs.getFloat("don_gia"));
+                sp.setTenMau(rs.getString("ten_mau"));
+                sp.setTenSize(rs.getString("ten_size"));
+                sp.setTenChatLieu(rs.getString("ten_chat_lieu"));
+                sp.setTrangThai(rs.getBoolean("trang_thai"));
+                list.add(sp);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
 }
