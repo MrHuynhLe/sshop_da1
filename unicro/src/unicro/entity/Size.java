@@ -57,4 +57,9 @@ public class Size {
         this.ten = ten;
     }
 
+    @Override
+    public String toString() {
+        return ten; 
+    }
+
 }

@@ -4,7 +4,9 @@
  */
 package unicro.view;
 
+import java.awt.Font;
 import java.awt.image.SampleModel;
+import java.awt.print.PrinterException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +31,12 @@ import java.sql.*;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Iterator;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JTextArea;
 import unicro.entity.GioHang;
 import unicro.entity.LoginResult;
 import unicro.entity.OrderDetailResponse;
@@ -741,6 +745,7 @@ public class BanHang extends javax.swing.JPanel {
 
                 if (ok) {
                     JOptionPane.showMessageDialog(null, "Thanh toán thành công!");
+                   
                     loadTableHoaDon();
                 } else {
                     JOptionPane.showMessageDialog(null, "Không tìm thấy hóa đơn cần cập nhật!");
@@ -1220,6 +1225,66 @@ public class BanHang extends javax.swing.JPanel {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void printHoaDonFull(
+            String maHd,
+            String tenNv,
+            LocalDateTime ngayTao,
+            List<OrderDetailResponse> chiTietList,
+            BigDecimal tongTien,
+            String voucher,
+            BigDecimal tongSauGiam,
+            String phuongThuc,
+            BigDecimal tienKhachDua,
+            BigDecimal tienThua,
+            String note,
+            String trangThai
+    ) {
+        JTextArea txtPrint = new JTextArea();
+        txtPrint.setFont(new Font("Monospaced", Font.PLAIN, 12));
+
+        txtPrint.append("========= HÓA ĐƠN BÁN HÀNG =========\n");
+        txtPrint.append("Mã HĐ         : " + maHd + "\n");
+        txtPrint.append("Nhân viên     : " + tenNv + "\n");
+        txtPrint.append("Ngày tạo      : " + ngayTao.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + "\n");
+        txtPrint.append("Voucher       : " + voucher + "\n");
+        txtPrint.append("------------------------------------\n");
+        txtPrint.append(String.format("%-10s %-15s %5s %10s\n", "Mã SP", "Tên SP", "SL", "Thành tiền"));
+        txtPrint.append("------------------------------------\n");
+
+        for (OrderDetailResponse item : chiTietList) {
+            txtPrint.append(String.format("%-10s %-15s %5d %,10.0f\n",
+                    item.getMaSp(),
+                    item.getTenSp(),
+                    item.getSoLuong(),
+                    item.getThanhTien()
+            ));
+        }
+
+        txtPrint.append("------------------------------------\n");
+        txtPrint.append(String.format("TỔNG TIỀN        : %,25.0f\n", tongTien));
+        txtPrint.append(String.format("GIẢM GIÁ (Voucher): %,24.0f\n", tongTien.subtract(tongSauGiam)));
+        txtPrint.append(String.format("THANH TOÁN       : %,25.0f\n", tongSauGiam));
+        txtPrint.append(String.format("KHÁCH ĐƯA        : %,25.0f\n", tienKhachDua));
+        txtPrint.append(String.format("TIỀN THỪA        : %,25.0f\n", tienThua));
+        txtPrint.append("Phương thức      : " + phuongThuc + "\n");
+        txtPrint.append("Ghi chú          : " + note + "\n");
+        txtPrint.append("Trạng thái       : " + trangThai + "\n");
+        txtPrint.append("====================================\n");
+        txtPrint.append("      CẢM ƠN VÀ HẸN GẶP LẠI!\n");
+
+        try {
+            boolean ok = txtPrint.print();
+            if (ok) {
+                JOptionPane.showMessageDialog(null, "In hóa đơn thành công!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Hủy in hóa đơn.");
+            }
+        } catch (PrinterException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Lỗi khi in hóa đơn: " + e.getMessage());
+        }
     }
 
 }

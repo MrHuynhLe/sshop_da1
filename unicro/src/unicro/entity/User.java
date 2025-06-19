@@ -5,6 +5,8 @@
 package unicro.entity;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -21,6 +23,7 @@ public class User {
     private String password;
     private Date created_at;
     private Date update_at;
+    private List<String> roleNames = new ArrayList<>();
 
     public User() {
     }
@@ -35,6 +38,14 @@ public class User {
         this.password = password;
         this.created_at = created_at;
         this.update_at = update_at;
+    }
+
+    public List<String> getRoleNames() {
+        return roleNames;
+    }
+
+    public void setRoleNames(List<String> roleNames) {
+        this.roleNames = roleNames;
     }
 
     public int getId() {

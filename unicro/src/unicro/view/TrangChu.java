@@ -129,7 +129,7 @@ public class TrangChu extends javax.swing.JFrame {
 
             menuButtons[1].setEnabled(false);
             menuButtons[3].setEnabled(false);
-            menuButtons[4].setEnabled(false);
+          // menuButtons[4].setEnabled(false);
         }
     }
 
