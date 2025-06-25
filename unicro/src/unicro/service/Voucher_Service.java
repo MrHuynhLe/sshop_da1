@@ -75,8 +75,8 @@ public class Voucher_Service {
             return false;
         }
 
-        String sql = "INSERT INTO vouchers (code, discount_type, discount_value, start_date, end_date, created_at, active) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO vouchers (code, discount_type, discount_value, start_date, end_date,max_purchase_amount,min_purchase_amount, created_at, active) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?,?,?)";
 
         try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -85,8 +85,10 @@ public class Voucher_Service {
             ps.setBigDecimal(3, v.getDiscount_value());
             ps.setDate(4, java.sql.Date.valueOf(v.getStart_date()));
             ps.setDate(5, java.sql.Date.valueOf(v.getEnd_date()));
-            ps.setTimestamp(6, Timestamp.valueOf(v.getCreated_at()));
-            ps.setBoolean(7, v.getActive());
+            ps.setBigDecimal(6, v.getMax_purchase_amount());
+            ps.setBigDecimal(7, v.getMin_purchase_amount());
+            ps.setTimestamp(8, Timestamp.valueOf(v.getCreated_at()));
+            ps.setBoolean(9, v.getActive());
 
             int rows = ps.executeUpdate();
             return rows > 0;
@@ -112,16 +114,18 @@ public class Voucher_Service {
     }
 
     public boolean updateVoucher(Voucher v) {
-        String sql = "UPDATE vouchers SET discount_type = ?, discount_value = ?, start_date = ?, end_date = ?, created_at = ?, active = ? WHERE code = ?";
+        String sql = "UPDATE vouchers SET discount_type = ?, discount_value = ?, start_date = ?, end_date = ?,max_purchase_amount = ?,min_purchase_amount = ?, created_at = ?, active = ? WHERE code = ?";
         try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, v.getDiscount_type());
             ps.setBigDecimal(2, v.getDiscount_value());
             ps.setTimestamp(3, Timestamp.valueOf(v.getStart_date().atStartOfDay()));
             ps.setTimestamp(4, Timestamp.valueOf(v.getEnd_date().atStartOfDay()));
-            ps.setTimestamp(5, Timestamp.valueOf(v.getCreated_at()));
-            ps.setBoolean(6, v.getActive());
-            ps.setString(7, v.getCode());
+            ps.setBigDecimal(5, v.getMax_purchase_amount());
+            ps.setBigDecimal(6, v.getMin_purchase_amount());
+            ps.setTimestamp(7, Timestamp.valueOf(v.getCreated_at()));
+            ps.setBoolean(8, v.getActive());
+            ps.setString(9, v.getCode());
 
             return ps.executeUpdate() > 0;
         } catch (Exception e) {

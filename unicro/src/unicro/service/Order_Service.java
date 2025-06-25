@@ -56,7 +56,7 @@ public class Order_Service {
 
     public List<Order> getDanhSachDonHang(Date fromDate, Date toDate) {
         List<Order> list = new ArrayList<>();
-        String sql = "SELECT id, order_date, total, status FROM orders WHERE order_date BETWEEN ? AND ?  AND status like 'Completed'";
+        String sql = "SELECT id, order_date, total, status FROM orders WHERE order_date BETWEEN ? AND ?  AND status like 'Đã thanh toán'";
 
         try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -487,6 +487,17 @@ public class Order_Service {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public boolean deleteById(Integer currentOrderId1) {
+        String sql = "DELETE FROM orders WHERE id = ?";
+        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, currentOrderId1);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }

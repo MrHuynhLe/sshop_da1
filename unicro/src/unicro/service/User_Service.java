@@ -13,9 +13,11 @@ import java.util.ArrayList;
 import org.postgresql.Driver;
 import unicro.User_Model;
 import java.sql.*;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.JOptionPane;
 import unicro.config.Connect;
 import unicro.entity.LoginResult;
 import unicro.entity.Session;
@@ -182,13 +184,17 @@ public class User_Service {
     }
 
     public boolean addUser(User user) {
+        if (checkUserName(user.getUsername())) {
+            JOptionPane.showMessageDialog(null, "Username đã tồn tại");
+            return false;
+        }
         String insertUserSql = """
         INSERT INTO users (username, fullname, address, phone_number, date_of_birth, password, created_at, update_at)
         VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
         RETURNING id
     """;
 
-        String insertUserRoleSql = "INSERT INTO user_role (user_id, role_id) VALUES (?, ?)";
+        String insertUserRoleSql = "INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)";
 
         try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement userStmt = conn.prepareStatement(insertUserSql);) {
             userStmt.setString(1, user.getUsername());
@@ -307,6 +313,65 @@ public class User_Service {
             ex.printStackTrace();
             return false;
         }
+    }
+
+    public boolean checkUserName(String userName) {
+        String sql = "Select 1 from  users where username = ?";
+        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, userName);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+            return false;
+        }
+    }
+
+    public List<User> searchUsersByName(String keyword) {
+        List<User> users = new ArrayList<>();
+
+        String sql = "SELECT u.id, u.fullname, u.username, u.date_of_birth, u.phone_number, u.address, "
+                + "u.created_at, u.update_at, "
+                + "ARRAY_AGG(r.name) AS roles "
+                + "FROM users u "
+                + "JOIN user_roles ur ON u.id = ur.user_id "
+                + "JOIN roles r ON ur.role_id = r.id "
+                + "WHERE u.fullname ILIKE ? "
+                + "GROUP BY u.id";
+
+        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, "%" + keyword + "%");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setFullname(rs.getString("fullname"));
+                user.setUsername(rs.getString("username"));
+                user.setDate_of_birth(rs.getDate("date_of_birth"));
+                user.setPhone_number(rs.getString("phone_number"));
+                user.setAddress(rs.getString("address"));
+                user.setCreated_at(rs.getDate("created_at"));
+                user.setUpdate_at(rs.getDate("update_at"));
+
+                Array rolesArray = rs.getArray("roles");
+                if (rolesArray != null) {
+                    String[] roles = (String[]) rolesArray.getArray();
+                    user.setRoleNames(Arrays.asList(roles));
+                }
+
+                users.add(user);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return users;
     }
 
 }

@@ -531,7 +531,6 @@ private void showDataToForm() {
             return;
         }
 
-
         txtSoLuongSPCT.setText(spct.getSoLuong() + "");
         txtDescription.setText(spct.getMoTa());
         txtDonGiaSPCT.setText(spct.getDonGia() + "");
@@ -589,9 +588,7 @@ private void showDataToForm() {
                 spct.getThuongHieu(),
                 spct.getSoLuong(),
                 formatCash(spct.getDonGia()),
-                spct.getMoTa(),
-                spct.getNgayTao(),
-                spct.isTrangThai() ? "Ngừng bán" : "Đang bán"
+                spct.getSoLuong() == 0 ? "Hết hàng" : "Còn hàng "
             });
         });
     }

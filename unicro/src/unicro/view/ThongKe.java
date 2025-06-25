@@ -125,15 +125,7 @@ public class ThongKe extends javax.swing.JPanel {
             new String [] {
                 "ID Hoá đơn", "Ngày tạo", "Tổng tiền", "Trạng thái"
             }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Long.class, java.lang.String.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
+        ));
         tblDoanhThu.setGridColor(new java.awt.Color(255, 255, 255));
         jScrollPane1.setViewportView(tblDoanhThu);
 
@@ -198,11 +190,13 @@ public class ThongKe extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLocActionPerformed
+       
         Date fromDate = tuNgay.getDate();
         Date toDate = denNgay.getDate();
 
         if (fromDate == null || toDate == null) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn cả ngày bắt đầu và ngày kết thúc.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+          //  JOptionPane.showMessageDialog(this, "Vui lòng chọn cả ngày bắt đầu và ngày kết thúc.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+          fillTable();
             return;
         }
 

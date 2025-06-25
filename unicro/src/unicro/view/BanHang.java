@@ -38,6 +38,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Optional;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
@@ -710,6 +711,10 @@ public class BanHang extends javax.swing.JPanel {
         } else {
             try {
                 int orderId = Integer.parseInt(txtMaHd.getText().trim());
+                if (tblChiTietHoaDon.getRowCount() == 0) {
+                    JOptionPane.showMessageDialog(null, "Hóa đơn chưa có sản phẩm! Không thể thanh toán.");
+                    return;
+                }
                 BigDecimal tongTien = new BigDecimal(txtTongtien.getText().replace(",", "").trim());
 
                 String phuongThuc = cboPhuongThucThanhToan.getSelectedItem().toString();
@@ -750,7 +755,7 @@ public class BanHang extends javax.swing.JPanel {
 
                 if (ok) {
                     JOptionPane.showMessageDialog(null, "Thanh toán thành công!");
-                      InHoaDon();
+                    InHoaDon();
                     loadTableHoaDon();
                 } else {
                     JOptionPane.showMessageDialog(null, "Không tìm thấy hóa đơn cần cập nhật!");
@@ -899,12 +904,24 @@ public class BanHang extends javax.swing.JPanel {
         loadChiTietHoaDonVaoTable(orderDetailService.getByOrderId1(currentOrderId1));
         loadTableSanPhamChiTiet();
         upvoucher();
+        List<OrderDetailResponse> chiTietConLai = orderDetailService.getByOrderId1(currentOrderId1);
+        if (chiTietConLai == null || chiTietConLai.isEmpty()) {
+            boolean deletedOrder = orderService.deleteById(currentOrderId1);
+            if (deletedOrder) {
+                JOptionPane.showMessageDialog(null, "Không còn sản phẩm nào, hóa đơn đã được xoá!");
+                ((DefaultTableModel) tblChiTietHoaDon.getModel()).setRowCount(0);
+                loadTableHoaDon();
+            } else {
+                JOptionPane.showMessageDialog(null, "Xoá hóa đơn thất bại trong CSDL!");
+            }
+        }
 
     }//GEN-LAST:event_btnXoaActionPerformed
 
     private void cboKhuyenMaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboKhuyenMaiActionPerformed
         // TODO add your handling code here:
-        tinhTongTienSauGiam();
+        // tinhTongTienSauGiam();
+        apDungVoucher();
     }//GEN-LAST:event_cboKhuyenMaiActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -944,7 +961,7 @@ public class BanHang extends javax.swing.JPanel {
                 sp.getTenMau(),
                 sp.getTenSize(),
                 sp.getTenChatLieu(),
-                sp.isTrangThai() ? "Đang bán" : "Ngừng bán"
+                sp.getSoLuong() == 0 ? "Hết hàng " : "Còn hàng"
             });
         }
 
@@ -1111,25 +1128,41 @@ public class BanHang extends javax.swing.JPanel {
 
     private void apDungVoucher() {
         Voucher selectedVoucher = (Voucher) cboKhuyenMai.getSelectedItem();
+        BigDecimal tongTienGoc = tinhTongTien();
         if (selectedVoucher == null) {
-            txtTongtien.setText(tinhTongTien().toString());
+            txtTongtien.setText(String.format("%,.0f", tongTienGoc));
+            txtTongTienSauGIam.setText(String.format("%,.0f", tongTienGoc));
             return;
         }
-        BigDecimal tongTienGoc = tinhTongTien();
-        BigDecimal giamGia = BigDecimal.ZERO;
-        if ("PERCENT".equalsIgnoreCase(selectedVoucher.getDiscount_type())) {
-            giamGia = tongTienGoc.multiply(selectedVoucher.getDiscount_value())
-                    .divide(new BigDecimal("100"));
-        } else if ("AMOUNT".equalsIgnoreCase(selectedVoucher.getDiscount_type())) {
-            giamGia = selectedVoucher.getDiscount_value();
+        BigDecimal minPurchase = Optional.ofNullable(selectedVoucher.getMin_purchase_amount()).orElse(BigDecimal.ZERO);
+        if (tongTienGoc.compareTo(minPurchase) < 0) {
+            JOptionPane.showMessageDialog(this,
+                    "Hóa đơn chưa đủ điều kiện để áp dụng voucher.\nĐơn tối thiểu: "
+                    + String.format("%,.0f", minPurchase));
+            txtTongTienSauGIam.setText(String.format("%,.0f", tongTienGoc));
+            return;
         }
 
+        BigDecimal giamGia = BigDecimal.ZERO;
+
+        if ("PERCENT".equalsIgnoreCase(selectedVoucher.getDiscount_type())) {
+            BigDecimal percent = Optional.ofNullable(selectedVoucher.getDiscount_value()).orElse(BigDecimal.ZERO);
+            giamGia = tongTienGoc.multiply(percent).divide(BigDecimal.valueOf(100));
+            BigDecimal maxGiam = selectedVoucher.getMax_purchase_amount();
+            if (maxGiam != null && giamGia.compareTo(maxGiam) > 0) {
+                giamGia = maxGiam;
+            }
+        } else if ("AMOUNT".equalsIgnoreCase(selectedVoucher.getDiscount_type())) {
+            giamGia = Optional.ofNullable(selectedVoucher.getDiscount_value()).orElse(BigDecimal.ZERO);
+        }
         if (giamGia.compareTo(tongTienGoc) > 0) {
             giamGia = tongTienGoc;
         }
-        BigDecimal tongTienSauGiam = tongTienGoc.subtract(giamGia);
-        txtTongTienSauGIam.setText(String.format("%,.0f", tongTienSauGiam));
 
+        BigDecimal tongSauGiam = tongTienGoc.subtract(giamGia);
+
+        txtTongtien.setText(String.format("%,.0f", tongTienGoc));
+        txtTongTienSauGIam.setText(String.format("%,.0f", tongSauGiam));
     }
 
     private BigDecimal tinhTongTien() {
@@ -1237,34 +1270,61 @@ public class BanHang extends javax.swing.JPanel {
         try {
             String orderId = txtMaHd.getText().trim();
             String tongTien = txtTongtien.getText().trim();
+            String thanhTien = txtTongTienSauGIam.getText().trim();
             String tienKhachDua = txtTienKhachDua.getText().trim();
             String tienThua = txtTienThua.getText().trim();
             String nhanVien = txtNhanVien.getText().trim();
-            String tienGiam = txtTongTienSauGIam.getText().trim();
-            String voucher = cboKhuyenMai.getSelectedItem().toString();
             String phuongThuc = cboPhuongThucThanhToan.getSelectedItem().toString();
-           
+
+            String voucher = "Không áp dụng";
+            if (cboKhuyenMai.getSelectedItem() instanceof Voucher selectedVoucher) {
+                voucher = selectedVoucher.getCode();
+            }
+
+            BigDecimal giamGia = new BigDecimal(tongTien.replace(",", "")).subtract(new BigDecimal(thanhTien.replace(",", "")));
+
+            String ngayTao = java.time.LocalDateTime.now()
+                    .format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+            List<OrderDetailResponse> danhSachSp = orderDetailService.getByOrderId1(Integer.parseInt(orderId));
+            StringBuilder spBuilder = new StringBuilder();
+            spBuilder.append("====== DANH SÁCH SẢN PHẨM ======\n");
+            spBuilder.append(String.format("%-25s %-10s %-15s %-15s\n", "Tên SP", "SL", "Đơn giá", "Thành tiền"));
+            for (OrderDetailResponse sp : danhSachSp) {
+                spBuilder.append(String.format("%-25s %-10d %,-15.0f %,-15.0f\n",
+                        sp.getTenSp(),
+                        sp.getSoLuong(),
+                        sp.getGia(),
+                        sp.getThanhTien()));
+            }
             String noiDung = """
             ========= HÓA ĐƠN =========
-            Mã HĐ      : %s
-            Nhân viên  : %s
-            Tổng tiền  : %s
-            Giảm giá   : %s
-            Thành tiền : %s 
-            Phương thức: %s                                
-            Khách đưa  : %s
-            Tiền thừa  : %s
-            Ngày tạo   : %s
-            ============= CẢM ƠN QUÝ KHÁCH!!!==============
-            """.formatted(orderId,
+            Mã HĐ       : %s
+            Nhân viên   : %s
+            Ngày tạo    : %s
+            %s
+            -------------------------------
+            Tổng tiền   : %s
+            Giảm giá    : %s
+            Thành tiền  : %s
+            Voucher     : %s
+            Phương thức : %s
+            Khách đưa   : %s
+            Tiền thừa   : %s
+            ========== CẢM ƠN QUÝ KHÁCH ==========
+            """.formatted(
+                    orderId,
                     nhanVien,
+                    ngayTao,
+                    spBuilder.toString(),
                     tongTien,
+                    String.format("%,.0f", giamGia),
+                    thanhTien,
                     voucher,
-                    tienGiam,
                     phuongThuc,
                     tienKhachDua,
-                    tienThua,
-                    java.time.LocalDateTime.now());
+                    tienThua
+            );
+
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("Chọn nơi lưu hóa đơn");
             fileChooser.setSelectedFile(new File("hoadon_" + orderId + ".txt"));
@@ -1272,7 +1332,6 @@ public class BanHang extends javax.swing.JPanel {
 
             if (result == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
-
                 try (OutputStream os = new FileOutputStream(file)) {
                     os.write(noiDung.getBytes("UTF-8"));
                 }
@@ -1286,5 +1345,5 @@ public class BanHang extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Lỗi khi in hóa đơn: " + ex.getMessage());
         }
     }
-}
 
+}

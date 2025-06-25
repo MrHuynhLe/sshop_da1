@@ -120,14 +120,15 @@ public class JPanelSanPham extends javax.swing.JPanel {
         mol = (DefaultTableModel) tblSP.getModel();
         mol.setRowCount(0);
         AtomicInteger index = new AtomicInteger(1);
-           for (SanPham sanPham : list) {
-               mol.addRow(new Object[]{
-               index.getAndIncrement(),
-                   sanPham.getMaSP(),
-                   sanPham.getTenSP(),
-                   sanPham.isTrangThai() ? "Hết hàng" : "Còn hàng"
-               });
-            
+        for (SanPham sanPham : list) {
+            mol.addRow(new Object[]{
+                sanPham.getId(),
+                // index.getAndIncrement(),
+                sanPham.getMaSP(),
+                sanPham.getTenSP(),
+                sanPham.isTrangThai() ? "Còn hàng" : "Hết hàng"
+            });
+
         }
 
     }

@@ -13,6 +13,7 @@ import unicro.entity.Session;
 import unicro.entity.User;
 import unicro.service.User_Service;
 import java.sql.Date;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  *
@@ -155,6 +156,11 @@ public class NguoiDung extends javax.swing.JPanel {
 
         btnTimKiem.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnTimKiem.setText("Tìm kiếm");
+        btnTimKiem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTimKiemActionPerformed(evt);
+            }
+        });
 
         tblnguoidung.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -304,9 +310,13 @@ public class NguoiDung extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         User user = new User();
+
         user.setUsername(txtUserName.getText());
         user.setFullname(txtten.getText());
         user.setAddress(txtquequan.getText());
+        if (!isValidPhoneNumber(txtsdt.getText())) {
+            JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ");
+        }
         user.setPhone_number(txtsdt.getText());
         java.util.Date utilDate = txtDate.getDate();
         if (utilDate != null) {
@@ -319,6 +329,7 @@ public class NguoiDung extends javax.swing.JPanel {
         List<String> roleList = new ArrayList<>();
         roleList.add(cbochucvu.getSelectedItem().toString());
         user.setRoleNames(roleList);
+
         boolean success = ser.addUser(user);
         if (success) {
             JOptionPane.showMessageDialog(null, "Thêm người dùng thành công");
@@ -328,7 +339,12 @@ public class NguoiDung extends javax.swing.JPanel {
         }
 
     }//GEN-LAST:event_jButton1ActionPerformed
-
+    public boolean isValidPhoneNumber(String phone) {
+        if (phone == null || phone.trim().isEmpty()) {
+            return false;
+        }
+        return phone.matches("^0\\d{8}$");
+    }
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
         txtten.setText("");
@@ -427,6 +443,13 @@ public class NguoiDung extends javax.swing.JPanel {
 
     }//GEN-LAST:event_tblnguoidungMouseClicked
 
+    private void btnTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimKiemActionPerformed
+String keyword = txttimkiem.getText().trim();
+List<User> result = ser.searchUsersByName(keyword);
+loadUserTable(result); // Hàm này hiển thị kết quả lên JTable
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnTimKiemActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnTimKiem;
@@ -511,13 +534,35 @@ public class NguoiDung extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày sinh!");
             return false;
         }
-      String sdt = txtsdt.getText().trim();
+        String sdt = txtsdt.getText().trim();
         if (!sdt.matches("0\\d{8}")) {
             JOptionPane.showMessageDialog(null, "Số điện thoại phải bắt đầu từ 0 và gồm 9 chữ số");
             txtsdt.requestFocus();
             return false;
         }
         return true;
+    }
+
+    private void loadUserTable(List<User> result) {
+          DefaultTableModel model = (DefaultTableModel) tblnguoidung.getModel();
+    model.setRowCount(0);
+
+    AtomicInteger index = new AtomicInteger(1); 
+
+    for (User user : result) {
+        model.addRow(new Object[]{
+            index.getAndIncrement(),
+            user.getId(),
+            user.getFullname(),
+            user.getUsername(),
+            user.getDate_of_birth(),
+            user.getPhone_number(),
+            user.getAddress(),
+            String.join(", ", user.getRoleNames()), 
+            user.getCreated_at(),
+            user.getUpdate_at()
+        });
+    }
     }
 
 }
