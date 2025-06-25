@@ -120,7 +120,7 @@ public class Voucher_Service {
             ps.setTimestamp(3, Timestamp.valueOf(v.getStart_date().atStartOfDay()));
             ps.setTimestamp(4, Timestamp.valueOf(v.getEnd_date().atStartOfDay()));
             ps.setTimestamp(5, Timestamp.valueOf(v.getCreated_at()));
-            ps.setString(6, v.getActive() ? "1" : "0");
+            ps.setBoolean(6, v.getActive());
             ps.setString(7, v.getCode());
 
             return ps.executeUpdate() > 0;
@@ -206,5 +206,49 @@ public class Voucher_Service {
         }
 
         return tongTien.subtract(giam);
+    }
+
+    public List<Voucher> getAllActiveValid() {
+        List<Voucher> list = new ArrayList<>();
+        String sql = """
+            SELECT * FROM vouchers
+            WHERE active = true
+              AND (start_date IS NULL OR start_date <= CURRENT_DATE)
+              AND (end_date IS NULL OR end_date >= CURRENT_DATE)
+        """;
+
+        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Voucher v = new Voucher();
+                v.setId(rs.getInt("id"));
+                v.setCode(rs.getString("code"));
+                v.setDiscount_type(rs.getString("discount_type"));
+                v.setDiscount_value(rs.getBigDecimal("discount_value"));
+                v.setStart_date(rs.getObject("start_date", LocalDate.class));
+                v.setEnd_date(rs.getObject("end_date", LocalDate.class));
+                v.setMax_purchase_amount(rs.getBigDecimal("max_purchase_amount"));
+                v.setMin_purchase_amount(rs.getBigDecimal("min_purchase_amount"));
+                // v.setCreated_at(rs.getObject("created_at", LocalDateTime.class));
+                v.setActive(rs.getBoolean("active"));
+
+                list.add(v);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public boolean check(String code) {
+        List<Voucher> list = getAllVouchers();
+        for (Voucher v : list) {
+            if (v.getCode().equalsIgnoreCase(code)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

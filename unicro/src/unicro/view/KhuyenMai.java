@@ -7,6 +7,11 @@ package unicro.view;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -14,6 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -55,7 +61,6 @@ public class KhuyenMai extends javax.swing.JPanel {
         tblVoucher = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         txtMaVoucher = new javax.swing.JTextField();
-        txtGiamGia1 = new javax.swing.JTextField();
         txtGiamGia2 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -66,6 +71,7 @@ public class KhuyenMai extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         JdBd = new com.toedter.calendar.JDateChooser();
         jdKt = new com.toedter.calendar.JDateChooser();
+        cboLoaiGiamGia = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         btnThem = new javax.swing.JButton();
         btnSua = new javax.swing.JButton();
@@ -150,6 +156,8 @@ public class KhuyenMai extends javax.swing.JPanel {
 
         jLabel5.setText("Ngày BĐ(yyyy-mm-dd) :");
 
+        cboLoaiGiamGia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "percent", "amount" }));
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -169,7 +177,7 @@ public class KhuyenMai extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtMaVoucher, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
                     .addComponent(txtGiamGia2)
-                    .addComponent(txtGiamGia1, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(cboLoaiGiamGia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(136, 136, 136)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -196,9 +204,9 @@ public class KhuyenMai extends javax.swing.JPanel {
                 .addGap(26, 26, 26)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtGiamGia1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel3)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cboLoaiGiamGia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jdKt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(32, 32, 32)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -278,17 +286,29 @@ public class KhuyenMai extends javax.swing.JPanel {
         int selectedRow = tblVoucher.getSelectedRow();
         if (selectedRow >= 0) {
             txtMaVoucher.setText(tblVoucher.getValueAt(selectedRow, 0).toString());
-            txtGiamGia1.setText(tblVoucher.getValueAt(selectedRow, 1).toString());
+              String discountType =  tblVoucher.getValueAt(selectedRow, 1).toString();
+              cboLoaiGiamGia.setSelectedItem(discountType);
             txtGiamGia2.setText(tblVoucher.getValueAt(selectedRow, 2).toString());
-            Date endDate = (Date) tblVoucher.getValueAt(selectedRow, 4);
-            Date startDate = (Date) tblVoucher.getValueAt(selectedRow, 3);
-            JdBd.setDate(startDate);
-            jdKt.setDate(endDate);
+
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+            try {
+                String startStr = tblVoucher.getValueAt(selectedRow, 3).toString();
+                String endStr = tblVoucher.getValueAt(selectedRow, 4).toString();
+
+                Date startDate = sdf.parse(startStr);
+                Date endDate = sdf.parse(endStr);
+
+                JdBd.setDate(startDate);
+                jdKt.setDate(endDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             String trangThai = tblVoucher.getValueAt(selectedRow, 6).toString();
-            if (trangThai.equalsIgnoreCase("Đang hoạt động")) {
-                cboTrangThai.setSelectedItem("Đang hoạt động");
+            if (trangThai.equalsIgnoreCase("Ngưng hoạt động")) {
+                cboTrangThai.setSelectedItem("Ngưng hoạt động");
             } else {
-                cboTrangThai.setSelectedItem("Không hoạt động");
+                cboTrangThai.setSelectedItem("Đang hoạt động");
             }
         }
     }//GEN-LAST:event_tblVoucherMouseClicked
@@ -298,27 +318,56 @@ public class KhuyenMai extends javax.swing.JPanel {
 
         try {
             String code = txtMaVoucher.getText().trim();
-            String discountType = txtGiamGia1.getText().trim();
-            BigDecimal discountValue = new BigDecimal(txtGiamGia2.getText().trim());
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-M-d");
+            String discountType = cboLoaiGiamGia.getSelectedItem().toString().toLowerCase(); // ✅ lấy từ combo
+            String discountStr = txtGiamGia2.getText().trim();
             Date fromDate = JdBd.getDate();
-            LocalDate startLocalDate = fromDate.toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate();
             Date toDate = jdKt.getDate();
-            LocalDate endLocalDate = toDate.toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate();
-            LocalDateTime createdAt = LocalDateTime.now();
+            if (code.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Mã voucher không được để trống!");
+                return;
+            }
+           
+            if (service.check(code)) {
+                JOptionPane.showMessageDialog(this, "Mã voucher đã tồn tại!");
+                return;
+            }
+            BigDecimal discountValue;
+            try {
+                discountValue = new BigDecimal(discountStr);
+                if (discountValue.compareTo(BigDecimal.ZERO) <= 0) {
+                    JOptionPane.showMessageDialog(this, "Giá trị giảm phải lớn hơn 0.");
+                    return;
+                }
+                if (discountType.equals("percent") && discountValue.compareTo(new BigDecimal("100")) > 0) {
+                    JOptionPane.showMessageDialog(this, "Phần trăm giảm không được vượt quá 100%.");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Giá trị giảm không hợp lệ.");
+                return;
+            }
+            if (fromDate == null || toDate == null) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày bắt đầu và kết thúc.");
+                return;
+            }
+
+            LocalDate startDate = fromDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate endDate = toDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            if (endDate.isBefore(startDate)) {
+                JOptionPane.showMessageDialog(this, "Ngày kết thúc phải sau hoặc bằng ngày bắt đầu.");
+                return;
+            }
             boolean isActive = cboTrangThai.getSelectedItem().toString().equals("Đang hoạt động");
             Voucher v = new Voucher();
             v.setCode(code);
             v.setDiscount_type(discountType);
             v.setDiscount_value(discountValue);
-            v.setStart_date(startLocalDate);
-            v.setEnd_date(endLocalDate);
-            v.setCreated_at(createdAt);
+            v.setStart_date(startDate);
+            v.setEnd_date(endDate);
+            v.setCreated_at(LocalDateTime.now());
             v.setActive(isActive);
+
             boolean success = service.addVoucher(v);
             if (success) {
                 JOptionPane.showMessageDialog(this, "Thêm thành công!");
@@ -326,17 +375,20 @@ public class KhuyenMai extends javax.swing.JPanel {
             } else {
                 JOptionPane.showMessageDialog(this, "Thêm thất bại!");
             }
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Lỗi: " + e.getMessage());
             e.printStackTrace();
         }
+
     }//GEN-LAST:event_btnThemActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
         // TODO add your handling code here:
         try {
             String code = txtMaVoucher.getText().trim();
-            String discountType = txtGiamGia1.getText().trim();
+            String discountType = cboLoaiGiamGia.getSelectedItem().toString().toLowerCase();
+
 
             BigDecimal discountValue;
             try {
@@ -408,7 +460,7 @@ public class KhuyenMai extends javax.swing.JPanel {
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
         // TODO add your handling code here:
         txtMaVoucher.setText("");
-        txtGiamGia1.setText("");
+        cboLoaiGiamGia.setSelectedIndex(0);
         txtGiamGia2.setText("");
         jdKt.setDate(null);
         JdBd.setDate(null);
@@ -425,6 +477,7 @@ public class KhuyenMai extends javax.swing.JPanel {
     private javax.swing.JButton btnSua;
     private javax.swing.JButton btnThem;
     private javax.swing.JButton btnXoa;
+    private javax.swing.JComboBox<String> cboLoaiGiamGia;
     private javax.swing.JComboBox<String> cboTrangThai;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -438,7 +491,6 @@ public class KhuyenMai extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private com.toedter.calendar.JDateChooser jdKt;
     private javax.swing.JTable tblVoucher;
-    private javax.swing.JTextField txtGiamGia1;
     private javax.swing.JTextField txtGiamGia2;
     private javax.swing.JTextField txtMaVoucher;
     // End of variables declaration//GEN-END:variables
@@ -448,18 +500,30 @@ public class KhuyenMai extends javax.swing.JPanel {
         list = service.getAllVouchers();
 
         for (Voucher v : list) {
-            Date startDate = Date.from(v.getStart_date().atStartOfDay(ZoneId.systemDefault()).toInstant());
-            Date endDate = Date.from(v.getEnd_date().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            String startDate = sdf.format(Date.from(v.getStart_date().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            String endDate = sdf.format(Date.from(v.getEnd_date().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            String ngayTao = sdf.format(Date.from(v.getEnd_date().atStartOfDay(ZoneId.systemDefault()).toInstant()));
             model.addRow(new Object[]{
                 v.getCode(),
                 v.getDiscount_type(),
-                v.getDiscount_value(),
+                formatDiscount(v.getDiscount_type(), v.getDiscount_value()),
                 startDate,
                 endDate,
-                v.getEnd_date(),
-                v.getCreated_at(),
-                v.getActive() ? "Đang hoạt động" : "Ngưng hoạt đông"
+                ngayTao,
+                v.getActive() ? "Ngưng hoạt động" : "Đang hoạt đông"
             });
+        }
+    }
+
+    private String formatDiscount(String type, BigDecimal value) {
+        if ("percent".equalsIgnoreCase(type)) {
+            return value.stripTrailingZeros().toPlainString() + "%";
+        } else if ("amount".equalsIgnoreCase(type)) {
+            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+            return currencyFormat.format(value);
+        } else {
+            return value.toPlainString();
         }
     }
 }

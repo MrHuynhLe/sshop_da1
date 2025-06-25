@@ -4,9 +4,13 @@
  */
 package unicro.view;
 
+import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.image.SampleModel;
 import java.awt.print.PrinterException;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +40,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFileChooser;
 import javax.swing.JTextArea;
 import unicro.entity.GioHang;
 import unicro.entity.LoginResult;
@@ -745,7 +750,7 @@ public class BanHang extends javax.swing.JPanel {
 
                 if (ok) {
                     JOptionPane.showMessageDialog(null, "Thanh toán thành công!");
-                   
+                      InHoaDon();
                     loadTableHoaDon();
                 } else {
                     JOptionPane.showMessageDialog(null, "Không tìm thấy hóa đơn cần cập nhật!");
@@ -905,6 +910,7 @@ public class BanHang extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         resetHoaDon();
+        upvoucher();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void txtMaHdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMaHdActionPerformed
@@ -1197,7 +1203,7 @@ public class BanHang extends javax.swing.JPanel {
     }
 
     private void upvoucher() {
-        List<Voucher> listVoucher = voucher_Service.getAllVouchers();
+        List<Voucher> listVoucher = voucher_Service.getAllActiveValid();
         DefaultComboBoxModel<Voucher> model = new DefaultComboBoxModel<>();
         for (Voucher v : listVoucher) {
             model.addElement(v);
@@ -1227,64 +1233,58 @@ public class BanHang extends javax.swing.JPanel {
         return null;
     }
 
-    public void printHoaDonFull(
-            String maHd,
-            String tenNv,
-            LocalDateTime ngayTao,
-            List<OrderDetailResponse> chiTietList,
-            BigDecimal tongTien,
-            String voucher,
-            BigDecimal tongSauGiam,
-            String phuongThuc,
-            BigDecimal tienKhachDua,
-            BigDecimal tienThua,
-            String note,
-            String trangThai
-    ) {
-        JTextArea txtPrint = new JTextArea();
-        txtPrint.setFont(new Font("Monospaced", Font.PLAIN, 12));
-
-        txtPrint.append("========= HÓA ĐƠN BÁN HÀNG =========\n");
-        txtPrint.append("Mã HĐ         : " + maHd + "\n");
-        txtPrint.append("Nhân viên     : " + tenNv + "\n");
-        txtPrint.append("Ngày tạo      : " + ngayTao.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + "\n");
-        txtPrint.append("Voucher       : " + voucher + "\n");
-        txtPrint.append("------------------------------------\n");
-        txtPrint.append(String.format("%-10s %-15s %5s %10s\n", "Mã SP", "Tên SP", "SL", "Thành tiền"));
-        txtPrint.append("------------------------------------\n");
-
-        for (OrderDetailResponse item : chiTietList) {
-            txtPrint.append(String.format("%-10s %-15s %5d %,10.0f\n",
-                    item.getMaSp(),
-                    item.getTenSp(),
-                    item.getSoLuong(),
-                    item.getThanhTien()
-            ));
-        }
-
-        txtPrint.append("------------------------------------\n");
-        txtPrint.append(String.format("TỔNG TIỀN        : %,25.0f\n", tongTien));
-        txtPrint.append(String.format("GIẢM GIÁ (Voucher): %,24.0f\n", tongTien.subtract(tongSauGiam)));
-        txtPrint.append(String.format("THANH TOÁN       : %,25.0f\n", tongSauGiam));
-        txtPrint.append(String.format("KHÁCH ĐƯA        : %,25.0f\n", tienKhachDua));
-        txtPrint.append(String.format("TIỀN THỪA        : %,25.0f\n", tienThua));
-        txtPrint.append("Phương thức      : " + phuongThuc + "\n");
-        txtPrint.append("Ghi chú          : " + note + "\n");
-        txtPrint.append("Trạng thái       : " + trangThai + "\n");
-        txtPrint.append("====================================\n");
-        txtPrint.append("      CẢM ƠN VÀ HẸN GẶP LẠI!\n");
-
+    public void InHoaDon() {
         try {
-            boolean ok = txtPrint.print();
-            if (ok) {
-                JOptionPane.showMessageDialog(null, "In hóa đơn thành công!");
-            } else {
-                JOptionPane.showMessageDialog(null, "Hủy in hóa đơn.");
+            String orderId = txtMaHd.getText().trim();
+            String tongTien = txtTongtien.getText().trim();
+            String tienKhachDua = txtTienKhachDua.getText().trim();
+            String tienThua = txtTienThua.getText().trim();
+            String nhanVien = txtNhanVien.getText().trim();
+            String tienGiam = txtTongTienSauGIam.getText().trim();
+            String voucher = cboKhuyenMai.getSelectedItem().toString();
+            String phuongThuc = cboPhuongThucThanhToan.getSelectedItem().toString();
+           
+            String noiDung = """
+            ========= HÓA ĐƠN =========
+            Mã HĐ      : %s
+            Nhân viên  : %s
+            Tổng tiền  : %s
+            Giảm giá   : %s
+            Thành tiền : %s 
+            Phương thức: %s                                
+            Khách đưa  : %s
+            Tiền thừa  : %s
+            Ngày tạo   : %s
+            ============= CẢM ƠN QUÝ KHÁCH!!!==============
+            """.formatted(orderId,
+                    nhanVien,
+                    tongTien,
+                    voucher,
+                    tienGiam,
+                    phuongThuc,
+                    tienKhachDua,
+                    tienThua,
+                    java.time.LocalDateTime.now());
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Chọn nơi lưu hóa đơn");
+            fileChooser.setSelectedFile(new File("hoadon_" + orderId + ".txt"));
+            int result = fileChooser.showSaveDialog(null);
+
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+
+                try (OutputStream os = new FileOutputStream(file)) {
+                    os.write(noiDung.getBytes("UTF-8"));
+                }
+                Desktop.getDesktop().open(file);
+
+                JOptionPane.showMessageDialog(null, "Đã in hóa đơn thành công:\n" + file.getAbsolutePath());
             }
-        } catch (PrinterException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Lỗi khi in hóa đơn: " + e.getMessage());
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Lỗi khi in hóa đơn: " + ex.getMessage());
         }
     }
-
 }
+

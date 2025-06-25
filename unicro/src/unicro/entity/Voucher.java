@@ -5,8 +5,10 @@
 package unicro.entity;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Locale;
 
 /**
  *
@@ -50,8 +52,6 @@ public class Voucher {
         this.min_purchase_amount = min_purchase_amount;
         this.active = active;
     }
-
-
 
     public int getId() {
         return id;
@@ -133,10 +133,14 @@ public class Voucher {
         this.active = active;
     }
 
-      @Override
-    public String toString() {
-        return code + " (" +
-               (discount_type.equalsIgnoreCase("percentage") ? discount_value + "%" : "-" + discount_value + "đ") +
-               ")";
+   @Override
+public String toString() {
+    if ("percent".equalsIgnoreCase(discount_type)) {
+        return code + " (-" + discount_value.stripTrailingZeros().toPlainString() + "%)";
+    } else if ("amount".equalsIgnoreCase(discount_type)) {
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        return code + " (-" + currencyFormat.format(discount_value) + ")";
     }
+    return code;
+}
 }
