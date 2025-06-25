@@ -108,7 +108,7 @@ public class TrangChu extends javax.swing.JFrame {
             int confirm = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn đăng xuất?", "Xác nhận", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
                 dispose();
-                new Dang_Nhap(this, rootPaneCheckingEnabled).setVisible(true);
+                new login(this, rootPaneCheckingEnabled).setVisible(true);
             }
         });
 

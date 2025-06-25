@@ -14,23 +14,19 @@ import javax.swing.JOptionPane;
 import unicro.entity.GioHang;
 import unicro.entity.OrderDetail;
 import unicro.entity.SanPhamChiTiet;
-
+import unicro.config.Connect;
 /**
  *
  * @author Admin
  */
 public class Order_Service {
 
-    private final String url = "jdbc:postgresql://localhost:5432/unicro_qlbh";
-    private final String username = "postgres";
-    private final String password = "password";
-
     public List<Order> getAllOrders() {
         List<Order> orders = new ArrayList<>();
         String sql = "SELECT * FROM orders "
                 + "order by id DESC";
 
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+        try (Connection conn = Connect.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 Order order = new Order();
@@ -58,7 +54,7 @@ public class Order_Service {
         List<Order> list = new ArrayList<>();
         String sql = "SELECT id, order_date, total, status FROM orders WHERE order_date BETWEEN ? AND ?  AND status like 'Đã thanh toán'";
 
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection conn = Connect.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setDate(1, new java.sql.Date(fromDate.getTime()));
             ps.setDate(2, new java.sql.Date(toDate.getTime()));
@@ -84,7 +80,7 @@ public class Order_Service {
         String sql = "SELECT SUM(total) AS total_revenue FROM orders WHERE order_date BETWEEN ? AND ? AND status like 'Đã thanh toán'";
         BigDecimal total = BigDecimal.ZERO;
 
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setDate(1, new java.sql.Date(fromDate.getTime()));
             ps.setDate(2, new java.sql.Date(toDate.getTime()));
@@ -108,7 +104,7 @@ public class Order_Service {
         String sql = "SELECT SUM(total) AS total_revenue FROM orders";
         BigDecimal total = BigDecimal.ZERO;
 
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -127,7 +123,7 @@ public class Order_Service {
 
     public int taoHoaDon(int userId, Integer voucherId, BigDecimal tongTien, String status, String paymentMethod) {
         String sql = "INSERT INTO orders (user_id, voucher_id, total, status, payment_method) VALUES (?, ?, ?, ?, ?) RETURNING id";
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, userId);
             if (voucherId == null) {
@@ -152,7 +148,7 @@ public class Order_Service {
 
     public boolean themChiTietHoaDon(int orderId, int productDetailId, BigDecimal price, int quantity) {
         String sql = "INSERT INTO order_details (order_id, product_detail_id, price, number_of_product) VALUES (?, ?, ?, ?)";
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, orderId);
             ps.setInt(2, productDetailId);
@@ -258,7 +254,7 @@ public class Order_Service {
                 + "note = ?, status = 'Đã thanh toán', order_date = CURRENT_TIMESTAMP "
                 + "WHERE id = ?";
 
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             if (voucherId != null) {
                 ps.setInt(1, voucherId);
@@ -277,7 +273,7 @@ public class Order_Service {
 
     public void capNhatSoLuongTon(int idSpct, int soLuongMoi) {
         String sql = "UPDATE san_pham_chi_tiet SET so_luong = ? WHERE id = ?";
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, soLuongMoi);
             ps.setInt(2, idSpct);
             ps.executeUpdate();
@@ -289,7 +285,7 @@ public class Order_Service {
 
     public String getUserNameByUserId(int userId) {
         String sql = "SELECT fullname FROM users WHERE id = ?";
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
@@ -305,7 +301,7 @@ public class Order_Service {
 
     public String getTenNhanVienByOrderId(int orderId) {
         String sql = "SELECT u.fullname FROM orders o JOIN users u ON o.user_id = u.id WHERE o.id = ?";
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, orderId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -319,7 +315,7 @@ public class Order_Service {
 
     public BigDecimal getTienGiam(int voucherId, BigDecimal tongTien) {
         String sql = "SELECT discount_type, discount_value FROM vouchers WHERE id = ?";
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, voucherId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -346,7 +342,7 @@ public class Order_Service {
         WHERE o.id = ?
     """;
 
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, idHoaDon);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -374,7 +370,7 @@ public class Order_Service {
         WHERE o.status = ?
     """;
 
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, status);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -402,7 +398,7 @@ public class Order_Service {
         WHERE DATE(o.order_date) BETWEEN ? AND ?
     """;
 
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setDate(1, new java.sql.Date(fromDate.getTime()));
             ps.setDate(2, new java.sql.Date(toDate.getTime()));
             ResultSet rs = ps.executeQuery();
@@ -424,7 +420,7 @@ public class Order_Service {
 
     public boolean insert(Order order) {
         String sql = "INSERT INTO orders (user_id, order_date, status, total) VALUES (?, ?, ?, ?)";
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, order.getUser_id());
 
@@ -441,7 +437,7 @@ public class Order_Service {
 
     public Order findPendingByUser(int userId) {
         String sql = "SELECT * FROM orders WHERE user_id = ? AND status = 'Pending' ORDER BY order_date DESC LIMIT 1";
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
@@ -463,7 +459,7 @@ public class Order_Service {
 
     public Order createPendingOrder(int userId) {
         String sql = "INSERT INTO orders (user_id, order_date, status, total) VALUES (?, ?, ?, ?) RETURNING id";
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             Date now = new Date();
             ps.setInt(1, userId);
@@ -491,7 +487,7 @@ public class Order_Service {
 
     public boolean deleteById(Integer currentOrderId1) {
         String sql = "DELETE FROM orders WHERE id = ?";
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, currentOrderId1);
             return ps.executeUpdate() > 0;
         } catch (Exception e) {

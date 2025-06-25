@@ -19,14 +19,10 @@ import unicro.entity.SanPhamChiTiet;
  */
 public class OrderDetailService {
 
-    private static final String URL = "jdbc:postgresql://localhost:5432/unicro_qlbh";
-    private static final String USER = "postgres";
-    private static final String PASSWORD = "password";
-
     public boolean insert(OrderDetail ct) {
         String sql = "INSERT INTO order_details (order_id, product_detail_id, price, number_of_product) "
                 + "VALUES (?, ?, ?, ?)";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, ct.getOrder_id());
             ps.setInt(2, ct.getProduct_detail_id());
@@ -42,7 +38,7 @@ public class OrderDetailService {
 
     public boolean delete(int id) {
         String sql = "DELETE FROM order_details WHERE id = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
@@ -69,7 +65,7 @@ public class OrderDetailService {
         JOIN san_pham sp ON spct.idsp = sp.id
         WHERE od.order_id = ?
     """;
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, orderId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -98,7 +94,7 @@ public class OrderDetailService {
                 + "JOIN san_pham_chi_tiet spct ON od.product_detail_id = spct.id "
                 + "JOIN san_pham sp ON spct.idsp = sp.id "
                 + "WHERE od.order_id = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, orderId);
             try (ResultSet rs = ps.executeQuery()) {
@@ -126,7 +122,7 @@ public class OrderDetailService {
                        + "WHERE spct.id = ?
     """;
 
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, idSpct);
             ResultSet rs = ps.executeQuery();
@@ -141,7 +137,7 @@ public class OrderDetailService {
 
     public OrderDetail findByOrderIdAndProductDetailId(int orderId, int productDetailId) {
         String sql = "SELECT * FROM order_details WHERE order_id = ? AND product_detail_id = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, orderId);
             ps.setInt(2, productDetailId);
             ResultSet rs = ps.executeQuery();
@@ -161,7 +157,7 @@ public class OrderDetailService {
 
     public boolean update(OrderDetail detail) {
         String sql = "UPDATE order_details SET number_of_product = ? WHERE order_id = ? AND product_detail_id = ?";
-        try (Connection con = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, detail.getNumber_of_product());
             ps.setInt(2, detail.getOrder_id());
             ps.setInt(3, detail.getProduct_detail_id());
@@ -174,7 +170,7 @@ public class OrderDetailService {
 
     public boolean deleteByOrderIdAndProductDetailId(int orderId, int productDetailId) {
         String sql = "DELETE FROM order_details WHERE order_id = ? AND product_detail_id = ?";
-        try (Connection con = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, orderId);
             ps.setInt(2, productDetailId);
             return ps.executeUpdate() > 0;

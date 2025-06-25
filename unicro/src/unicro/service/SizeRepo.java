@@ -10,23 +10,19 @@ import java.sql.ResultSet;
 import java.sql.*;
 import java.util.ArrayList;
 import unicro.entity.Size;
-
+import unicro.config.Connect;
 /**
  *
  * @author Admin
  */
 public class SizeRepo {
 
-    private final String url = "jdbc:postgresql://localhost:5432/unicro_qlbh";
-    private final String username = "postgres";
-    private final String password = "password";
-
     public ArrayList<Size> getAll() {
 
         String sql = "SELECT ID,MA_SIZE, TEN FROM SIZE";
         ArrayList<Size> list = new ArrayList<>();
 
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -47,7 +43,7 @@ public class SizeRepo {
 
     public void addThuocTinh(String tenBang, String tenCot, String giaTri) throws SQLException {
         String sql = "INSERT INTO " + tenBang + " (" + tenCot + ") VALUES (?)";
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, giaTri);
             ps.executeUpdate();
         }

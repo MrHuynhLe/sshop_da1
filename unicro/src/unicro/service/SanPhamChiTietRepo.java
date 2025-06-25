@@ -27,10 +27,6 @@ import java.sql.*;
  */
 public class SanPhamChiTietRepo {
 
-    private final String url = "jdbc:postgresql://localhost:5432/unicro_qlbh";
-    private final String username = "postgres";
-    private final String password = "password";
-
     public ArrayList<SanPhamChiTietResponse> getAllSPCT() {
         String sql = """
            SELECT 
@@ -57,7 +53,7 @@ public class SanPhamChiTietRepo {
        """;
 
         ArrayList<SanPhamChiTietResponse> list = new ArrayList<>();
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 SanPhamChiTietResponse spct = new SanPhamChiTietResponse(
@@ -102,7 +98,7 @@ public class SanPhamChiTietRepo {
             WHERE id = ?;
            """;
         int check = 0;
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, spct.getIdSp());
             ps.setInt(2, spct.getMaNhaCungCap());
             ps.setInt(3, spct.getMaMau());
@@ -151,7 +147,7 @@ public class SanPhamChiTietRepo {
 
         ArrayList<SanPhamChiTietResponse> list = new ArrayList<>();
 
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, "%" + tenSanPham + "%");
             ResultSet rs = ps.executeQuery();
 
@@ -186,7 +182,7 @@ public class SanPhamChiTietRepo {
         ArrayList<String> list = new ArrayList<>();
         String sql = "SELECT TEN FROM " + tenBang;
 
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 list.add(rs.getString("TEN"));
             }
@@ -198,7 +194,7 @@ public class SanPhamChiTietRepo {
 
     public void addThuocTinh(String tenBang, String tenThuocTinh) throws SQLException {
         String sql = "INSERT INTO " + tenBang + " (TEN) VALUES (?)";
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, tenThuocTinh);
             ps.executeUpdate();
         }
@@ -213,7 +209,7 @@ public class SanPhamChiTietRepo {
 
            """;
         int check = 0;
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, spct.getSoLuong());
             ps.setInt(2, spct.getId());
 
@@ -247,7 +243,7 @@ public class SanPhamChiTietRepo {
 
         ArrayList<SanPhamChiTietResponse> list = new ArrayList<>();
 
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, mauSac_id);
             ps.setObject(2, mauSac_id);
             ps.setObject(3, size_id);
@@ -288,7 +284,7 @@ public class SanPhamChiTietRepo {
         String sql = " SELECT ID, TEN ,MA_MAU FROM MAU_SAC where TEN like ?";
         List<MauSac> lst = new ArrayList<>();
         try {
-            Connection con = DriverManager.getConnection(url, username, password);
+            Connection con = Connect.getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setObject(1, tenMau);
             ResultSet rs = ps.executeQuery();
@@ -314,7 +310,7 @@ public class SanPhamChiTietRepo {
         String sql = "SELECT ID, TEN, MA_SIZE FROM SIZE WHERE TEN like?";
         List<Size> list = new ArrayList<>();
 
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             ps.setObject(1, tenSize);
 
@@ -342,7 +338,7 @@ public class SanPhamChiTietRepo {
         String sql = "SELECT ID, TEN, MA_CHAT_LIEU FROM CHAT_LIEU WHERE TEN like ?";
         List<ChatLieu> list = new ArrayList<>();
 
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             ps.setObject(1, tenChatLieu);
             while (rs.next()) {
@@ -368,7 +364,7 @@ public class SanPhamChiTietRepo {
         String sql = "SELECT ID, TEN, MA_THUONG_HIEU FROM THUONG_HIEU WHERE TEN like ?";
         List<ThuongHieu> list = new ArrayList<>();
 
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             ps.setObject(1, tenThuongHieu);
             while (rs.next()) {
@@ -416,7 +412,7 @@ public class SanPhamChiTietRepo {
 
         ArrayList<SanPhamChiTietResponse> list = new ArrayList<>();
 
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setObject(1, idSP);
             ResultSet rs = ps.executeQuery();
@@ -471,7 +467,7 @@ public class SanPhamChiTietRepo {
         WHERE spct.id = ?;
     """;
 
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setObject(1, idSPCT);
             ResultSet rs = ps.executeQuery();
@@ -506,7 +502,7 @@ public class SanPhamChiTietRepo {
             WHERE id = $2;
            """;
         int check = 0;
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, trangThai);
             ps.setObject(2, idSpct);
 
@@ -538,7 +534,7 @@ public class SanPhamChiTietRepo {
                JOIN san_pham sp ON spct.idsp = sp.id
                WHERE spct.id = ?;
                     """;
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, idSPCT);
             ResultSet rs = ps.executeQuery();
 
@@ -583,7 +579,7 @@ public class SanPhamChiTietRepo {
                                 VALUES
                                     (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
                     """;
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setObject(1, spct.getIdSp());
             ps.setObject(2, spct.getMaNhaCungCap());
@@ -619,7 +615,7 @@ public class SanPhamChiTietRepo {
                                      ma_thuong_hieu = ?
                                  WHERE id = ?;
                     """;
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setObject(1, spct.getMaNhaCungCap());
             ps.setObject(2, spct.getMaMau());
@@ -641,7 +637,7 @@ public class SanPhamChiTietRepo {
 
     public void capNhatSoLuongTon(int idSpct, int soLuongMoi) {
         String sql = "UPDATE san_pham_chi_tiet SET so_luong = ? WHERE id = ?";
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, soLuongMoi);
             ps.setInt(2, idSpct);
             ps.executeUpdate();
@@ -658,7 +654,7 @@ public class SanPhamChiTietRepo {
         JOIN san_pham sp ON sp.id = spct.idsp
         WHERE spct.id = ?
     """;
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -699,7 +695,7 @@ public class SanPhamChiTietRepo {
         WHERE sp.ten ILIKE ?
     """;
 
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, "%" + keyword + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

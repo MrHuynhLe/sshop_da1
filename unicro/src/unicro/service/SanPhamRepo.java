@@ -12,16 +12,12 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import unicro.entity.SanPham;
 import java.sql.*;
-
+import unicro.config.Connect;
 /**
  *
  * @author Admin
  */
 public class SanPhamRepo {
-
-    private static final String url = "jdbc:postgresql://localhost:5432/unicro_qlbh";
-    private static final String username = "postgres";
-    private static final String password = "password";
 
     public ArrayList<SanPham> getAll() {
         String sql = """
@@ -48,7 +44,7 @@ public class SanPhamRepo {
         """;
         ArrayList<SanPham> list = new ArrayList<>();
 
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -80,7 +76,7 @@ public class SanPhamRepo {
                   WHERE id = $1;
                      
                      """;
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, id);
             check = ps.executeUpdate();
         } catch (Exception e) {
@@ -98,7 +94,7 @@ public class SanPhamRepo {
             WHERE id = ?
       """;
 
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, newSanPham.getTenSP());
             ps.setString(2, newSanPham.getMoTa());
             ps.setBoolean(3, newSanPham.isTrangThai());
@@ -120,7 +116,7 @@ public class SanPhamRepo {
                 VALUES
                   (?, ?, ?, ?, ?, ?);
                 """;
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, sanPham.getMaSP());
             ps.setObject(2, sanPham.getTenSP());
             ps.setObject(3, sanPham.getMoTa());

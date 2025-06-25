@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import unicro.entity.ChatLieu;
 import java.sql.*;
+import unicro.config.Connect;
 
 /**
  *
@@ -18,15 +19,11 @@ import java.sql.*;
  */
 public class ChatLieuRepo {
 
-    private static final String url = "jdbc:postgresql://localhost:5432/unicro_qlbh";
-    private static final String username = "postgres";
-    private static final String password = "password";
-
     public ArrayList<ChatLieu> getAll() {
         String sql = "SELECT ID, TEN, MA_CHAT_LIEU FROM CHAT_LIEU";
         ArrayList<ChatLieu> list = new ArrayList<>();
 
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -47,7 +44,7 @@ public class ChatLieuRepo {
 
     public void addThuocTinh(String tenBang, String tenCot, String giaTri) throws SQLException {
         String sql = "INSERT INTO " + tenBang + " (" + tenCot + ") VALUES (?)";
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, giaTri);
             ps.executeUpdate();
         }

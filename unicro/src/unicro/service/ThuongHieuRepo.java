@@ -10,22 +10,19 @@ import java.sql.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import unicro.entity.ThuongHieu;
-
+import unicro.config.Connect;
 /**
  *
  * @author Admin
  */
 public class ThuongHieuRepo {
 
-    private static final String url = "jdbc:postgresql://localhost:5432/unicro_qlbh";
-    private static final String username = "postgres";
-    private static final String password = "password";
 
     public ArrayList<ThuongHieu> getAll() {
         String sql = "SELECT ID, TEN,MA_THUONG_HIEU FROM THUONG_HIEU";
         ArrayList<ThuongHieu> list = new ArrayList<>();
 
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = Connect.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -46,7 +43,7 @@ public class ThuongHieuRepo {
 
     public void addDoBay(String tenDoBay) throws SQLException {
         String sql = "INSERT INTO DO_BAY (TEN) VALUES (?)";
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = Connect.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, tenDoBay);
             ps.executeUpdate();
         }

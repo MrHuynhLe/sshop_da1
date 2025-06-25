@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.*;
+import unicro.config.Connect;
 
 /**
  *
@@ -20,15 +21,11 @@ import java.sql.*;
  */
 public class Voucher_Service {
 
-    private final String url = "jdbc:postgresql://localhost:5432/unicro_qlbh";
-    private final String username = "postgres";
-    private final String password = "password";
-
     public List<Voucher> getAllVouchers() {
         List<Voucher> vouchers = new ArrayList<>();
         String sql = "SELECT * FROM vouchers";
 
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+        try (Connection conn = Connect.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 Voucher v = new Voucher();
@@ -78,7 +75,7 @@ public class Voucher_Service {
         String sql = "INSERT INTO vouchers (code, discount_type, discount_value, start_date, end_date,max_purchase_amount,min_purchase_amount, created_at, active) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?,?,?)";
 
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = Connect.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, v.getCode());
             ps.setString(2, v.getDiscount_type());
@@ -101,7 +98,7 @@ public class Voucher_Service {
 
     public boolean existsByCode(String code) {
         String sql = "SELECT COUNT(*) FROM vouchers WHERE code = ?";
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, code);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -115,7 +112,7 @@ public class Voucher_Service {
 
     public boolean updateVoucher(Voucher v) {
         String sql = "UPDATE vouchers SET discount_type = ?, discount_value = ?, start_date = ?, end_date = ?,max_purchase_amount = ?,min_purchase_amount = ?, created_at = ?, active = ? WHERE code = ?";
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, v.getDiscount_type());
             ps.setBigDecimal(2, v.getDiscount_value());
@@ -136,7 +133,7 @@ public class Voucher_Service {
 
     public boolean deleteVoucher(String code) {
         String sql = "DELETE FROM vouchers WHERE code = ?";
-        try (Connection con = DriverManager.getConnection(url, username, password); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, code);
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
@@ -146,7 +143,7 @@ public class Voucher_Service {
     }
 
     public Voucher getVoucherByCode(String code) {
-        try (Connection conn = DriverManager.getConnection(url, username, password)) {
+        try (Connection conn = Connect.getConnection()) {
             String sql = "SELECT * FROM vouchers WHERE code = ? AND active = true";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, code);
@@ -173,7 +170,7 @@ public class Voucher_Service {
         List<Voucher> vouchers = new ArrayList<>();
         String sql = "SELECT * FROM vouchers WHERE active = true AND CURRENT_DATE BETWEEN start_date AND end_date AND min_purchase_amount <= ?";
 
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = Connect.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setBigDecimal(1, tongTien);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
@@ -221,7 +218,7 @@ public class Voucher_Service {
               AND (end_date IS NULL OR end_date >= CURRENT_DATE)
         """;
 
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = Connect.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Voucher v = new Voucher();

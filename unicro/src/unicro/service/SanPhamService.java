@@ -13,16 +13,12 @@ import java.time.ZoneId;
 import unicro.config.Connect;
 import unicro.entity.OrderDetail;
 import unicro.entity.SanPhamChiTiet;
-
+import unicro.config.Connect;
 /**
  *
  * @author Admin
  */
 public class SanPhamService {
-
-    private final String url = "jdbc:postgresql://localhost:5432/unicro_qlbh";
-    private final String user = "postgres";
-    private final String password = "password";
 
     public List<SanPhamChiTiet> getAll() {
         List<SanPhamChiTiet> list = new ArrayList<>();
@@ -30,7 +26,7 @@ public class SanPhamService {
                 + "spct.MA_CHAT_LIEU, spct.SO_LUONG, spct.DON_GIA, spct.MO_TA, spct.NGAY_TAO, spct.MA_THUONG_HIEU, spct.TRANG_THAI "
                 + "FROM SAN_PHAM_CHI_TIET spct "
                 + "JOIN SAN_PHAM sp ON spct.IDSP = sp.ID";
-        try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 SanPhamChiTiet spct = new SanPhamChiTiet();
@@ -105,7 +101,7 @@ public class SanPhamService {
 
     public boolean updateSoLuong(int id, int soLuongMoi) {
         String sql = "UPDATE SAN_PHAM_CHI_TIET SET SO_LUONG = ? WHERE ID = ?";
-        try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = Connect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, soLuongMoi);
             ps.setInt(2, id);
             return ps.executeUpdate() > 0;

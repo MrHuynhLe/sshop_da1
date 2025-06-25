@@ -16,20 +16,17 @@ import unicro.entity.MauSac;
 import unicro.entity.NhaCungCap;
 import unicro.entity.Size;
 import unicro.entity.ThuongHieu;
-
+import unicro.config.Connect;
 /**
  *
  * @author Admin
  */
 public class ThuocTinhRepo {
 
-    private final String url = "jdbc:postgresql://localhost:5432/unicro_qlbh";
-    private final String username = "postgres";
-    private final String password = "password";
 
     public ArrayList<Object[]> getAllThuocTinh(String tenBang) {
         ArrayList<Object[]> listThuocTinh = new ArrayList<>();
-        try (Connection conn = DriverManager.getConnection(url, username, password); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery("SELECT * FROM " + tenBang
+        try (Connection conn = Connect.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery("SELECT * FROM " + tenBang
         )) {
             while (rs.next()) {
                 if (tenBang.equalsIgnoreCase("MAU_SAC")) {
@@ -81,7 +78,7 @@ public class ThuocTinhRepo {
 
     public boolean kiemTraMaThuocTinhTonTai(String tenBang, String maThuocTinh) throws SQLException {
         String sql = "SELECT COUNT(*) FROM " + tenBang + " WHERE MaThuocTinh = ?";
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = Connect.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, maThuocTinh);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -95,7 +92,7 @@ public class ThuocTinhRepo {
 
     public void addThuocTinh(String tenBang, String maThuocTinh, String tenThuocTinh) throws SQLException {
         String sql = "INSERT INTO " + tenBang + " VALUES (?, ?)";
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = Connect.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, maThuocTinh);
             ps.setString(2, tenThuocTinh);
             ps.executeUpdate();
@@ -105,7 +102,7 @@ public class ThuocTinhRepo {
     public void addNhaCC(String tenBang, String maThuocTinh, String tenThuocTinh, String diaChi) throws SQLException {
         if (tenBang.equalsIgnoreCase("NHA_CUNG_CAP")) {
             String sql = "INSERT INTO " + tenBang + " VALUES (?, ?, ?)";
-            try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+            try (Connection conn = Connect.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setString(1, maThuocTinh);
                 ps.setString(2, tenThuocTinh);
                 ps.setString(3, diaChi);
@@ -116,7 +113,7 @@ public class ThuocTinhRepo {
 
     public void updateNhaCC(String tenBang, String maThuocTinh, String maTT, String tenThuocTinhMoi, String diaChi) throws SQLException {
         String sql = "UPDATE " + tenBang + " SET TEN = ?, DIA_CHI = ? WHERE " + maTT + " = ?";
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = Connect.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, tenThuocTinhMoi);
             ps.setString(2, diaChi);
             ps.setString(3, maThuocTinh);
@@ -126,7 +123,7 @@ public class ThuocTinhRepo {
 
     public void updateThuocTinh(String tenBang, String maThuocTinh, String maTT, String tenThuocTinhMoi) throws SQLException {
         String sql = "UPDATE " + tenBang + " SET TEN = ? WHERE " + maTT + " = ?";
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = Connect.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, tenThuocTinhMoi);
             ps.setString(2, maThuocTinh);
             ps.executeUpdate();
@@ -148,7 +145,7 @@ public class ThuocTinhRepo {
         }
 
         String sql = "DELETE FROM " + tenBang + " WHERE " + cotMaThuocTinh + " = ?";
-        try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = Connect.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, maThuocTinh);
             ps.executeUpdate();
         }
@@ -157,7 +154,7 @@ public class ThuocTinhRepo {
     public ArrayList<Size> getSize() {
         ArrayList<Size> listDoCang = new ArrayList<>();
         String query = "SELECT * FROM SIZE";
-        try (Connection conn = DriverManager.getConnection(url, username, password); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query
+        try (Connection conn = Connect.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query
         )) {
 
             while (rs.next()) {
@@ -176,7 +173,7 @@ public class ThuocTinhRepo {
     public ArrayList<ChatLieu> getCL() {
         ArrayList<ChatLieu> listCDV = new ArrayList<>();
         String query = "SELECT * FROM CHAT_LIEU";
-        try (Connection conn = DriverManager.getConnection(url, username, password); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query
+        try (Connection conn = Connect.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query
         )) {
 
             while (rs.next()) {
@@ -195,7 +192,7 @@ public class ThuocTinhRepo {
     public ArrayList<ThuongHieu> getTH() {
         ArrayList<ThuongHieu> listDoCang = new ArrayList<>();
         String query = "SELECT * FROM THUONG_HIEU";
-        try (Connection conn = DriverManager.getConnection(url, username, password); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query
+        try (Connection conn = Connect.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query
         )) {
 
             while (rs.next()) {
@@ -214,7 +211,7 @@ public class ThuocTinhRepo {
     public ArrayList<MauSac> getMauSac() {
         ArrayList<MauSac> listDoCang = new ArrayList<>();
         String query = "SELECT * FROM MAU_SAC";
-        try (Connection conn = DriverManager.getConnection(url, username, password); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query
+        try (Connection conn = Connect.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query
         )) {
             while (rs.next()) {
                 MauSac dc = new MauSac();
@@ -232,7 +229,7 @@ public class ThuocTinhRepo {
     public ArrayList<NhaCungCap> getNhaCungCap() {
         ArrayList<NhaCungCap> listDoCang = new ArrayList<>();
         String query = "SELECT * FROM NHA_CUNG_CAP";
-        try (Connection conn = DriverManager.getConnection(url, username, password); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query
+        try (Connection conn = Connect.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query
         )) {
             while (rs.next()) {
                 NhaCungCap dc = new NhaCungCap();
